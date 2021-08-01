@@ -20,7 +20,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     setState(() {
@@ -43,7 +42,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     this._streamSubscription!.cancel();
   }

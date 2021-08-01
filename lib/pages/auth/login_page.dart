@@ -4,6 +4,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_not_found_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
+import 'package:varenya_mobile/pages/auth/register_page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
@@ -50,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
     this._emailFieldController.dispose();
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         MinLengthValidator(
                           5,
                           errorText:
-                              'Your password should be atleast 5 characters long.',
+                              'Your password should be at least 5 characters long.',
                         )
                       ],
                       textInputType: TextInputType.text,
@@ -103,6 +103,11 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _onFormSubmit,
                       child: Text('Login'),
                     ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context)
+                          .pushReplacementNamed(RegisterPage.routeName),
+                      child: Text('Don\'t have an account? Register here!'),
+                    )
                   ],
                 ),
               )
