@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/register_account_dto/register_account_dto.dart';
+import 'package:varenya_mobile/dtos/auth/user_details_dto/user_details_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/user_not_found_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
@@ -25,20 +26,10 @@ class AuthService {
   ) async {
     try {
       // Register the user in firebase.
-      UserCredential userCredential =
-          await this.firebaseAuth.createUserWithEmailAndPassword(
-                email: registerAccountDto.emailAddress,
-                password: registerAccountDto.password,
-              );
-
-      // Fetch the firebase user details from firebase.
-      User? firebaseUser = userCredential.user;
-
-      // Update the user details with name and profile picture.
-      if (firebaseUser != null) {
-        await firebaseUser.updateDisplayName(registerAccountDto.fullName);
-        await firebaseUser.updatePhotoURL(registerAccountDto.imageUrl);
-      }
+      await this.firebaseAuth.createUserWithEmailAndPassword(
+            email: registerAccountDto.emailAddress,
+            password: registerAccountDto.password,
+          );
     } on FirebaseException catch (error) {
       // If email is already in use, throw an error.
       if (error.code == 'email-already-in-use') {
@@ -53,7 +44,8 @@ class AuthService {
    * Method to log the user in the application.
    * @param loginAccountDto DTO for user login
    */
-  Future<void> login(LoginAccountDto loginAccountDto) async {
+  Future<void> loginWithEmailAndPassword(
+      LoginAccountDto loginAccountDto) async {
     try {
       // Log the user in with firebase using their credentials.
       await firebaseAuth.signInWithEmailAndPassword(
@@ -73,6 +65,22 @@ class AuthService {
           message: 'Wrong password provided for the specified user account.',
         );
       }
+    }
+  }
+
+  Future<void> saveUserDetails(UserDetailsDto userDetailsDto) async {
+    try {
+      User? firebaseUser = firebaseAuth.currentUser;
+
+      if (firebaseUser != null) {
+        await firebaseUser.updateDisplayName(userDetailsDto.fullName);
+
+        if (userDetailsDto.image != null) {
+          await firebaseUser.updatePhotoURL(userDetailsDto.image);
+        }
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
