@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:varenya_mobile/pages/auth/auth_page.dart';
+import 'package:varenya_mobile/pages/common/splash_page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 
 class App extends StatelessWidget {
@@ -12,7 +14,11 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      routes: {
+        SplashPage.routeName: (context) => SplashPage(),
+        HomePage.routeName: (context) => HomePage(),
+        AuthPage.routeName: (context) => AuthPage(),
+      },
     );
   }
 }
