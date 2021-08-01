@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:varenya_mobile/pages/auth/auth_page.dart';
+import 'package:varenya_mobile/pages/auth/login_page.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
         if (user != null) {
           Navigator.of(context).pushReplacementNamed(HomePage.routeName);
         } else {
-          Navigator.of(context).pushReplacementNamed(AuthPage.routeName);
+          Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
         }
       });
     });
