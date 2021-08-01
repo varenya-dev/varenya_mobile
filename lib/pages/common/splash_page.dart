@@ -24,6 +24,12 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     setState(() {
+      /*
+       * Listen for logged in user using firebase auth changes.
+       * If the user exists, route them to the Home Page.
+       *
+       * Otherwise, route them to Auth page.
+       */
       this._streamSubscription =
           FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {

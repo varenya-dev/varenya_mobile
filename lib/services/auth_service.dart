@@ -68,13 +68,22 @@ class AuthService {
     }
   }
 
+  /*
+   * Method to update the existing user with a name and profile picture.
+   * @param userDetailsDto DTO for user details
+   */
   Future<void> saveUserDetails(UserDetailsDto userDetailsDto) async {
     try {
+      // Fetching the currently logged in user.
       User? firebaseUser = firebaseAuth.currentUser;
 
+      // Check if user is not null
       if (firebaseUser != null) {
+        // Update the name for the user.
         await firebaseUser.updateDisplayName(userDetailsDto.fullName);
 
+        // If an image link has been given as well,
+        // update the user's profile picture.
         if (userDetailsDto.image != null) {
           await firebaseUser.updatePhotoURL(userDetailsDto.image);
         }
