@@ -42,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       await this._authService.registerWithEmailAndPassword(registerAccountDto);
 
-      Navigator.of(context).pushReplacementNamed(UserDetailsPage.routeName);
+      Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
     } on UserAlreadyExistsException catch (error) {
       displaySnackbar(error.message, context);
     }
