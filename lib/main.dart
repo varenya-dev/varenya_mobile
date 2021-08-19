@@ -23,11 +23,14 @@ class Root extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return MultiProvider(providers: [
-            ChangeNotifierProvider<UserProvider>(
-              create: (context) => UserProvider(),
-            ),
-          ]);
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider<UserProvider>(
+                create: (context) => UserProvider(),
+              ),
+            ],
+            child: App(),
+          );
         }
 
         return LoadingPage();
