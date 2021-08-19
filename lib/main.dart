@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
+import 'package:provider/provider.dart';
+import 'package:varenya_mobile/providers/user_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,11 @@ class Root extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return App();
+          return MultiProvider(providers: [
+            ChangeNotifierProvider<UserProvider>(
+              create: (context) => UserProvider(),
+            ),
+          ]);
         }
 
         return LoadingPage();
