@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_not_found_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
 import 'package:varenya_mobile/pages/auth/register_page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
+import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
@@ -39,7 +42,10 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await this._authService.loginWithEmailAndPassword(loginAccountDto);
+      User user =
+          await this._authService.loginWithEmailAndPassword(loginAccountDto);
+
+      Provider.of<UserProvider>(context, listen: false).user = user;
 
       Navigator.of(context).pushReplacementNamed(HomePage.routeName);
     } on UserNotFoundException catch (error) {
