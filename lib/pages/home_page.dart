@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,9 +17,11 @@ class HomePage extends StatelessWidget {
         title: Text('Varenya'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: Text('Varenya'),
-          onPressed: authService.logOut,
+        child: Consumer<UserProvider>(
+          builder: (context, state, child) {
+            User user = state.user;
+            return Text(user.email!);
+          },
         ),
       ),
     );
