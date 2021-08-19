@@ -4,6 +4,8 @@ import 'package:varenya_mobile/app.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
+import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/services/user_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +29,12 @@ class Root extends StatelessWidget {
             providers: [
               ChangeNotifierProvider<UserProvider>(
                 create: (context) => UserProvider(),
+              ),
+              Provider<AuthService>(
+                create: (context) => AuthService(),
+              ),
+              Provider<UserService>(
+                create: (context) => UserService(),
               ),
             ],
             child: App(),

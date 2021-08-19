@@ -24,12 +24,20 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final AuthService _authService = new AuthService();
+  late AuthService _authService;
 
   final TextEditingController _emailFieldController =
       new TextEditingController();
   final TextEditingController _passwordFieldController =
       new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initializing the service.
+    this._authService = Provider.of<AuthService>(context, listen: false);
+  }
 
   Future<void> _onFormSubmit() async {
     if (!this._formKey.currentState!.validate()) {
