@@ -20,7 +20,7 @@ class UserService {
     await firebaseUser.updatePhotoURL(imageUrl);
 
     // Return updated user.
-    return firebaseUser;
+    return this._firebaseAuth.currentUser!;
   }
 
   /*
@@ -36,7 +36,7 @@ class UserService {
       await loggedInUser.updateDisplayName(fullName);
 
       // Returning updated user data.
-      return loggedInUser;
+      return this._firebaseAuth.currentUser!;
     } catch (error) {
       print(error);
       throw Exception("Something went wrong, please try again later");
@@ -68,7 +68,7 @@ class UserService {
       await loggedInUser.updateEmail(updateEmailDto.newEmailAddress);
 
       // Returning updated user data.
-      return loggedInUser;
+      return this._firebaseAuth.currentUser!;
     } on FirebaseAuthException catch (error) {
       // Firebase Error: If the user has typed a weak password.
       if (error.code == "email-already-in-use") {
@@ -99,7 +99,7 @@ class UserService {
    * Update password for the given user.
    * @param updateEmailDto DTO for password update.
    */
-  Future<User> updatePassword(UpdatePasswordDto updatePasswordDto) async {
+  Future<void> updatePassword(UpdatePasswordDto updatePasswordDto) async {
     try {
       // Fetch the currently logged in user.
       User loggedInUser = this._firebaseAuth.currentUser!;
@@ -118,9 +118,6 @@ class UserService {
 
       // Update password for the user.
       await loggedInUser.updatePassword(updatePasswordDto.newPassword);
-
-      // Returning updated user data.
-      return loggedInUser;
     } on FirebaseAuthException catch (error) {
       // Firebase Error: If the user has typed a weak password.
       if (error.code == "weak-password") {

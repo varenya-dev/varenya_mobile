@@ -10,4 +10,8 @@ class UserProvider extends ChangeNotifier {
     this._firebaseUser = firebaseUser;
     notifyListeners();
   }
+
+  void removeUser() {
+    this._firebaseUser = null;
+  }
 }
