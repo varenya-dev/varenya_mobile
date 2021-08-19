@@ -28,7 +28,7 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final UserService _userService = new UserService();
+  late UserService _userService;
 
   @override
   void initState() {
@@ -37,6 +37,9 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
     // Initializing the user provider.
     this._userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // Initializing the user service
+    this._userService = Provider.of<UserService>(context, listen: false);
   }
 
   @override

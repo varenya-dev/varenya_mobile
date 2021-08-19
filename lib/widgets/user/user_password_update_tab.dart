@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/user/update_password_dto/update_password_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/not_logged_in_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/weak_password_exception.dart';
@@ -24,7 +25,16 @@ class _UserPasswordUpdateTabState extends State<UserPasswordUpdateTab> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final UserService _userService = new UserService();
+  late UserService _userService;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // Initializing the user service
+    this._userService = Provider.of<UserService>(context, listen: false);
+  }
 
   @override
   void dispose() {

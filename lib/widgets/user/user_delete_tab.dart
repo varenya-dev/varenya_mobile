@@ -22,7 +22,7 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final UserService _userService = new UserService();
+  late UserService _userService;
 
   late UserProvider _userProvider;
 
@@ -31,8 +31,11 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
     // TODO: implement initState
     super.initState();
 
-    // Initializing the authentication provider.
+    // Initializing the user provider.
     this._userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // Initializing the user service.
+    this._userService = Provider.of<UserService>(context, listen: false);
   }
 
   @override
