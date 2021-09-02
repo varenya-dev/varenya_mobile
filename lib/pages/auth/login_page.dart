@@ -73,13 +73,20 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    this._emailFieldController.text =
+        ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Login'),
+              Container(
+                child: Image.asset(
+                  'assets/logo/app_logo.png',
+                  scale: 0.5,
+                ),
+              ),
               Form(
                 key: _formKey,
                 child: Column(
