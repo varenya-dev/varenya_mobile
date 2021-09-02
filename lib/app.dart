@@ -3,6 +3,7 @@ import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/auth/login_page.dart';
 import 'package:varenya_mobile/pages/auth/register_page.dart';
 import 'package:varenya_mobile/pages/auth/user_details_page.dart';
+import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/common/splash_page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
         UserDetailsPage.routeName: (context) => UserDetailsPage(),
         UserUpdatePage.routeName: (context) => UserUpdatePage(),
         ThreadsPage.routeName: (context) => ThreadsPage(),
+        ChatPage.routeName: (context) => ChatPage(),
       },
     );
   }

@@ -10,4 +10,7 @@ class ChatService {
       .collection('threads')
       .where("participants", arrayContains: this._auth.currentUser!.uid)
       .snapshots();
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> listenToThread(String id) =>
+      this._firestore.collection('threads').doc(id).snapshots();
 }

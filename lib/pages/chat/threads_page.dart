@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 
 class ThreadsPage extends StatefulWidget {
@@ -36,8 +38,9 @@ class _ThreadsPageState extends State<ThreadsPage> {
         this._threads.clear();
 
         setState(() {
-          threads.docs.forEach((thread) =>
-              this._threads.add(ChatThread.fromJson(thread.data())));
+          threads.docs.forEach((thread) {
+            this._threads.add(ChatThread.fromJson(thread.data()));
+          });
         });
       });
     });
@@ -57,14 +60,39 @@ class _ThreadsPageState extends State<ThreadsPage> {
       appBar: AppBar(
         title: Text('Threads'),
       ),
-      body: ListView.builder(
-        itemCount: this._threads.length,
-        itemBuilder: (context, index) {
-          ChatThread thread = this._threads[index];
-          return ListTile(
-            leading: Icon(Icons.person),
-            title: Text(thread.id),
-            subtitle: Text(thread.participants.join(", ")),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: this._chatService.fetchAllThreads(),
+        builder: (BuildContext context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+
+          this._threads.clear();
+          snapshot.data!.docs.forEach((thread) {
+            this._threads.add(ChatThread.fromJson(thread.data()));
+          });
+
+          return ListView.builder(
+            itemCount: this._threads.length,
+            itemBuilder: (context, index) {
+              ChatThread thread = this._threads[index];
+              return ListTile(
+                leading: Icon(Icons.person),
+                title: Text(thread.id),
+                subtitle: Text(thread.participants.join(", ")),
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    ChatPage.routeName,
+                    arguments: thread.id,
+                  );
+                },
+              );
+            },
           );
         },
       ),
