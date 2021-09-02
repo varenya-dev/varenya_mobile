@@ -43,13 +43,15 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> onMessageSubmit() async {
-    if (!this._formKey.currentState!.validate()) {
-      return;
-    }
+    // if (!this._formKey.currentState!.validate()) {
+    //   return;
+    // }
+    //
+    // await this
+    //     ._chatService
+    //     .sendMessage(this._chatController.text, this._chatThread);
 
-    await this
-        ._chatService
-        .sendMessage(this._chatController.text, this._chatThread);
+    await this._chatService.deleteMessage("de77777d-3a34-4749-8dcb-9d41dd0fccd4", this._chatThread);
   }
 
   @override

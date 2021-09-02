@@ -32,10 +32,16 @@ class ChatService {
     jsonData['messages'] =
         jsonData['messages'].map((Chat message) => message.toJson()).toList();
 
-    await this
-        ._firestore
-        .collection("threads")
-        .doc(thread.id)
-        .set(jsonData);
+    await this._firestore.collection("threads").doc(thread.id).set(jsonData);
+  }
+
+  Future<void> deleteMessage(String id, ChatThread thread) async {
+    thread.messages = thread.messages.where((chat) => chat.id != id).toList();
+
+    Map<String, dynamic> jsonData = thread.toJson();
+    jsonData['messages'] =
+        jsonData['messages'].map((Chat message) => message.toJson()).toList();
+
+    await this._firestore.collection("threads").doc(thread.id).set(jsonData);
   }
 }
