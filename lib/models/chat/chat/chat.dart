@@ -5,6 +5,7 @@ part 'chat.g.dart';
 
 @JsonSerializable()
 class Chat {
+  String id;
   String userId;
   String message;
 
@@ -12,6 +13,7 @@ class Chat {
   DateTime timestamp;
 
   Chat({
+    required this.id,
     required this.userId,
     required this.message,
     required this.timestamp,
