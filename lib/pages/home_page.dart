@@ -6,16 +6,21 @@ import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/services/user_service.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   static const routeName = "/home";
   late AuthService _authService;
+  late UserService _userService;
 
   @override
   Widget build(BuildContext context) {
     this._authService = Provider.of<AuthService>(context, listen: false);
+    this._userService = Provider.of<UserService>(context, listen: false);
+
+    this._userService.updateUserPresence();
 
     return Scaffold(
       appBar: AppBar(

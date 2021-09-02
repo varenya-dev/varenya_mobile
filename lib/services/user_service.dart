@@ -4,9 +4,11 @@ import 'package:varenya_mobile/dtos/user/update_password_dto/update_password_dto
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/weak_password_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class UserService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseDatabase _firebaseDatabase = FirebaseDatabase.instance;
 
   /*
    * Update profile picture for the given user.
@@ -182,5 +184,31 @@ class UserService {
       print(error);
       throw Exception("Something went wrong, please try again later");
     }
+  }
+
+  Future<void> updateUserPresence() async {
+    Map<String, dynamic> presenceStatusTrue = {
+      'presence': true,
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+    };
+
+    await this
+        ._firebaseDatabase
+        .reference()
+        .child(this._firebaseAuth.currentUser!.uid)
+        .update(presenceStatusTrue)
+        .whenComplete(() => print('USER STATUS UPDATED'));
+
+    Map<String, dynamic> presenceStatusFalse = {
+      'presence': false,
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+    };
+
+    this
+        ._firebaseDatabase
+        .reference()
+        .child(this._firebaseAuth.currentUser!.uid)
+        .onDisconnect()
+        .update(presenceStatusFalse);
   }
 }
