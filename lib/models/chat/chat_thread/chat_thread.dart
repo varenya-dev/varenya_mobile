@@ -5,10 +5,12 @@ part 'chat_thread.g.dart';
 
 @JsonSerializable()
 class ChatThread {
+  String id;
   List<String> participants;
   List<Chat> messages;
 
   ChatThread({
+    required this.id,
     required this.participants,
     required this.messages,
   });

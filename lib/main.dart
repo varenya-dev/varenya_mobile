@@ -5,6 +5,7 @@ import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 
 void main() {
@@ -35,6 +36,9 @@ class Root extends StatelessWidget {
               ),
               Provider<UserService>(
                 create: (context) => UserService(),
+              ),
+              Provider<ChatService>(
+                create: (context) => ChatService(),
               ),
             ],
             child: App(),
