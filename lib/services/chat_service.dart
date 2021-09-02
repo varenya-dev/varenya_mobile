@@ -44,4 +44,8 @@ class ChatService {
 
     await this._firestore.collection("threads").doc(thread.id).set(jsonData);
   }
+
+  Future<void> closeThread(ChatThread thread) async {
+    await this._firestore.collection("threads").doc(thread.id).delete();
+  }
 }

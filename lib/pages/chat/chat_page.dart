@@ -43,15 +43,23 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> onMessageSubmit() async {
-    // if (!this._formKey.currentState!.validate()) {
-    //   return;
-    // }
-    //
-    // await this
-    //     ._chatService
-    //     .sendMessage(this._chatController.text, this._chatThread);
+    if (!this._formKey.currentState!.validate()) {
+      return;
+    }
 
-    await this._chatService.deleteMessage("de77777d-3a34-4749-8dcb-9d41dd0fccd4", this._chatThread);
+    await this
+        ._chatService
+        .sendMessage(this._chatController.text, this._chatThread);
+  }
+
+  Future<void> onMessageDelete(String id) async {
+    await this._chatService.deleteMessage(id, this._chatThread);
+  }
+
+  Future<void> onThreadClose() async {
+    await this._chatService.closeThread(this._chatThread);
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -61,6 +69,12 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat'),
+        actions: [
+          TextButton(
+            onPressed: this.onThreadClose,
+            child: Text('Close Chat'),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
