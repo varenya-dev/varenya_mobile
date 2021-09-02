@@ -17,7 +17,6 @@ class UserUpdatePage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Update Your Profile'),
           bottom: TabBar(
-            indicatorColor: Colors.pink,
             tabs: [
               Tab(
                 child: Text(

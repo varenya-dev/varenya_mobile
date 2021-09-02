@@ -8,6 +8,8 @@ part of 'register_account_dto.dart';
 
 RegisterAccountDto _$RegisterAccountDtoFromJson(Map<String, dynamic> json) {
   return RegisterAccountDto(
+    fullName: json['fullName'] as String,
+    imageUrl: json['imageUrl'] as String,
     emailAddress: json['emailAddress'] as String,
     password: json['password'] as String,
   );
@@ -15,6 +17,8 @@ RegisterAccountDto _$RegisterAccountDtoFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$RegisterAccountDtoToJson(RegisterAccountDto instance) =>
     <String, dynamic>{
+      'fullName': instance.fullName,
+      'imageUrl': instance.imageUrl,
       'emailAddress': instance.emailAddress,
       'password': instance.password,
     };
