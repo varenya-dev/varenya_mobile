@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
+import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
@@ -34,6 +35,12 @@ class HomePage extends StatelessWidget {
                 Navigator.of(context).pushNamed(UserUpdatePage.routeName);
               },
               child: Text('User Update'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(ThreadsPage.routeName);
+              },
+              child: Text('Threads'),
             ),
             ElevatedButton(
               onPressed: () async {
