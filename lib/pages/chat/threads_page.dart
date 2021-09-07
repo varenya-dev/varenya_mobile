@@ -19,39 +19,13 @@ class ThreadsPage extends StatefulWidget {
 class _ThreadsPageState extends State<ThreadsPage> {
   late ChatService _chatService;
   List<ChatThread> _threads = [];
-  late StreamSubscription _threadsSubscription;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
+    // Injecting required services from context.
     this._chatService = Provider.of<ChatService>(context, listen: false);
-
-    this._listenToThreads();
-  }
-
-  void _listenToThreads() {
-    setState(() {
-      this._threadsSubscription =
-          this._chatService.fetchAllThreads().listen((threads) {
-        this._threads.clear();
-
-        setState(() {
-          threads.docs.forEach((thread) {
-            this._threads.add(ChatThread.fromJson(thread.data()));
-          });
-        });
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-
-    this._threadsSubscription.cancel();
   }
 
   @override
@@ -62,8 +36,10 @@ class _ThreadsPageState extends State<ThreadsPage> {
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: this._chatService.fetchAllThreads(),
-        builder: (BuildContext context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
           }

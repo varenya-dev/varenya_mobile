@@ -47,16 +47,21 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
 
-    // Initializing the service.
+    // Injecting the required services.
     this._authService = Provider.of<AuthService>(context, listen: false);
     this._userProvider = Provider.of<UserProvider>(context, listen: false);
   }
 
+  /*
+   * Handle form submission for registering the user in.
+   */
   Future<void> _onFormSubmit() async {
+    // Check the validity of the form.
     if (!this._formKey.currentState!.validate()) {
       return;
     }
 
+    // Create a DTO object for signing in the user.
     RegisterAccountDto registerAccountDto = new RegisterAccountDto(
       fullName: this._nameFieldController.text,
       imageUrl: this._imageUrl,
@@ -65,14 +70,20 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     try {
+      // Try registering the user in with given credentials.
       User user = await this
           ._authService
           .registerWithEmailAndPassword(registerAccountDto);
 
+      // Save the user details in memory.
       this._userProvider.user = user;
 
+      // Push them to the home page.
       Navigator.of(context).pushReplacementNamed(HomePage.routeName);
-    } on UserAlreadyExistsException catch (error) {
+    }
+
+    // Handle errors gracefully.
+    on UserAlreadyExistsException catch (error) {
       displaySnackbar(error.message, context);
     }
   }
@@ -81,6 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     super.dispose();
 
+    // Disposing off the test controllers.
     this._passwordFieldController.dispose();
     this._passwordAgainFieldController.dispose();
     this._nameFieldController.dispose();

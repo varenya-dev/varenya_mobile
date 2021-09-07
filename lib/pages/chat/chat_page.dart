@@ -28,37 +28,49 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
+    // Injecting the required services.
     this._chatService = Provider.of<ChatService>(context, listen: false);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
+    // Disposing off the text controllers.
     this._chatController.dispose();
   }
 
+  /*
+   * Method to handle chat message submission.
+   */
   Future<void> onMessageSubmit() async {
+    // Check the validity of the form.
     if (!this._formKey.currentState!.validate()) {
       return;
     }
 
+    // Save the message in database in the given thread.
     await this
         ._chatService
         .sendMessage(this._chatController.text, this._chatThread);
   }
 
+  /*
+   * Method to handle deleting chat message.
+   */
   Future<void> onMessageDelete(String id) async {
+    // Delete the message from the thread.
     await this._chatService.deleteMessage(id, this._chatThread);
   }
 
+  /*
+   * Method to handle closing a thread.
+   */
   Future<void> onThreadClose() async {
+    // Close the thread and pop off from the chat screen.
     await this._chatService.closeThread(this._chatThread);
-
     Navigator.of(context).pop();
   }
 
