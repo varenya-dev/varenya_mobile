@@ -1,12 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:varenya_mobile/dtos/user/update_email_dto/update_email_dto.dart';
 import 'package:varenya_mobile/dtos/user/update_password_dto/update_password_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/weak_password_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
+import 'package:firebase_database/firebase_database.dart';
 
+/*
+ * Service implementation for user module.
+ */
 class UserService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseDatabase _firebaseDatabase = FirebaseDatabase.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   /*
    * Update profile picture for the given user.
@@ -182,5 +191,61 @@ class UserService {
       print(error);
       throw Exception("Something went wrong, please try again later");
     }
+  }
+
+  /*
+   * Method to update user online presence in firebase.
+   */
+  Future<void> updateUserPresence() async {
+    // Online status document.
+    Map<String, dynamic> presenceStatusTrue = {
+      'presence': true,
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+    };
+
+    // Save the document in firebase database.
+    await this
+        ._firebaseDatabase
+        .reference()
+        .child(this._firebaseAuth.currentUser!.uid)
+        .update(presenceStatusTrue)
+        .whenComplete(() => print('USER STATUS UPDATED'));
+
+    // Offline status document.
+    Map<String, dynamic> presenceStatusFalse = {
+      'presence': false,
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+    };
+
+    // Listen for connection disconnection to update status with offline.
+    this
+        ._firebaseDatabase
+        .reference()
+        .child(this._firebaseAuth.currentUser!.uid)
+        .onDisconnect()
+        .update(presenceStatusFalse);
+  }
+
+  /*
+   * Save FCM token to database on each update.
+   * @param token FCM Token to be saved.
+   */
+  Future<void> saveTokenToDatabase(String token) async {
+    // Save token to the respective document collection.
+    String userId = this._firebaseAuth.currentUser!.uid;
+    await this._firebaseFirestore.collection('users').doc(userId).update({
+      'token': token,
+    });
+  }
+
+  /*
+   * Save token to the database on first run.
+   */
+  Future<void> generateAndSaveTokenToDatabase() async {
+    //  Generate an FCM token and save it to firestore.
+    String? token = await this._firebaseMessaging.getToken();
+    this.saveTokenToDatabase(token!);
+
+    print('TOKEN GENERATED AND SAVED.');
   }
 }

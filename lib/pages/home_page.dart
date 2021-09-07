@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
@@ -6,17 +7,40 @@ import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/services/user_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
   static const routeName = "/home";
-  late AuthService _authService;
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late final AuthService _authService;
+
+  late final UserService _userService;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    this._authService = Provider.of<AuthService>(context, listen: false);
+    this._userService = Provider.of<UserService>(context, listen: false);
+
+    this._userService.updateUserPresence();
+
+    this._userService.generateAndSaveTokenToDatabase();
+
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen(this._userService.saveTokenToDatabase);
+  }
 
   @override
   Widget build(BuildContext context) {
-    this._authService = Provider.of<AuthService>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Varenya'),

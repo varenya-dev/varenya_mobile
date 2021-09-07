@@ -30,45 +30,65 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    // Injecting Authentication service from context.
     this._authService = Provider.of<AuthService>(context, listen: false);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
+    // Disposing off the text editing controller.
     this._emailAddressController.dispose();
   }
 
+  /*
+   * Method to handle the registration/login status of the auth page.
+   * @param authPageStatus Auth status.
+   */
   void _handleAuthPageStatus(AuthPageStatus authPageStatus) {
+    // Change status of the page.
     setState(() {
       this._authPageStatus = authPageStatus;
     });
   }
 
+  /*
+   * Handle form submission to check for email address availability.
+   */
   Future<void> _handleFormSubmit() async {
+    // Check the validity of the form.
     if (!this._formKey.currentState!.validate()) {
       return;
     }
 
+    // Get the email address input from user.
     String emailAddress = this._emailAddressController.text;
 
+    // Check only for registration process.
     if (this._authPageStatus == AuthPageStatus.REGISTER) {
+      // Check for account availability on firebase.
       bool isAvailable =
           await this._authService.checkAccountAvailability(emailAddress);
 
+      // If available, route the user to registration page.
       if (isAvailable) {
         Navigator.of(context).pushReplacementNamed(
           RegisterPage.routeName,
           arguments: emailAddress,
         );
-      } else {
+      }
+
+      // Else show them the error message.
+      else {
         displaySnackbar("This email address is not available.", context);
       }
-    } else {
+    }
+
+    // Route to login page.
+    else {
       Navigator.of(context).pushReplacementNamed(
         LoginPage.routeName,
         arguments: emailAddress,
