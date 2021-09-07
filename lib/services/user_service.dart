@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:varenya_mobile/dtos/user/update_email_dto/update_email_dto.dart';
 import 'package:varenya_mobile/dtos/user/update_password_dto/update_password_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
@@ -9,6 +11,8 @@ import 'package:firebase_database/firebase_database.dart';
 class UserService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseDatabase _firebaseDatabase = FirebaseDatabase.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   /*
    * Update profile picture for the given user.
@@ -210,5 +214,24 @@ class UserService {
         .child(this._firebaseAuth.currentUser!.uid)
         .onDisconnect()
         .update(presenceStatusFalse);
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    String userId = this._firebaseAuth.currentUser!.uid;
+
+    await this._firebaseFirestore.collection('users').doc(userId).update({
+      'token': token,
+    });
+  }
+
+  Future<void> generateAndSaveTokenToDatabase() async {
+    String userId = this._firebaseAuth.currentUser!.uid;
+    String? token = await this._firebaseMessaging.getToken();
+
+    await this._firebaseFirestore.collection('users').doc(userId).set({
+      'token': token!,
+    });
+
+    print('TOKEN GENERATED AND SAVED.');
   }
 }
