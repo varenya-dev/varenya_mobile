@@ -31,8 +31,6 @@ class _HomePageState extends State<HomePage> {
     this._authService = Provider.of<AuthService>(context, listen: false);
     this._userService = Provider.of<UserService>(context, listen: false);
 
-    this._userService.updateUserPresence();
-
     this._userService.generateAndSaveTokenToDatabase();
 
     FirebaseMessaging.instance.onTokenRefresh
