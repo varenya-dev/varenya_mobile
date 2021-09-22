@@ -31,7 +31,6 @@ void main() async {
 
   print("FCM STATUS: ${settings.authorizationStatus}");
 
-  FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(Root());
 }
