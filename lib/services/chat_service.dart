@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:uuid/uuid.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:http/http.dart' as http;
+
 
 /*
  * Service implementation for chat module.
@@ -45,6 +50,8 @@ class ChatService {
     // Add it to the chat list in the thread.
     thread.messages.add(chatMessage);
 
+    await this._sendChatNotification(thread.id);
+
     // Convert all to JSON and update the same in firestore.
     Map<String, dynamic> jsonData = thread.toJson();
     jsonData['messages'] =
@@ -73,4 +80,62 @@ class ChatService {
    */
   Future<void> closeThread(ChatThread thread) async =>
       await this._firestore.collection("threads").doc(thread.id).delete();
+
+  Future<void> _sendChatNotification(String threadId) async {
+    try {
+      // Fetch the ID token for the user.
+      String firebaseAuthToken =
+      await this._auth.currentUser!.getIdToken();
+
+      // Prepare URI for the request.
+      Uri uri = Uri.parse("$endpoint/chat/notification");
+
+      // Prepare authorization headers.
+      Map<String, String> headers = {
+        "Authorization": "Bearer $firebaseAuthToken",
+      };
+
+      // Preparing body for the request.
+      Map<String, String> body = {
+        "threadId": threadId,
+      };
+
+      // Send the post request to the server.
+      http.Response response = await http.post(
+        uri,
+        headers: headers,
+        body: body,
+      );
+
+      // Check for any errors.
+      if (response.statusCode >= 400) {
+        Map<String, dynamic> body = json.decode(response.body);
+        throw Exception(body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> openDummyThread() async {
+    DocumentReference threadDocumentReference =
+        this._firestore.collection('threads').doc();
+
+    List<String> participants = [
+      "AogJeR814fgYkTzTvNSwnQx8o8p1",
+      "QTLZElOg8KUONNRZiZmD90NIR2r1"
+    ];
+
+    ChatThread chatThread = new ChatThread(
+      id: threadDocumentReference.id,
+      participants: participants,
+      messages: [],
+    );
+
+    await this
+        ._firestore
+        .collection('threads')
+        .doc(chatThread.id)
+        .set(chatThread.toJson());
+  }
 }

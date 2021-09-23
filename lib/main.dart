@@ -18,8 +18,8 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  NotificationSettings settings = await FirebaseMessaging.instance
-      .requestPermission(
+  NotificationSettings settings =
+      await FirebaseMessaging.instance.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -30,6 +30,8 @@ void main() async {
   );
 
   print("FCM STATUS: ${settings.authorizationStatus}");
+
+  FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(Root());
