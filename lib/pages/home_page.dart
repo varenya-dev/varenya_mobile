@@ -7,6 +7,7 @@ import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,8 +21,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final AuthService _authService;
-
   late final UserService _userService;
+  late final ChatService _chatService;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
 
     this._authService = Provider.of<AuthService>(context, listen: false);
     this._userService = Provider.of<UserService>(context, listen: false);
+    this._chatService = Provider.of<ChatService>(context, listen: false);
 
     this._userService.generateAndSaveTokenToDatabase();
 
@@ -70,6 +72,12 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushNamed(AuthPage.routeName);
               },
               child: Text('Logout'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await this._chatService.openDummyThread();
+              },
+              child: Text('Dummy Chat'),
             )
           ],
         ),
