@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/auth/login_page.dart';
 import 'package:varenya_mobile/pages/auth/register_page.dart';
@@ -9,11 +10,15 @@ import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  App({Key? key}) : super(key: key);
+
+  final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey(debugLabel: "Main Navigator");
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: this.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Varenya',
       theme: ThemeData(
@@ -21,7 +26,6 @@ class App extends StatelessWidget {
         primarySwatch: Colors.yellow,
       ),
       routes: {
-        SplashPage.routeName: (context) => SplashPage(),
         HomePage.routeName: (context) => HomePage(),
         AuthPage.routeName: (context) => AuthPage(),
         LoginPage.routeName: (context) => LoginPage(),
@@ -30,6 +34,7 @@ class App extends StatelessWidget {
         ThreadsPage.routeName: (context) => ThreadsPage(),
         ChatPage.routeName: (context) => ChatPage(),
       },
+      home: SplashPage(),
     );
   }
 }

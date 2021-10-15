@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
@@ -78,75 +80,83 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     String id = ModalRoute.of(context)!.settings.arguments as String;
 
+    AppBar appBar = AppBar(
+      title: Text('Chat'),
+      actions: [
+        TextButton(
+          onPressed: this.onThreadClose,
+          child: Text('Close Chat'),
+        ),
+      ],
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat'),
-        actions: [
-          TextButton(
-            onPressed: this.onThreadClose,
-            child: Text('Close Chat'),
+      appBar: appBar,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: this._chatService.listenToThread(id),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                    snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+
+              this._chats.clear();
+
+              if (snapshot.data!.data() != null) {
+                this._chatThread =
+                    ChatThread.fromJson(snapshot.data!.data()!);
+                this._chatThread.messages.sort(
+                    (Chat a, Chat b) => a.timestamp.compareTo(b.timestamp));
+              }
+
+              ScrollController controller = ScrollController();
+
+              SchedulerBinding.instance!.addPostFrameCallback((_) {
+                controller.jumpTo(controller.position.maxScrollExtent);
+              });
+
+              return Flexible(
+                fit: FlexFit.tight,
+                child: ListView.builder(
+                  controller: controller,
+                  shrinkWrap: true,
+                  itemCount: this._chatThread.messages.length,
+                  itemBuilder: (context, index) {
+                    Chat chat = this._chatThread.messages[index];
+                    return Text(chat.message);
+                  },
+                ),
+              );
+            },
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.85,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: this._chatService.listenToThread(id),
-                builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                        snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
-                  }
-
-                  this._chats.clear();
-
-                  if (snapshot.data!.data() != null) {
-                    this._chatThread =
-                        ChatThread.fromJson(snapshot.data!.data()!);
-                    this._chatThread.messages.sort(
-                        (Chat a, Chat b) => a.timestamp.compareTo(b.timestamp));
-                  }
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: this._chatThread.messages.length,
-                    itemBuilder: (context, index) {
-                      Chat chat = this._chatThread.messages[index];
-                      return Text(chat.message);
-                    },
-                  );
-                },
-              ),
-              Form(
-                key: this._formKey,
-                child: CustomFieldWidget(
-                  textFieldController: this._chatController,
-                  label: "Your Message",
-                  validators: [
-                    RequiredValidator(errorText: "Please type in your message")
-                  ],
-                  textInputType: TextInputType.text,
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: this.onMessageSubmit,
-                  ),
+          Container(
+            child: Form(
+              key: this._formKey,
+              child: CustomFieldWidget(
+                textFieldController: this._chatController,
+                label: "Your Message",
+                validators: [
+                  RequiredValidator(errorText: "Please type in your message")
+                ],
+                textInputType: TextInputType.text,
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: this.onMessageSubmit,
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

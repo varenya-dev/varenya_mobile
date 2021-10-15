@@ -50,7 +50,7 @@ class ChatService {
     // Add it to the chat list in the thread.
     thread.messages.add(chatMessage);
 
-    await this._sendChatNotification(thread.id);
+    await this._sendChatNotification(thread.id, message);
 
     // Convert all to JSON and update the same in firestore.
     Map<String, dynamic> jsonData = thread.toJson();
@@ -81,7 +81,7 @@ class ChatService {
   Future<void> closeThread(ChatThread thread) async =>
       await this._firestore.collection("threads").doc(thread.id).delete();
 
-  Future<void> _sendChatNotification(String threadId) async {
+  Future<void> _sendChatNotification(String threadId, String message) async {
     try {
       // Fetch the ID token for the user.
       String firebaseAuthToken =
@@ -98,6 +98,7 @@ class ChatService {
       // Preparing body for the request.
       Map<String, String> body = {
         "threadId": threadId,
+        "message": message,
       };
 
       // Send the post request to the server.
