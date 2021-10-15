@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +12,34 @@ import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 
+const AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  'high_importance_channel',
+  'High Importance Channel',
+  importance: Importance.high,
+  playSound: true,
+);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    new FlutterLocalNotificationsPlugin();
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a message: ${message.data}");
+  Map<String, dynamic> data = message.data;
+  String userNameSent = json.decode(data['owner'])['displayName'];
+
+  flutterLocalNotificationsPlugin.show(
+    01,
+    'New Message!',
+    '$userNameSent sent you a new message',
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        color: Colors.blue,
+        playSound: true,
+        icon: '@mipmap/launcher_icon',
+      ),
+    ),
+  );
 }
 
 void main() async {
@@ -31,9 +60,14 @@ void main() async {
 
   print("FCM STATUS: ${settings.authorizationStatus}");
 
-  FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
+
   runApp(Root());
 }
 

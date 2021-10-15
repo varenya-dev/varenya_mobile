@@ -88,59 +88,65 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: this._chatService.listenToThread(id),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                    snapshot) {
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: this._chatService.listenToThread(id),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                        snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
-              }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
 
-              this._chats.clear();
+                  this._chats.clear();
 
-              if (snapshot.data!.data() != null) {
-                this._chatThread = ChatThread.fromJson(snapshot.data!.data()!);
-                this._chatThread.messages.sort(
-                    (Chat a, Chat b) => a.timestamp.compareTo(b.timestamp));
-              }
+                  if (snapshot.data!.data() != null) {
+                    this._chatThread =
+                        ChatThread.fromJson(snapshot.data!.data()!);
+                    this._chatThread.messages.sort(
+                        (Chat a, Chat b) => a.timestamp.compareTo(b.timestamp));
+                  }
 
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: this._chatThread.messages.length,
-                itemBuilder: (context, index) {
-                  Chat chat = this._chatThread.messages[index];
-                  return Text(chat.message);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: this._chatThread.messages.length,
+                    itemBuilder: (context, index) {
+                      Chat chat = this._chatThread.messages[index];
+                      return Text(chat.message);
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          Form(
-            key: this._formKey,
-            child: CustomFieldWidget(
-              textFieldController: this._chatController,
-              label: "Your Message",
-              validators: [
-                RequiredValidator(errorText: "Please type in your message")
-              ],
-              textInputType: TextInputType.text,
-              suffixIcon: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: this.onMessageSubmit,
               ),
-            ),
+              Form(
+                key: this._formKey,
+                child: CustomFieldWidget(
+                  textFieldController: this._chatController,
+                  label: "Your Message",
+                  validators: [
+                    RequiredValidator(errorText: "Please type in your message")
+                  ],
+                  textInputType: TextInputType.text,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: this.onMessageSubmit,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
