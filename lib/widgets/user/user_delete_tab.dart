@@ -93,21 +93,16 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
                     children: [
                       TextSpan(
                         text: 'Please note that deleting your account ',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
                       ),
                       TextSpan(
-                        text: 'deletes all of your data from YASM. ',
+                        text: 'deletes all of your data from Varenya. ',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       TextSpan(
                         text:
                             'This action is irreversible and no data is recoverable after deleting your account.',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
                       ),
                     ],
                   ),

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/widgets/chat/chat_bubble_widget.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
 
 class ChatPage extends StatefulWidget {
@@ -113,8 +114,7 @@ class _ChatPageState extends State<ChatPage> {
               this._chats.clear();
 
               if (snapshot.data!.data() != null) {
-                this._chatThread =
-                    ChatThread.fromJson(snapshot.data!.data()!);
+                this._chatThread = ChatThread.fromJson(snapshot.data!.data()!);
                 this._chatThread.messages.sort(
                     (Chat a, Chat b) => a.timestamp.compareTo(b.timestamp));
               }
@@ -125,15 +125,17 @@ class _ChatPageState extends State<ChatPage> {
                 controller.jumpTo(controller.position.maxScrollExtent);
               });
 
-              return Flexible(
-                fit: FlexFit.tight,
+              return Expanded(
                 child: ListView.builder(
                   controller: controller,
                   shrinkWrap: true,
                   itemCount: this._chatThread.messages.length,
                   itemBuilder: (context, index) {
                     Chat chat = this._chatThread.messages[index];
-                    return Text(chat.message);
+                    return ChatBubbleWidget(
+                      chat: chat,
+                      onDelete: this.onMessageDelete,
+                    );
                   },
                 ),
               );
