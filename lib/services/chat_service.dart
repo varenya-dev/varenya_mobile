@@ -88,7 +88,7 @@ class ChatService {
       await this._auth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$endpoint/chat/notification");
+      Uri uri = Uri.parse("$endpoint/notification/chat");
 
       // Prepare authorization headers.
       Map<String, String> headers = {

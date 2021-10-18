@@ -28,7 +28,7 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
-  void _handleMessage(RemoteMessage message) {
+  Future<void> _handleMessage(RemoteMessage message) async {
     print("MESSAGE DATA: ${message.data}");
     if (message.data['type'] == 'chat') {
       Navigator.pushNamed(
