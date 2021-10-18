@@ -88,7 +88,13 @@ class _HomePageState extends State<HomePage> {
                   await this._chatService.openDummyThread();
                 },
                 child: Text('Dummy Chat'),
-              )
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await this._alertsService.sendSOSNotifications();
+                },
+                child: Text('SOS Notification'),
+              ),
             ],
           ),
         ),
