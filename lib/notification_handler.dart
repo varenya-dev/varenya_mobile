@@ -1,6 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
+import 'package:varenya_mobile/services/alerts_service.dart';
+import 'package:varenya_mobile/services/chat_service.dart';
 
 class NotificationsHandler extends StatefulWidget {
   final Widget child;
@@ -16,6 +19,8 @@ class NotificationsHandler extends StatefulWidget {
 
 class _NotificationsHandlerState extends State<NotificationsHandler> {
   late final FirebaseMessaging _firebaseMessaging;
+  late final ChatService _chatService;
+  late final AlertsService _alertsService;
 
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
@@ -29,12 +34,22 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
   }
 
   Future<void> _handleMessage(RemoteMessage message) async {
-    print("MESSAGE DATA: ${message.data}");
     if (message.data['type'] == 'chat') {
       Navigator.pushNamed(
         context,
         ChatPage.routeName,
         arguments: message.data['thread'],
+      );
+    }
+    if (message.data['type'] == 'sos') {
+      String userId = message.data['userId'];
+      String threadId = await this._chatService.createNewThread(userId);
+      await this._alertsService.sendSOSResponseNotification(threadId);
+
+      Navigator.pushNamed(
+        context,
+        ChatPage.routeName,
+        arguments: threadId,
       );
     }
   }
@@ -44,6 +59,8 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     super.initState();
 
     this._firebaseMessaging = FirebaseMessaging.instance;
+    this._chatService = Provider.of<ChatService>(context, listen: false);
+    this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
     setupInteractedMessage();
   }
