@@ -1,0 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+class AlertsService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  Future<void> toggleSubscribeToSOSTopic(bool subscribe) async {
+    await this._firebaseMessaging.subscribeToTopic('sos');
+  }
+}
