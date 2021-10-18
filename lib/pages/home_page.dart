@@ -40,6 +40,12 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.instance.onTokenRefresh
         .listen(this._userService.saveTokenToDatabase);
+
+    this
+        ._alertsService
+        .toggleSubscribeToSOSTopic(true)
+        .then((_) => print('SOS TOPIC SUBSCRIBED'))
+        .catchError((error) => print(error));
   }
 
   @override
