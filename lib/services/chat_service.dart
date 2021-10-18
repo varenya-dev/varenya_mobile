@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:http/http.dart' as http;
 
-
 /*
  * Service implementation for chat module.
  */
@@ -16,6 +15,32 @@ class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Uuid uuid = new Uuid();
+
+  Future<String> createNewThread(String userId) async {
+    DocumentReference threadDocumentReference =
+        this._firestore.collection('threads').doc();
+
+    String loggedInUserId = this._auth.currentUser!.uid;
+
+    List<String> participants = [
+      userId,
+      loggedInUserId,
+    ];
+
+    ChatThread chatThread = new ChatThread(
+      id: threadDocumentReference.id,
+      participants: participants,
+      messages: [],
+    );
+
+    await this
+        ._firestore
+        .collection('threads')
+        .doc(chatThread.id)
+        .set(chatThread.toJson());
+
+    return threadDocumentReference.id;
+  }
 
   /*
    * Method to fetch all threads the user is part of.
@@ -84,8 +109,7 @@ class ChatService {
   Future<void> _sendChatNotification(String threadId, String message) async {
     try {
       // Fetch the ID token for the user.
-      String firebaseAuthToken =
-      await this._auth.currentUser!.getIdToken();
+      String firebaseAuthToken = await this._auth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
       Uri uri = Uri.parse("$endpoint/notification/chat");
