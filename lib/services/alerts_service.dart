@@ -6,6 +6,9 @@ class AlertsService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> toggleSubscribeToSOSTopic(bool subscribe) async {
-    await this._firebaseMessaging.subscribeToTopic('sos');
+    if (subscribe)
+      await this._firebaseMessaging.subscribeToTopic('sos');
+    else
+      await this._firebaseMessaging.unsubscribeFromTopic('sos');
   }
 }
