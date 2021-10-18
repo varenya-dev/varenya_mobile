@@ -20,7 +20,7 @@ class AlertsService {
     try {
       // Fetch the ID token for the user.
       String firebaseAuthToken =
-      await this._firebaseAuth.currentUser!.getIdToken();
+          await this._firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
       Uri uri = Uri.parse("$endpoint/notification/sos");
@@ -33,6 +33,41 @@ class AlertsService {
       // Send the post request to the server.
       http.Response response = await http.post(
         uri,
+        headers: headers,
+      );
+
+      // Check for any errors.
+      if (response.statusCode >= 400) {
+        Map<String, dynamic> body = json.decode(response.body);
+        throw Exception(body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> sendSOSResponseNotification(String threadId) async {
+    try {
+      // Fetch the ID token for the user.
+      String firebaseAuthToken =
+          await this._firebaseAuth.currentUser!.getIdToken();
+
+      // Prepare URI for the request.
+      Uri uri = Uri.parse("$endpoint/notification/sos/response");
+
+      // Prepare authorization headers.
+      Map<String, String> headers = {
+        "Authorization": "Bearer $firebaseAuthToken",
+      };
+
+      Map<String, String> body = {
+        "threadId": threadId,
+      };
+
+      // Send the post request to the server.
+      http.Response response = await http.post(
+        uri,
+        body: json.encode(body),
         headers: headers,
       );
 
