@@ -67,7 +67,7 @@ class AlertsService {
       // Send the post request to the server.
       http.Response response = await http.post(
         uri,
-        body: json.encode(body),
+        body: body,
         headers: headers,
       );
 
