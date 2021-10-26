@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
+import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
@@ -94,6 +95,12 @@ class _HomePageState extends State<HomePage> {
                   await this._alertsService.sendSOSNotifications();
                 },
                 child: Text('SOS Notification'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(DoctorList.routeName);
+                },
+                child: Text('Doctor List'),
               ),
             ],
           ),
