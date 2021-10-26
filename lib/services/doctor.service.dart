@@ -19,7 +19,10 @@ class DoctorService {
       return this
           ._firestore
           .collection('doctors')
-          .where('specializations', arrayContainsAny: specializationsFilter)
+          .where('specializations',
+              arrayContainsAny: specializationsFilter
+                  .map((s) => s.toString().split('.')[1])
+                  .toList())
           .snapshots();
     } else {
       return this._firestore.collection('doctors').snapshots();

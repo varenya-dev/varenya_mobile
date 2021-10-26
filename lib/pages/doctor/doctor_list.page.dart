@@ -6,6 +6,7 @@ import 'package:varenya_mobile/enum/job.enum.dart';
 import 'package:varenya_mobile/enum/specialization.enum.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
 
 class DoctorList extends StatefulWidget {
@@ -29,6 +30,108 @@ class _DoctorListState extends State<DoctorList> {
     super.initState();
 
     this._doctorService = Provider.of<DoctorService>(context, listen: false);
+  }
+
+  void _openSpecializationFilters(BuildContext context) {
+    displayBottomSheet(
+      context,
+      StatefulBuilder(
+        builder: (context, setStateInner) => Wrap(
+          children: [
+            ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: Specialization.values
+                  .map(
+                    (s) => ListTile(
+                      title: Text(
+                        s.toString().split(".")[1],
+                      ),
+                      leading: Checkbox(
+                        value: this._specializationsFilter.contains(s),
+                        onChanged: (bool? value) {
+                          if (value == true) {
+                            setState(() {
+                              this._specializationsFilter.add(s);
+                            });
+                          } else {
+                            setState(() {
+                              this._specializationsFilter.remove(s);
+                            });
+                          }
+                          setStateInner(() {});
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+            Center(
+              child: TextButton(
+                child: Text('Clear Filters'),
+                onPressed: () {
+                  setState(() {
+                    this._specializationsFilter.clear();
+                  });
+
+                  setStateInner(() {});
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openJobFilters(BuildContext context) {
+    displayBottomSheet(
+      context,
+      StatefulBuilder(
+        builder: (context, setStateInner) => Wrap(
+          children: [
+            ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: Job.values
+                  .map(
+                    (job) => ListTile(
+                      title: Text(
+                        job.toString().split(".")[1],
+                      ),
+                      leading: Radio(
+                        value: job,
+                        groupValue: this._jobFilter,
+                        onChanged: (Job? jobValue) {
+                          if (jobValue != null) {
+                            setState(() {
+                              this._jobFilter = jobValue;
+                            });
+
+                            setStateInner(() {});
+                          }
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+            Center(
+              child: TextButton(
+                child: Text('Clear Filters'),
+                onPressed: () {
+                  setState(() {
+                    this._jobFilter = null;
+                  });
+
+                  setStateInner(() {});
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -142,46 +245,17 @@ class _DoctorListState extends State<DoctorList> {
   Widget _buildSpecializationFilter() {
     return ListTile(
       title: Text('Select Specialization Filter'),
+      onTap: () {
+        this._openSpecializationFilters(context);
+      },
     );
   }
 
   Widget _buildJobFilter() {
-    return PopupMenuButton(
-      child: ListTile(
-        title: Text('Select Job Filter'),
-      ),
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          child: Text("NONE"),
-          value: -1,
-        ),
-        PopupMenuItem(
-          child: Text(Job.values[0].toString().split('.')[1]),
-          value: 0,
-        ),
-        PopupMenuItem(
-          child: Text(Job.values[1].toString().split('.')[1]),
-          value: 1,
-        ),
-        PopupMenuItem(
-          child: Text(Job.values[2].toString().split('.')[1]),
-          value: 2,
-        ),
-        PopupMenuItem(
-          child: Text(Job.values[3].toString().split('.')[1]),
-          value: 3,
-        ),
-      ],
-      onSelected: (int value) {
-        if (value >= 0) {
-          setState(() {
-            this._jobFilter = Job.values[value];
-          });
-        } else {
-          setState(() {
-            this._jobFilter = null;
-          });
-        }
+    return ListTile(
+      title: Text('Select Job Filter'),
+      onTap: () {
+        this._openJobFilters(context);
       },
     );
   }
