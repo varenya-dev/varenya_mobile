@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,7 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
   late final FirebaseMessaging _firebaseMessaging;
   late final ChatService _chatService;
   late final AlertsService _alertsService;
+  late StreamSubscription _fmSubscription;
 
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
@@ -30,7 +33,10 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
       _handleMessage(initialMessage);
     }
 
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    setState(() {
+      this._fmSubscription =
+          FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    });
   }
 
   Future<void> _handleMessage(RemoteMessage message) async {
@@ -63,6 +69,12 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
     setupInteractedMessage();
+  }
+
+  @override
+  void dispose() {
+    this._fmSubscription.cancel();
+    super.dispose();
   }
 
   @override
