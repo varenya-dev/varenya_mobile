@@ -13,7 +13,7 @@ class DoctorService {
       return this
           ._firestore
           .collection('doctors')
-          .where('jobTitle', isEqualTo: jobFilter)
+          .where('jobTitle', isEqualTo: jobFilter.toString().split('.')[1])
           .snapshots();
     } else if (specializationsFilter.length > 0) {
       return this
