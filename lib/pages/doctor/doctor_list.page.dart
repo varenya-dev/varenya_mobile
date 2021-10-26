@@ -5,6 +5,7 @@ import 'package:varenya_mobile/enum/job.enum.dart';
 import 'package:varenya_mobile/enum/specialization.enum.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
 
 class DoctorList extends StatefulWidget {
   const DoctorList({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _DoctorListState extends State<DoctorList> {
 
   Job? _jobFilter;
   List<Specialization> _specializationsFilter = [];
-  late final List<Doctor> _doctors;
+  List<Doctor> _doctors = [];
 
   @override
   void initState() {
@@ -72,7 +73,9 @@ class _DoctorListState extends State<DoctorList> {
                   itemBuilder: (BuildContext context, int index) {
                     Doctor doctor = this._doctors[index];
 
-                    return Text(doctor.fullName);
+                    return DoctorCard(
+                      doctor: doctor,
+                    );
                   },
                 )
               ],
