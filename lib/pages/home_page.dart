@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/notification_handler.dart';
+import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
@@ -101,6 +102,12 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(DoctorList.routeName);
                 },
                 child: Text('Doctor List'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(AppointmentList.routeName);
+                },
+                child: Text('Appointments List'),
               ),
             ],
           ),

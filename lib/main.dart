@@ -5,6 +5,7 @@ import 'package:varenya_mobile/app.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
+import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
@@ -52,6 +53,9 @@ class Root extends StatelessWidget {
         ),
         Provider<DoctorService>(
           create: (context) => DoctorService(),
+        ),
+        Provider<AppointmentService>(
+          create: (context) => AppointmentService(),
         ),
       ],
       child: App(),
