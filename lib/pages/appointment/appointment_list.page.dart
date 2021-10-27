@@ -26,6 +26,10 @@ class _AppointmentListState extends State<AppointmentList> {
         Provider.of<AppointmentService>(context, listen: false);
   }
 
+  void _refreshAppointmentLists() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +56,10 @@ class _AppointmentListState extends State<AppointmentList> {
                 PatientAppointmentResponse appointmentResponse =
                     this._appointments[index];
 
-                return AppointmentCard(appointment: appointmentResponse);
+                return AppointmentCard(
+                  appointment: appointmentResponse,
+                  refreshAppointments: this._refreshAppointmentLists,
+                );
               },
             );
           }

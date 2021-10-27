@@ -4,13 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/enum/confirmation_status.enum.dart';
 import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 
 class AppointmentCard extends StatefulWidget {
   final PatientAppointmentResponse appointment;
+  final Function refreshAppointments;
 
   AppointmentCard({
     Key? key,
     required this.appointment,
+    required this.refreshAppointments,
   }) : super(key: key);
 
   @override
@@ -68,15 +71,11 @@ class _AppointmentCardState extends State<AppointmentCard> {
                   elevation: 40,
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      child: Text("Delete"),
+                      child: Text("Cancel Appointment"),
                       value: 1,
                     ),
                   ],
-                  onSelected: (int? value) async {
-                    await this
-                        ._appointmentService
-                        .deleteAppointment(widget.appointment.appointment);
-                  },
+                  onSelected: _onDeleteAppointment,
                 ),
               ],
             ),
@@ -84,5 +83,25 @@ class _AppointmentCardState extends State<AppointmentCard> {
         ),
       ),
     );
+  }
+
+  void _onDeleteAppointment(int? value) async {
+    try {
+      await this
+          ._appointmentService
+          .deleteAppointment(widget.appointment.appointment);
+
+      widget.refreshAppointments();
+
+      displaySnackbar(
+        'Appointment Cancelled!',
+        context,
+      );
+    } catch (error) {
+      displaySnackbar(
+        'Something went wrong, please try again later.',
+        context,
+      );
+    }
   }
 }
