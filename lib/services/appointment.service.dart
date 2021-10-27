@@ -5,11 +5,12 @@ import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appointment.dto.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
+import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 
 class AppointmentService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> requestForAppointment(
+  Future<Appointment> requestForAppointment(
     CreateAppointmentDto createAppointmentDto,
   ) async {
     try {
@@ -41,9 +42,46 @@ class AppointmentService {
       Appointment appointment =
           Appointment.fromJson(json.decode(response.body));
 
-      print(appointment.scheduledFor);
+      return appointment;
     } catch (error) {
-      print(error);
+      throw Exception(error);
+    }
+  }
+
+  Future<List<PatientAppointmentResponse>> fetchScheduledAppointments() async {
+    try {
+      // Fetch the ID token for the user.
+      String firebaseAuthToken =
+          await this._firebaseAuth.currentUser!.getIdToken();
+
+      // Prepare URI for the request.
+      Uri uri = Uri.parse("$endpoint/appointment/patient");
+
+      // Prepare authorization headers.
+      Map<String, String> headers = {
+        "Authorization": "Bearer $firebaseAuthToken",
+      };
+
+      // Send the post request to the server.
+      http.Response response = await http.get(
+        uri,
+        headers: headers,
+      );
+
+      // Check for any errors.
+      if (response.statusCode >= 400) {
+        Map<String, dynamic> body = json.decode(response.body);
+        throw Exception(body);
+      }
+
+      List<dynamic> jsonResponse = json.decode(response.body);
+      List<PatientAppointmentResponse> appointments = jsonResponse
+          .map((json) => PatientAppointmentResponse.fromJson(json))
+          .toList();
+
+      return appointments;
+    } catch (error) {
+      throw Exception('Try again later');
     }
   }
 }

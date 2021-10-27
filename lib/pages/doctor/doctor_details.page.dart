@@ -57,11 +57,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await this._appointmentService.requestForAppointment(
-                    new CreateAppointmentDto(
-                      doctorId: doctorDetails.id,
-                    ),
-                  );
+              await this._appointmentService.fetchScheduledAppointments();
             },
             child: Text('Book Appointment'),
           ),
