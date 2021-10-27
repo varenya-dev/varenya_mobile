@@ -60,8 +60,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                         ConfirmationStatus.CONFIRMED)
                       Text(
                         'Confirmed for: ${DateFormat.yMd().add_jm().format(
-                              widget.appointment.appointment.scheduledFor
-                                  .toLocal(),
+                              widget.appointment.appointment.scheduledFor,
                             ).toString()}',
                         textAlign: TextAlign.left,
                       ),
