@@ -5,6 +5,7 @@ import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
 
 class DoctorDetails extends StatefulWidget {
@@ -29,6 +30,26 @@ class _DoctorDetailsState extends State<DoctorDetails> {
       context,
       listen: false,
     );
+  }
+
+  Future<void> _onRequestAppointment(Doctor doctorDetails) async {
+    try {
+      await this._appointmentService.requestForAppointment(
+            new CreateAppointmentDto(
+              doctorId: doctorDetails.id,
+            ),
+          );
+
+      displaySnackbar(
+        "Appointment request was successful! You will receive a confirmation soon!",
+        context,
+      );
+    } catch (error) {
+      displaySnackbar(
+        "Something went wrong, please try again later.",
+        context,
+      );
+    }
   }
 
   @override
@@ -57,9 +78,9 @@ class _DoctorDetailsState extends State<DoctorDetails> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await this._appointmentService.fetchScheduledAppointments();
+              await this._onRequestAppointment(doctorDetails);
             },
-            child: Text('Book Appointment'),
+            child: Text('Request Appointment'),
           ),
         ],
       ),

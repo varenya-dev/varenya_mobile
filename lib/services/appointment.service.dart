@@ -44,7 +44,7 @@ class AppointmentService {
 
       return appointment;
     } catch (error) {
-      throw Exception(error);
+      throw Exception('Try again later');
     }
   }
 
