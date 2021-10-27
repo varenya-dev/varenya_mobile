@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/notification_handler.dart';
+import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/auth/login_page.dart';
 import 'package:varenya_mobile/pages/auth/register_page.dart';
@@ -37,6 +38,7 @@ class App extends StatelessWidget {
         ChatPage.routeName: (context) => ChatPage(),
         DoctorList.routeName: (context) => DoctorList(),
         DoctorDetails.routeName: (context) => DoctorDetails(),
+        AppointmentList.routeName: (context) => AppointmentList(),
       },
       home: SplashPage(),
     );
