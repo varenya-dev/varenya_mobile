@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
@@ -57,6 +58,9 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
         ChatPage.routeName,
         arguments: threadId,
       );
+    }
+    if (message.data['type'] == 'appointment') {
+      Navigator.pushNamed(context, AppointmentList.routeName);
     }
   }
 
