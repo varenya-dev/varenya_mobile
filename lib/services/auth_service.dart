@@ -6,7 +6,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/register_account_dto/register_account_dto.dart';
+import 'package:varenya_mobile/dtos/auth/server_register_dto/server_register.dto.dart';
 import 'package:varenya_mobile/dtos/auth/user_details_dto/user_details_dto.dart';
+import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/user_not_found_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
@@ -196,16 +198,22 @@ class AuthService {
           await this.firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$endpoint/auth/roles/main");
+      Uri uri = Uri.parse("$endpoint/auth/register");
 
       // Prepare authorization headers.
       Map<String, String> headers = {
         "Authorization": "Bearer $firebaseAuthToken",
       };
 
+      ServerRegisterDto serverRegisterDto = new ServerRegisterDto(
+        uid: this.firebaseAuth.currentUser!.uid,
+        role: Roles.MAIN,
+      );
+
       // Send the post request to the server.
       http.Response response = await http.post(
         uri,
+        body: serverRegisterDto.toJson(),
         headers: headers,
       );
 
