@@ -153,7 +153,7 @@ class _DoctorListState extends State<DoctorList> {
             ) {
               if (snapshot.hasError) {
                 print(snapshot.error);
-                return Text('Error');
+                return Text('Something went wrong, please try again later.');
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {

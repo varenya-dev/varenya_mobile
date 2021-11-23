@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/chat/chat_bubble_widget.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
 
@@ -55,9 +57,19 @@ class _ChatPageState extends State<ChatPage> {
     }
 
     // Save the message in database in the given thread.
-    await this
-        ._chatService
-        .sendMessage(this._chatController.text, this._chatThread);
+    try {
+      await this
+          ._chatService
+          .sendMessage(this._chatController.text, this._chatThread);
+    } on ServerException catch (error) {
+      displaySnackbar(error.message, context);
+    } catch (error) {
+      print(error);
+      displaySnackbar(
+        "Something went wrong, please try again later.",
+        context,
+      );
+    }
   }
 
   /*

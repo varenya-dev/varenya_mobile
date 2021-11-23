@@ -85,6 +85,9 @@ class _RegisterPageState extends State<RegisterPage> {
     // Handle errors gracefully.
     on UserAlreadyExistsException catch (error) {
       displaySnackbar(error.message, context);
+    } catch (error) {
+      print(error);
+      displaySnackbar("Something went wrong, please try again later.", context);
     }
   }
 

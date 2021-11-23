@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appointment.dto.dart';
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
@@ -44,7 +45,10 @@ class _DoctorDetailsState extends State<DoctorDetails> {
         "Appointment request was successful! You will receive a confirmation soon!",
         context,
       );
+    } on ServerException catch (error) {
+      displaySnackbar(error.message, context);
     } catch (error) {
+      print(error);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,

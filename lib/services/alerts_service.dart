@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:http/http.dart' as http;
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 
 class AlertsService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -17,67 +18,65 @@ class AlertsService {
   }
 
   Future<void> sendSOSNotifications() async {
-    try {
-      // Fetch the ID token for the user.
-      String firebaseAuthToken =
-          await this._firebaseAuth.currentUser!.getIdToken();
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+        await this._firebaseAuth.currentUser!.getIdToken();
 
-      // Prepare URI for the request.
-      Uri uri = Uri.parse("$endpoint/notification/sos");
+    // Prepare URI for the request.
+    Uri uri = Uri.parse("$ENDPOINT/notification/sos");
 
-      // Prepare authorization headers.
-      Map<String, String> headers = {
-        "Authorization": "Bearer $firebaseAuthToken",
-      };
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
 
-      // Send the post request to the server.
-      http.Response response = await http.post(
-        uri,
-        headers: headers,
-      );
+    // Send the post request to the server.
+    http.Response response = await http.post(
+      uri,
+      headers: headers,
+    );
 
-      // Check for any errors.
-      if (response.statusCode >= 400) {
-        Map<String, dynamic> body = json.decode(response.body);
-        throw Exception(body);
-      }
-    } catch (error) {
-      print(error);
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      throw ServerException(
+          message: 'Something went wrong, please try again later.');
     }
   }
 
   Future<void> sendSOSResponseNotification(String threadId) async {
-    try {
-      // Fetch the ID token for the user.
-      String firebaseAuthToken =
-          await this._firebaseAuth.currentUser!.getIdToken();
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+        await this._firebaseAuth.currentUser!.getIdToken();
 
-      // Prepare URI for the request.
-      Uri uri = Uri.parse("$endpoint/notification/sos/response");
+    // Prepare URI for the request.
+    Uri uri = Uri.parse("$ENDPOINT/notification/sos/response");
 
-      // Prepare authorization headers.
-      Map<String, String> headers = {
-        "Authorization": "Bearer $firebaseAuthToken",
-      };
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
 
-      Map<String, String> body = {
-        "threadId": threadId,
-      };
+    Map<String, String> body = {
+      "threadId": threadId,
+    };
 
-      // Send the post request to the server.
-      http.Response response = await http.post(
-        uri,
-        body: body,
-        headers: headers,
-      );
+    // Send the post request to the server.
+    http.Response response = await http.post(
+      uri,
+      body: body,
+      headers: headers,
+    );
 
-      // Check for any errors.
-      if (response.statusCode >= 400) {
-        Map<String, dynamic> body = json.decode(response.body);
-        throw Exception(body);
-      }
-    } catch (error) {
-      print(error);
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      throw ServerException(
+          message: 'Something went wrong, please try again later.');
     }
   }
 }
