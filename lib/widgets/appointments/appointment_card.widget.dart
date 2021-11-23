@@ -100,6 +100,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error) {
+      print(error);
       displaySnackbar(
         'Something went wrong, please try again later.',
         context,

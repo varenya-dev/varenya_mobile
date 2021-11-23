@@ -70,10 +70,16 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
       displaySnackbar(error.message, context);
     } on WeakPasswordException catch (error) {
       displaySnackbar(error.message, context);
-    } on NotLoggedInException {
-      print("NOT LOGGED IN");
+    } on NotLoggedInException catch (error) {
+      displaySnackbar(error.message, context);
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
+    } catch (error) {
+      print(error);
+      displaySnackbar(
+        'Something went wrong, please try again later.',
+        context,
+      );
     }
   }
 
