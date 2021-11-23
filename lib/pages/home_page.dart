@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
@@ -13,6 +14,7 @@ import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -93,7 +95,19 @@ class _HomePageState extends State<HomePage> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await this._alertsService.sendSOSNotifications();
+                  try {
+                    await this._alertsService.sendSOSNotifications();
+                  } on ServerException catch (error) {
+                    displaySnackbar(
+                      error.message,
+                      context,
+                    );
+                  } catch (error) {
+                    displaySnackbar(
+                      "Something went wrong, please try again later.",
+                      context,
+                    );
+                  }
                 },
                 child: Text('SOS Notification'),
               ),
