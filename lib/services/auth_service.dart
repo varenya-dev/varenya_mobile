@@ -7,7 +7,6 @@ import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/register_account_dto/register_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/server_register_dto/server_register.dto.dart';
-import 'package:varenya_mobile/dtos/auth/user_details_dto/user_details_dto.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/user_not_found_exception.dart';
@@ -92,8 +91,11 @@ class AuthService {
         print(error);
         throw Exception("Something went wrong, please try again later");
       }
-    } catch (error) {
-      print(error);
+    } on ServerException catch (error) {
+      throw Exception(error.message);
+    } catch (error, stacktrace) {
+      print("ERROR: $error");
+      print("STACKTRACE: $stacktrace");
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -168,37 +170,37 @@ class AuthService {
    * Send a server request for setting roles for the user.
    */
   Future<void> _setupFirebaseRoles() async {
-      // Fetch the ID token for the user.
-      String firebaseAuthToken =
-          await this.firebaseAuth.currentUser!.getIdToken();
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+        await this.firebaseAuth.currentUser!.getIdToken();
 
-      // Prepare URI for the request.
-      Uri uri = Uri.parse("$ENDPOINT/auth/register");
+    // Prepare URI for the request.
+    Uri uri = Uri.parse("$ENDPOINT/auth/register");
 
-      // Prepare authorization headers.
-      Map<String, String> headers = {
-        "Authorization": "Bearer $firebaseAuthToken",
-      };
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
 
-      ServerRegisterDto serverRegisterDto = new ServerRegisterDto(
-        uid: this.firebaseAuth.currentUser!.uid,
-        role: Roles.MAIN,
-      );
+    ServerRegisterDto serverRegisterDto = new ServerRegisterDto(
+      uid: this.firebaseAuth.currentUser!.uid,
+      role: Roles.MAIN,
+    );
 
-      // Send the post request to the server.
-      http.Response response = await http.post(
-        uri,
-        body: serverRegisterDto.toJson(),
-        headers: headers,
-      );
+    // Send the post request to the server.
+    http.Response response = await http.post(
+      uri,
+      body: serverRegisterDto.toJson(),
+      headers: headers,
+    );
 
-      // Check for any errors.
-      if (response.statusCode >= 400 && response.statusCode < 500) {
-        Map<String, dynamic> body = json.decode(response.body);
-        throw ServerException(message: body['message']);
-      } else if (response.statusCode >= 500) {
-        throw ServerException(
-            message: 'Something went wrong, please try again later.');
-      }
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      throw ServerException(
+          message: 'Something went wrong, please try again later.');
+    }
   }
 }
