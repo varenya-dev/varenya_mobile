@@ -40,7 +40,7 @@ class AlertsService {
     if (response.statusCode >= 400 && response.statusCode < 500) {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
-    } else {
+    } else if (response.statusCode >= 500) {
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -74,7 +74,7 @@ class AlertsService {
     if (response.statusCode >= 400 && response.statusCode < 500) {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
-    } else {
+    } else if (response.statusCode >= 500) {
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

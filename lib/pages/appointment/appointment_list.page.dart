@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 
 class AppointmentList extends StatefulWidget {
@@ -43,8 +45,17 @@ class _AppointmentListState extends State<AppointmentList> {
           AsyncSnapshot<List<PatientAppointmentResponse>> snapshot,
         ) {
           if (snapshot.hasError) {
-            print(snapshot.error);
-            return Text('Error');
+            switch (snapshot.error.runtimeType) {
+              case ServerException:
+                {
+                  ServerException exception = snapshot.error as ServerException;
+                  return Text(exception.message);
+                }
+              default:
+                {
+                  return Text("Something went wrong, please try again later");
+                }
+            }
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
