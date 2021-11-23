@@ -15,6 +15,7 @@ import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -137,31 +138,6 @@ class AuthService {
   }
 
   /*
-   * Method to update the existing user with a name and profile picture.
-   * @param userDetailsDto DTO for user details
-   */
-  Future<void> saveUserDetails(UserDetailsDto userDetailsDto) async {
-    try {
-      // Fetching the currently logged in user.
-      User? firebaseUser = firebaseAuth.currentUser;
-
-      // Check if user is not null
-      if (firebaseUser != null) {
-        // Update the name for the user.
-        await firebaseUser.updateDisplayName(userDetailsDto.fullName);
-
-        // If an image link has been given as well,
-        // update the user's profile picture.
-        if (userDetailsDto.image != null) {
-          await firebaseUser.updatePhotoURL(userDetailsDto.image);
-        }
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  /*
    * Method to log out from firebase.
    */
   Future<void> logOut() async {
@@ -192,7 +168,6 @@ class AuthService {
    * Send a server request for setting roles for the user.
    */
   Future<void> _setupFirebaseRoles() async {
-    try {
       // Fetch the ID token for the user.
       String firebaseAuthToken =
           await this.firebaseAuth.currentUser!.getIdToken();
@@ -218,12 +193,12 @@ class AuthService {
       );
 
       // Check for any errors.
-      if (response.statusCode >= 400) {
+      if (response.statusCode >= 400 && response.statusCode < 500) {
         Map<String, dynamic> body = json.decode(response.body);
-        throw Exception(body);
+        throw ServerException(message: body['message']);
+      } else if (response.statusCode >= 500) {
+        throw ServerException(
+            message: 'Something went wrong, please try again later.');
       }
-    } catch (error) {
-      print(error);
-    }
   }
 }
