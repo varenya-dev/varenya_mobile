@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +39,8 @@ class _ThreadsPageState extends State<ThreadsPage> {
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
         ) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            print(snapshot.error);
+            return Text('Something went wrong, please try again later.');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {

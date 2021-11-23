@@ -71,6 +71,9 @@ class _LoginPageState extends State<LoginPage> {
       displaySnackbar(error.message, context);
     } on WrongPasswordException catch (error) {
       displaySnackbar(error.message, context);
+    } catch (error) {
+      print(error);
+      displaySnackbar("Something went wrong, please try again later.", context);
     }
   }
 

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
-import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 
 class AppointmentList extends StatefulWidget {

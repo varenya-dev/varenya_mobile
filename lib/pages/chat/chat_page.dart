@@ -64,8 +64,9 @@ class _ChatPageState extends State<ChatPage> {
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error) {
+      print(error);
       displaySnackbar(
-        "something went wrong, please try again later.",
+        "Something went wrong, please try again later.",
         context,
       );
     }
