@@ -92,7 +92,7 @@ class AuthService {
         throw Exception("Something went wrong, please try again later");
       }
     } on ServerException catch (error) {
-      throw Exception(error.message);
+      throw ServerException(message: error.message);
     } catch (error, stacktrace) {
       print("ERROR: $error");
       print("STACKTRACE: $stacktrace");
@@ -144,26 +144,6 @@ class AuthService {
    */
   Future<void> logOut() async {
     await this.firebaseAuth.signOut();
-  }
-
-  /*
-   * Method to upload image to firebase.
-   * @param imageFile File object for the image itself.
-   */
-  Future<String> uploadImageToFirebase(File imageFile) async {
-    String uid = uuid.v4();
-
-    // Upload image to firebase.
-    await this
-        .firebaseStorage
-        .ref("profilePictures/$uid.png")
-        .putFile(imageFile);
-
-    // Generate a URL for the uploaded image.
-    return await this
-        .firebaseStorage
-        .ref("profilePictures/$uid.png")
-        .getDownloadURL();
   }
 
   /*
