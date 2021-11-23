@@ -9,16 +9,26 @@ class DoctorService {
     Job? jobFilter,
     List<Specialization> specializationsFilter,
   ) {
-    if (jobFilter != null) {
+    if (jobFilter != null && specializationsFilter.length == 0) {
       return this
           ._firestore
           .collection('doctors')
           .where('jobTitle', isEqualTo: jobFilter.toString().split('.')[1])
           .snapshots();
-    } else if (specializationsFilter.length > 0) {
+    } else if (jobFilter == null && specializationsFilter.length > 0) {
       return this
           ._firestore
           .collection('doctors')
+          .where('specializations',
+              arrayContainsAny: specializationsFilter
+                  .map((s) => s.toString().split('.')[1])
+                  .toList())
+          .snapshots();
+    } else if (jobFilter != null && specializationsFilter.length > 0) {
+      return this
+          ._firestore
+          .collection('doctors')
+          .where('jobTitle', isEqualTo: jobFilter.toString().split('.')[1])
           .where('specializations',
               arrayContainsAny: specializationsFilter
                   .map((s) => s.toString().split('.')[1])
