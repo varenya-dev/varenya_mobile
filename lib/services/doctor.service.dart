@@ -80,4 +80,38 @@ class DoctorService {
 
     return specializations;
   }
+
+  Future<List<String>> fetchJobTitles() async {
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+    await this._firebaseAuth.currentUser!.getIdToken();
+
+    // Prepare URI for the request.
+    Uri uri = Uri.parse("$ENDPOINT/doctor/title");
+
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
+
+    // Send the post request to the server.
+    http.Response response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      throw ServerException(
+        message: 'Something went wrong, please try again later.',
+      );
+    }
+
+    List<String> titles = json.decode(response.body);
+
+    return titles;
+  }
 }
