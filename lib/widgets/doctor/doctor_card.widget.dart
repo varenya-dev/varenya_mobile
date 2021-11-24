@@ -57,7 +57,7 @@ class DoctorCard extends StatelessWidget {
                         text: 'Position:',
                       ),
                       TextSpan(
-                        text: this.doctor.jobTitle.toString().split('.')[1],
+                        text: this.doctor.jobTitle,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -79,7 +79,7 @@ class DoctorCard extends StatelessWidget {
                           ),
                           child: Chip(
                             label: Text(
-                              specialization.toString().split(".")[1],
+                              specialization.specialization,
                             ),
                           ),
                         ),

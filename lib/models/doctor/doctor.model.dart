@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:varenya_mobile/enum/job.enum.dart';
-import 'package:varenya_mobile/enum/specialization.enum.dart';
+import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 
 part 'doctor.model.g.dart';
 
@@ -20,8 +19,8 @@ class Doctor {
   @JsonKey(defaultValue: 0.0)
   double cost;
 
-  @JsonKey(defaultValue: Job.THERAPIST)
-  Job jobTitle;
+  @JsonKey(defaultValue: "")
+  String jobTitle;
 
   @JsonKey(defaultValue: [])
   List<Specialization> specializations;
@@ -32,7 +31,7 @@ class Doctor {
     this.fullName = '',
     this.clinicAddress = '',
     this.cost = 0.0,
-    this.jobTitle = Job.THERAPIST,
+    this.jobTitle = "",
     this.specializations = const [],
   });
 
