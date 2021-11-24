@@ -143,45 +143,45 @@ class _DoctorListState extends State<DoctorList> {
       body: Column(
         children: [
           _buildFilterMain(),
-          StreamBuilder(
-            stream: this
-                ._doctorService
-                .fetchDoctorsStream(_jobFilter, _specializationsFilter),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-            ) {
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return Text('Something went wrong, please try again later.');
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Column(
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                );
-              }
-
-              this._doctors = snapshot.data!.docs
-                  .map((data) => Doctor.fromJson(data.data()))
-                  .toList();
-
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: this._doctors.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Doctor doctor = this._doctors[index];
-
-                  return DoctorCard(
-                    doctor: doctor,
-                  );
-                },
-              );
-            },
-          ),
+          // StreamBuilder(
+          //   stream: this
+          //       ._doctorService
+          //       .fetchDoctorsStream(_jobFilter, _specializationsFilter),
+          //   builder: (
+          //     BuildContext context,
+          //     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+          //   ) {
+          //     if (snapshot.hasError) {
+          //       print(snapshot.error);
+          //       return Text('Something went wrong, please try again later.');
+          //     }
+          //
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return Column(
+          //         children: [
+          //           CircularProgressIndicator(),
+          //         ],
+          //       );
+          //     }
+          //
+          //     this._doctors = snapshot.data!.docs
+          //         .map((data) => Doctor.fromJson(data.data()))
+          //         .toList();
+          //
+          //     return ListView.builder(
+          //       shrinkWrap: true,
+          //       physics: NeverScrollableScrollPhysics(),
+          //       itemCount: this._doctors.length,
+          //       itemBuilder: (BuildContext context, int index) {
+          //         Doctor doctor = this._doctors[index];
+          //
+          //         return DoctorCard(
+          //           doctor: doctor,
+          //         );
+          //       },
+          //     );
+          //   },
+          // ),
         ],
       ),
     );
