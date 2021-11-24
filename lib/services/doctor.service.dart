@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
+import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
@@ -12,15 +12,17 @@ class DoctorService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<List<Doctor>> fetchDoctorsWithFiltering(
-    String? jobFilter,
-    List<String> specializationsFilter,
-  ) async {
+      DoctorFilterDto doctorFilterDto) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/doctor/filter");
+    Uri uri = Uri.http(
+      RAW_ENDPOINT,
+      "/v1/api/doctor/filter",
+      doctorFilterDto.toJson(),
+    );
 
     // Prepare authorization headers.
     Map<String, String> headers = {
@@ -42,6 +44,14 @@ class DoctorService {
         message: 'Something went wrong, please try again later.',
       );
     }
+
+    List<dynamic> jsonResponse = json.decode(response.body);
+    List<Doctor> doctors =
+        jsonResponse.map((doctorJson) => Doctor.fromJson(doctorJson)).toList();
+
+    print(doctors);
+
+    return doctors;
   }
 
   Future<List<Specialization>> fetchSpecializations() async {
@@ -83,7 +93,7 @@ class DoctorService {
   Future<List<String>> fetchJobTitles() async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
-    await this._firebaseAuth.currentUser!.getIdToken();
+        await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
     Uri uri = Uri.parse("$ENDPOINT/doctor/title");

@@ -7,12 +7,12 @@ class DoctorFilterDto {
   @JsonKey(defaultValue: 'EMPTY')
   final String? jobTitle;
 
-  @JsonKey(defaultValue: [])
+  @JsonKey(defaultValue: ['', ''])
   final List<String> specializations;
 
   DoctorFilterDto({
     this.jobTitle = 'EMPTY',
-    this.specializations = const [],
+    this.specializations = const ['', ''],
   });
 
   factory DoctorFilterDto.fromJson(Map<String, dynamic> json) =>
