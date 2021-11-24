@@ -49,8 +49,6 @@ class DoctorService {
     List<Doctor> doctors =
         jsonResponse.map((doctorJson) => Doctor.fromJson(doctorJson)).toList();
 
-    print(doctors);
-
     return doctors;
   }
 
@@ -119,7 +117,9 @@ class DoctorService {
       );
     }
 
-    List<String> titles = json.decode(response.body);
+    List<dynamic> titlesData = json.decode(response.body);
+    List<String> titles =
+        titlesData.map((element) => element.toString()).toList();
 
     return titles;
   }

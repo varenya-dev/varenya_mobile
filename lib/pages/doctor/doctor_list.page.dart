@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
 import 'package:varenya_mobile/enum/job.enum.dart';
-import 'package:varenya_mobile/enum/specialization.enum.dart';
+import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
+import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
@@ -21,8 +23,8 @@ class DoctorList extends StatefulWidget {
 class _DoctorListState extends State<DoctorList> {
   late final DoctorService _doctorService;
 
-  Job? _jobFilter;
-  List<Specialization> _specializationsFilter = [];
+  String _jobFilter = 'EMPTY';
+  List<String> _specializationsFilter = ['', ''];
   List<Doctor> _doctors = [];
 
   @override
@@ -38,33 +40,70 @@ class _DoctorListState extends State<DoctorList> {
       StatefulBuilder(
         builder: (context, setStateInner) => Wrap(
           children: [
-            ListView(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: Specialization.values
-                  .map(
-                    (s) => ListTile(
-                      title: Text(
-                        s.toString().split(".")[1],
-                      ),
-                      leading: Checkbox(
-                        value: this._specializationsFilter.contains(s),
-                        onChanged: (bool? value) {
-                          if (value == true) {
-                            setState(() {
-                              this._specializationsFilter.add(s);
-                            });
-                          } else {
-                            setState(() {
-                              this._specializationsFilter.remove(s);
-                            });
-                          }
-                          setStateInner(() {});
-                        },
-                      ),
-                    ),
-                  )
-                  .toList(),
+            FutureBuilder(
+              future: this._doctorService.fetchSpecializations(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Specialization>> snapshot) {
+                if (snapshot.hasError) {
+                  switch (snapshot.error.runtimeType) {
+                    case ServerException:
+                      {
+                        ServerException exception =
+                            snapshot.error as ServerException;
+                        return Text(exception.message);
+                      }
+                    default:
+                      {
+                        return Text(
+                            "Something went wrong, please try again later");
+                      }
+                  }
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  List<Specialization> specializations = snapshot.data!;
+                  return ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: specializations
+                        .map(
+                          (s) => ListTile(
+                            title: Text(
+                              s.specialization,
+                            ),
+                            leading: Checkbox(
+                              value: this
+                                  ._specializationsFilter
+                                  .contains(s.specialization),
+                              onChanged: (bool? value) {
+                                if (value == true) {
+                                  setState(() {
+                                    this
+                                        ._specializationsFilter
+                                        .add(s.specialization);
+                                  });
+                                } else {
+                                  setState(() {
+                                    this
+                                        ._specializationsFilter
+                                        .remove(s.specialization);
+                                  });
+                                }
+                                setStateInner(() {});
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                }
+
+                return Column(
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
+                );
+              },
             ),
             Center(
               child: TextButton(
@@ -72,6 +111,8 @@ class _DoctorListState extends State<DoctorList> {
                 onPressed: () {
                   setState(() {
                     this._specializationsFilter.clear();
+                    this._specializationsFilter.add('');
+                    this._specializationsFilter.add('');
                   });
 
                   setStateInner(() {});
@@ -90,38 +131,69 @@ class _DoctorListState extends State<DoctorList> {
       StatefulBuilder(
         builder: (context, setStateInner) => Wrap(
           children: [
-            ListView(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: Job.values
-                  .map(
-                    (job) => ListTile(
-                      title: Text(
-                        job.toString().split(".")[1],
-                      ),
-                      leading: Radio(
-                        value: job,
-                        groupValue: this._jobFilter,
-                        onChanged: (Job? jobValue) {
-                          if (jobValue != null) {
-                            setState(() {
-                              this._jobFilter = jobValue;
-                            });
+            FutureBuilder(
+              future: this._doctorService.fetchJobTitles(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                if (snapshot.hasError) {
+                  switch (snapshot.error.runtimeType) {
+                    case ServerException:
+                      {
+                        ServerException exception =
+                            snapshot.error as ServerException;
+                        return Text(exception.message);
+                      }
+                    default:
+                      {
+                        print(snapshot.error);
+                        return Text(
+                            "Something went wrong, please try again later");
+                      }
+                  }
+                }
 
-                            setStateInner(() {});
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                  .toList(),
+                if (snapshot.connectionState == ConnectionState.done) {
+                  List<String> jobTitles = snapshot.data!;
+                  return ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: jobTitles
+                        .map(
+                          (job) => ListTile(
+                            title: Text(
+                              job,
+                            ),
+                            leading: Radio(
+                              value: job,
+                              groupValue: this._jobFilter,
+                              onChanged: (String? jobValue) {
+                                if (jobValue != null) {
+                                  setState(() {
+                                    this._jobFilter = jobValue;
+                                  });
+                                  setStateInner(() {});
+                                }
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                }
+
+                return Column(
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
+                );
+              },
             ),
             Center(
               child: TextButton(
                 child: Text('Clear Filters'),
                 onPressed: () {
                   setState(() {
-                    this._jobFilter = null;
+                    this._jobFilter = 'EMPTY';
                   });
 
                   setStateInner(() {});
@@ -143,45 +215,58 @@ class _DoctorListState extends State<DoctorList> {
       body: Column(
         children: [
           _buildFilterMain(),
-          // StreamBuilder(
-          //   stream: this
-          //       ._doctorService
-          //       .fetchDoctorsStream(_jobFilter, _specializationsFilter),
-          //   builder: (
-          //     BuildContext context,
-          //     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-          //   ) {
-          //     if (snapshot.hasError) {
-          //       print(snapshot.error);
-          //       return Text('Something went wrong, please try again later.');
-          //     }
-          //
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       return Column(
-          //         children: [
-          //           CircularProgressIndicator(),
-          //         ],
-          //       );
-          //     }
-          //
-          //     this._doctors = snapshot.data!.docs
-          //         .map((data) => Doctor.fromJson(data.data()))
-          //         .toList();
-          //
-          //     return ListView.builder(
-          //       shrinkWrap: true,
-          //       physics: NeverScrollableScrollPhysics(),
-          //       itemCount: this._doctors.length,
-          //       itemBuilder: (BuildContext context, int index) {
-          //         Doctor doctor = this._doctors[index];
-          //
-          //         return DoctorCard(
-          //           doctor: doctor,
-          //         );
-          //       },
-          //     );
-          //   },
-          // ),
+          FutureBuilder(
+            future: this._doctorService.fetchDoctorsWithFiltering(
+                  new DoctorFilterDto(
+                    jobTitle: this._jobFilter,
+                    specializations: this._specializationsFilter,
+                  ),
+                ),
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<List<Doctor>> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                switch (snapshot.error.runtimeType) {
+                  case ServerException:
+                    {
+                      ServerException exception =
+                          snapshot.error as ServerException;
+                      return Text(exception.message);
+                    }
+                  default:
+                    {
+                      print(snapshot.error);
+                      return Text(
+                          "Something went wrong, please try again later");
+                    }
+                }
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                this._doctors = snapshot.data!;
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: this._doctors.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Doctor doctor = this._doctors[index];
+
+                    return DoctorCard(
+                      doctor: doctor,
+                    );
+                  },
+                );
+              }
+
+              return Column(
+                children: [
+                  CircularProgressIndicator(),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
