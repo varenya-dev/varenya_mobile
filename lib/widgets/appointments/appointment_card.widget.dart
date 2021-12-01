@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:varenya_mobile/enum/confirmation_status.enum.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
-import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
+import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class AppointmentCard extends StatefulWidget {
-  final PatientAppointmentResponse appointment;
+  final Appointment appointment;
   final Function refreshAppointments;
 
   AppointmentCard({
@@ -47,7 +46,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dr ${widget.appointment.doctor.fullName}',
+                      'Dr ${widget.appointment.doctorUser.fullName}',
                     ),
                   ],
                 ),
@@ -63,6 +62,8 @@ class _AppointmentCardState extends State<AppointmentCard> {
                 ),
               ],
             ),
+            Text(
+                'Booked for: ${DateFormat.yMd().add_jm().format(this.widget.appointment.scheduledFor).toString()}')
           ],
         ),
       ),
@@ -71,9 +72,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
 
   void _onDeleteAppointment(int? value) async {
     try {
-      await this
-          ._appointmentService
-          .deleteAppointment(widget.appointment.appointment);
+      await this._appointmentService.deleteAppointment(widget.appointment);
 
       widget.refreshAppointments();
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
@@ -17,7 +18,7 @@ class AppointmentList extends StatefulWidget {
 class _AppointmentListState extends State<AppointmentList> {
   late final AppointmentService _appointmentService;
 
-  List<PatientAppointmentResponse> _appointments = [];
+  List<Appointment> _appointments = [];
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _AppointmentListState extends State<AppointmentList> {
         future: this._appointmentService.fetchScheduledAppointments(),
         builder: (
           BuildContext buildContext,
-          AsyncSnapshot<List<PatientAppointmentResponse>> snapshot,
+          AsyncSnapshot<List<Appointment>> snapshot,
         ) {
           if (snapshot.hasError) {
             switch (snapshot.error.runtimeType) {
@@ -63,7 +64,7 @@ class _AppointmentListState extends State<AppointmentList> {
               itemCount: this._appointments.length,
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                PatientAppointmentResponse appointmentResponse =
+                Appointment appointmentResponse =
                     this._appointments[index];
 
                 return AppointmentCard(

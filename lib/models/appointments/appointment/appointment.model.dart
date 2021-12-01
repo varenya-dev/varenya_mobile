@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:varenya_mobile/enum/confirmation_status.enum.dart';
+import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 
 part 'appointment.model.g.dart';
@@ -11,7 +12,7 @@ class Appointment {
   DateTime createdAt;
   DateTime updatedAt;
   ServerUser patientUser;
-  ServerUser doctorUser;
+  Doctor doctorUser;
 
   Appointment({
     required this.id,

@@ -85,7 +85,7 @@ class AppointmentService {
     }
   }
 
-  Future<List<PatientAppointmentResponse>> fetchScheduledAppointments() async {
+  Future<List<Appointment>> fetchScheduledAppointments() async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
         await this._firebaseAuth.currentUser!.getIdToken();
@@ -115,8 +115,8 @@ class AppointmentService {
     }
 
     List<dynamic> jsonResponse = json.decode(response.body);
-    List<PatientAppointmentResponse> appointments = jsonResponse
-        .map((json) => PatientAppointmentResponse.fromJson(json))
+    List<Appointment> appointments = jsonResponse
+        .map((json) => Appointment.fromJson(json))
         .toList();
 
     return appointments;

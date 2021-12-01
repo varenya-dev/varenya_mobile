@@ -13,8 +13,7 @@ Appointment _$AppointmentFromJson(Map<String, dynamic> json) => Appointment(
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       patientUser:
           ServerUser.fromJson(json['patientUser'] as Map<String, dynamic>),
-      doctorUser:
-          ServerUser.fromJson(json['doctorUser'] as Map<String, dynamic>),
+      doctorUser: Doctor.fromJson(json['doctorUser'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AppointmentToJson(Appointment instance) =>
