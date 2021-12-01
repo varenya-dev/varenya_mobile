@@ -38,6 +38,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
       await this._appointmentService.requestForAppointment(
             new CreateAppointmentDto(
               doctorId: doctorDetails.id,
+              timing: DateTime.now(),
             ),
           );
 

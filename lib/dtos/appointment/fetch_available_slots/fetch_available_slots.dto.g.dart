@@ -7,12 +7,11 @@ part of 'fetch_available_slots.dto.dart';
 // **************************************************************************
 
 FetchAvailableSlotsDto _$FetchAvailableSlotsDtoFromJson(
-    Map<String, dynamic> json) {
-  return FetchAvailableSlotsDto(
-    date: DateTime.parse(json['date'] as String),
-    doctorId: json['doctorId'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    FetchAvailableSlotsDto(
+      date: DateTime.parse(json['date'] as String),
+      doctorId: json['doctorId'] as String,
+    );
 
 Map<String, dynamic> _$FetchAvailableSlotsDtoToJson(
         FetchAvailableSlotsDto instance) =>
