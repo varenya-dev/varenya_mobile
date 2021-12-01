@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_appointment.dto.dart';
+part of 'fetch_available_slots.dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CreateAppointmentDto _$CreateAppointmentDtoFromJson(
+FetchAvailableSlotsDto _$FetchAvailableSlotsDtoFromJson(
         Map<String, dynamic> json) =>
-    CreateAppointmentDto(
+    FetchAvailableSlotsDto(
+      date: DateTime.parse(json['date'] as String),
       doctorId: json['doctorId'] as String,
-      timing: DateTime.parse(json['timing'] as String),
     );
 
-Map<String, dynamic> _$CreateAppointmentDtoToJson(
-        CreateAppointmentDto instance) =>
+Map<String, dynamic> _$FetchAvailableSlotsDtoToJson(
+        FetchAvailableSlotsDto instance) =>
     <String, dynamic>{
+      'date': instance.date.toIso8601String(),
       'doctorId': instance.doctorId,
-      'timing': instance.timing.toIso8601String(),
     };

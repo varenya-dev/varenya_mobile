@@ -25,6 +25,9 @@ class Doctor {
   @JsonKey(defaultValue: [])
   List<Specialization> specializations;
 
+  DateTime shiftStartTime;
+  DateTime shiftEndTime;
+
   Doctor({
     required this.id,
     this.imageUrl = '',
@@ -33,6 +36,8 @@ class Doctor {
     this.cost = 0.0,
     this.jobTitle = "",
     this.specializations = const [],
+    required this.shiftStartTime,
+    required this.shiftEndTime,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) => _$DoctorFromJson(json);
