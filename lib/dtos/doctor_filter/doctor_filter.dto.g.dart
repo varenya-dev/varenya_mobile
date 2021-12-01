@@ -12,7 +12,7 @@ DoctorFilterDto _$DoctorFilterDtoFromJson(Map<String, dynamic> json) {
     specializations: (json['specializations'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList() ??
-        [],
+        ['', ''],
   );
 }
 
