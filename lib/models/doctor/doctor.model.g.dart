@@ -17,6 +17,8 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) => Doctor(
               ?.map((e) => Specialization.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      shiftStartTime: DateTime.parse(json['shiftStartTime'] as String),
+      shiftEndTime: DateTime.parse(json['shiftEndTime'] as String),
     );
 
 Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
@@ -27,4 +29,6 @@ Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
       'cost': instance.cost,
       'jobTitle': instance.jobTitle,
       'specializations': instance.specializations,
+      'shiftStartTime': instance.shiftStartTime.toIso8601String(),
+      'shiftEndTime': instance.shiftEndTime.toIso8601String(),
     };
