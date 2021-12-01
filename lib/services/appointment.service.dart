@@ -53,7 +53,7 @@ class AppointmentService {
     return availableDates;
   }
 
-  Future<Appointment> requestForAppointment(
+  Future<void> bookAppointment(
     CreateAppointmentDto createAppointmentDto,
   ) async {
     // Fetch the ID token for the user.
@@ -83,10 +83,6 @@ class AppointmentService {
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
-
-    Appointment appointment = Appointment.fromJson(json.decode(response.body));
-
-    return appointment;
   }
 
   Future<List<PatientAppointmentResponse>> fetchScheduledAppointments() async {

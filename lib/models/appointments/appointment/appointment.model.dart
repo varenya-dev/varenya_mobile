@@ -10,7 +10,6 @@ class Appointment {
   DateTime scheduledFor;
   DateTime createdAt;
   DateTime updatedAt;
-  ConfirmationStatus status;
   ServerUser patientUser;
   ServerUser doctorUser;
 
@@ -19,7 +18,6 @@ class Appointment {
     required this.scheduledFor,
     required this.createdAt,
     required this.updatedAt,
-    required this.status,
     required this.patientUser,
     required this.doctorUser,
   });

@@ -49,22 +49,6 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     Text(
                       'Dr ${widget.appointment.doctor.fullName}',
                     ),
-                    if (widget.appointment.appointment.status ==
-                        ConfirmationStatus.PENDING)
-                      Text(
-                        widget.appointment.appointment.status
-                            .toString()
-                            .split('.')[1],
-                        textAlign: TextAlign.left,
-                      ),
-                    if (widget.appointment.appointment.status ==
-                        ConfirmationStatus.CONFIRMED)
-                      Text(
-                        'Confirmed for: ${DateFormat.yMd().add_jm().format(
-                              widget.appointment.appointment.scheduledFor,
-                            ).toString()}',
-                        textAlign: TextAlign.left,
-                      ),
                   ],
                 ),
                 PopupMenuButton(

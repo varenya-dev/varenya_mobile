@@ -34,30 +34,6 @@ class _DoctorDetailsState extends State<DoctorDetails> {
     );
   }
 
-  Future<void> _onRequestAppointment(Doctor doctorDetails) async {
-    try {
-      await this._appointmentService.requestForAppointment(
-            new CreateAppointmentDto(
-              doctorId: doctorDetails.id,
-              timing: DateTime.now(),
-            ),
-          );
-
-      displaySnackbar(
-        "Appointment request was successful! You will receive a confirmation soon!",
-        context,
-      );
-    } on ServerException catch (error) {
-      displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
-      displaySnackbar(
-        "Something went wrong, please try again later.",
-        context,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Doctor doctorDetails = ModalRoute.of(context)!.settings.arguments as Doctor;
