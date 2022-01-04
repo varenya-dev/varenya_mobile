@@ -4,8 +4,6 @@ import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_avai
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
-import 'package:varenya_mobile/services/appointment.service.dart';
-import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/widgets/appointments/timing_slot.widget.dart';
 
 class SlotList extends StatefulWidget {

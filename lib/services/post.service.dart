@@ -139,18 +139,20 @@ class PostService {
     // Prepare authorization headers.
     Map<String, String> headers = {
       "Authorization": "Bearer $firebaseAuthToken",
+      'Content-type': 'application/json',
     };
 
     // Send the post request to the server.
     http.Response response = await http.post(
       uri,
-      body: createPostDto.toJson(),
+      body: json.encode(createPostDto.toJson()),
       headers: headers,
     );
 
     // Check for any errors.
     if (response.statusCode >= 400 && response.statusCode < 500) {
       Map<String, dynamic> body = json.decode(response.body);
+      print(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
       throw ServerException(
@@ -169,12 +171,13 @@ class PostService {
     // Prepare authorization headers.
     Map<String, String> headers = {
       "Authorization": "Bearer $firebaseAuthToken",
+      'Content-type': 'application/json',
     };
 
     // Send the post request to the server.
     http.Response response = await http.put(
       uri,
-      body: updatePostDto.toJson(),
+      body: json.encode(updatePostDto.toJson()),
       headers: headers,
     );
 
