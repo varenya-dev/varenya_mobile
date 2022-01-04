@@ -48,6 +48,9 @@ class _NewPostsState extends State<NewPosts> {
     comments: [],
     categories: [
       new PostCategory(id: 'lol', categoryName: 'LOL'),
+      new PostCategory(id: 'lol', categoryName: 'LOL'),
+      new PostCategory(id: 'lol', categoryName: 'LOL'),
+      new PostCategory(id: 'lol', categoryName: 'LOL'),
     ],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
