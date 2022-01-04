@@ -5,30 +5,30 @@ part 'doctor.model.g.dart';
 
 @JsonSerializable()
 class Doctor {
-  String id;
+  final String id;
 
   @JsonKey(defaultValue: '')
-  String imageUrl;
+  final String imageUrl;
 
   @JsonKey(defaultValue: '')
-  String fullName;
+  final String fullName;
 
   @JsonKey(defaultValue: '')
-  String clinicAddress;
+  final String clinicAddress;
 
   @JsonKey(defaultValue: 0.0)
-  double cost;
+  final double cost;
 
   @JsonKey(defaultValue: "")
-  String jobTitle;
+  final String jobTitle;
 
   @JsonKey(defaultValue: [])
-  List<Specialization> specializations;
+  final List<Specialization> specializations;
 
-  DateTime shiftStartTime;
-  DateTime shiftEndTime;
+  final DateTime shiftStartTime;
+  final DateTime shiftEndTime;
 
-  Doctor({
+  const Doctor({
     required this.id,
     this.imageUrl = '',
     this.fullName = '',
