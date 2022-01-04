@@ -5,7 +5,9 @@ import 'package:varenya_mobile/enum/post_options_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/exceptions/auth/not_logged_in_exception.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
+import 'package:varenya_mobile/pages/post/update_post.page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
@@ -14,12 +16,12 @@ import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 
 class PostUserDetails extends StatefulWidget {
   final ServerUser serverUser;
-  final String postId;
+  final Post post;
 
   const PostUserDetails({
     Key? key,
     required this.serverUser,
-    required this.postId,
+    required this.post,
   }) : super(key: key);
 
   @override
@@ -73,7 +75,7 @@ class _PostUserDetailsState extends State<PostUserDetails> {
     try {
       await this._postService.deletePost(
             new DeletePostDto(
-              id: this.widget.postId,
+              id: this.widget.post.id,
             ),
           );
 
@@ -159,7 +161,12 @@ class _PostUserDetailsState extends State<PostUserDetails> {
                               ),
                             ],
                             onSelected: (PostOptionsType selectedData) {
-                              if (selectedData == PostOptionsType.UPDATE) {}
+                              if (selectedData == PostOptionsType.UPDATE) {
+                                Navigator.of(context).pushNamed(
+                                  UpdatePost.routeName,
+                                  arguments: this.widget.post,
+                                );
+                              }
                               if (selectedData == PostOptionsType.DELETE) {
                                 this._onDeletePost(context);
                               }

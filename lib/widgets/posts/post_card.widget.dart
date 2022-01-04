@@ -21,7 +21,7 @@ class PostCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PostUserDetails(
-              postId: this.post.id,
+              post: this.post,
               serverUser: this.post.user,
             ),
             Container(
