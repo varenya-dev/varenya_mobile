@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 onPressed: () async {
                   print(
-                    await this._postService.fetchPostsByCategory("bipolar"),
+                    await this._postService.fetchCategories(),
                   );
                 },
                 child: Text('Test Fetching posts'),
