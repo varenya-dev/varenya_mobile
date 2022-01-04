@@ -27,6 +27,14 @@ class PostCard extends StatelessWidget {
               postId: this.post.id,
               serverUser: this.post.user,
             ),
+            Container(
+              margin: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.03,
+              ),
+              child: Text(
+                this.post.body,
+              ),
+            ),
             PostCategories(
               categories: this.post.categories,
             ),

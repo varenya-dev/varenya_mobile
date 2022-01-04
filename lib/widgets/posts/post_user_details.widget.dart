@@ -139,7 +139,7 @@ class _PostUserDetailsState extends State<PostUserDetails> {
           children: [
             Consumer<UserProvider>(
               builder: (context, user, _) =>
-                  this.widget.serverUser.firebaseId != user.user.uid
+                  this.widget.serverUser.firebaseId == user.user.uid
                       ? Container(
                           margin: EdgeInsets.symmetric(
                             horizontal:
