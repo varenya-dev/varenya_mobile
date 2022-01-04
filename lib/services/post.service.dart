@@ -49,6 +49,10 @@ class PostService {
   }
 
   Future<List<Post>> fetchPostsByCategory(String category) async {
+    if (category == 'EMPTY') {
+      return await this.fetchNewPosts();
+    }
+
     // Fetch the ID token for the user.
     String firebaseAuthToken =
         await this._firebaseAuth.currentUser!.getIdToken();
@@ -157,7 +161,7 @@ class PostService {
   Future<void> updatePost(UpdatePostDto updatePostDto) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
-    await this._firebaseAuth.currentUser!.getIdToken();
+        await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
     Uri uri = Uri.parse("$ENDPOINT/post");
@@ -187,7 +191,7 @@ class PostService {
   Future<void> deletePost(DeletePostDto deletePostDto) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
-    await this._firebaseAuth.currentUser!.getIdToken();
+        await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
     Uri uri = Uri.parse("$ENDPOINT/post");
