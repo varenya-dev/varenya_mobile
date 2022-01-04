@@ -11,10 +11,17 @@ class Post {
   final String id;
   final PostType postType;
   final String body;
+
+  @JsonKey(defaultValue: const [])
   final List<PostImage> images;
   final ServerUser user;
+
+  @JsonKey(defaultValue: const [])
   final List<Post> comments;
+
+  @JsonKey(defaultValue: const [])
   final List<PostCategory> categories;
+  
   final DateTime createdAt;
   final DateTime updatedAt;
 

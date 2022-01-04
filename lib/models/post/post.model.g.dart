@@ -10,16 +10,19 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       id: json['id'] as String,
       postType: $enumDecode(_$PostTypeEnumMap, json['postType']),
       body: json['body'] as String,
-      images: (json['images'] as List<dynamic>)
-          .map((e) => PostImage.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => PostImage.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       user: ServerUser.fromJson(json['user'] as Map<String, dynamic>),
-      comments: (json['comments'] as List<dynamic>)
-          .map((e) => Post.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      categories: (json['categories'] as List<dynamic>)
-          .map((e) => PostCategory.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      comments: (json['comments'] as List<dynamic>?)
+              ?.map((e) => Post.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      categories: (json['categories'] as List<dynamic>?)
+              ?.map((e) => PostCategory.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
