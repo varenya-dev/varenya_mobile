@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/register_account_dto/register_account_dto.dart';
@@ -17,7 +16,6 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final Uuid uuid = Uuid();
 

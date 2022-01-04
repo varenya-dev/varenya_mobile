@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
@@ -11,6 +10,10 @@ import 'package:varenya_mobile/pages/common/splash_page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
+import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
+import 'package:varenya_mobile/pages/post/new_post.page.dart';
+import 'package:varenya_mobile/pages/post/new_posts.page.dart';
+import 'package:varenya_mobile/pages/post/update_post.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 
 class App extends StatelessWidget {
@@ -41,6 +44,10 @@ class App extends StatelessWidget {
         DoctorDetails.routeName: (context) => DoctorDetails(),
         AppointmentList.routeName: (context) => AppointmentList(),
         AppointmentSlots.routeName: (context) => AppointmentSlots(),
+        NewPosts.routeName: (context) => NewPosts(),
+        CategorizedPosts.routeName: (context) => CategorizedPosts(),
+        NewPost.routeName: (context) => NewPost(),
+        UpdatePost.routeName: (context) => UpdatePost(),
       },
       home: SplashPage(),
     );
