@@ -10,6 +10,41 @@ import 'package:varenya_mobile/models/post/post_category/post_category.model.dar
 class PostService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  Future<List<Post>> fetchNewPosts() async {
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+        await this._firebaseAuth.currentUser!.getIdToken();
+
+    // Prepare URI for the request.
+    Uri uri = Uri.parse("$ENDPOINT/post");
+
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
+
+    // Send the post request to the server.
+    http.Response response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      throw ServerException(
+        message: 'Something went wrong, please try again later.',
+      );
+    }
+
+    List<dynamic> jsonResponse = json.decode(response.body);
+    List<Post> posts = jsonResponse.map((json) => Post.fromJson(json)).toList();
+
+    return posts;
+  }
+
   Future<List<Post>> fetchPostsByCategory(String category) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
