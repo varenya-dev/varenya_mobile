@@ -3,7 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_available_slots.dto.dart';
-import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
@@ -17,6 +16,7 @@ import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   late final UserService _userService;
   late final ChatService _chatService;
   late final AlertsService _alertsService;
-  late final DoctorService _doctorService;
   late final AppointmentService _appointmentService;
+  late final PostService _postService;
 
   @override
   void initState() {
@@ -45,9 +45,9 @@ class _HomePageState extends State<HomePage> {
     this._userService = Provider.of<UserService>(context, listen: false);
     this._chatService = Provider.of<ChatService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
-    this._doctorService = Provider.of<DoctorService>(context, listen: false);
     this._appointmentService =
         Provider.of<AppointmentService>(context, listen: false);
+    this._postService = Provider.of<PostService>(context, listen: false);
 
     this._userService.generateAndSaveTokenToDatabase();
 
@@ -144,6 +144,14 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: Text('Test Fetching available dates'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  print(
+                    await this._postService.fetchPostsByCategory("bipolar"),
+                  );
+                },
+                child: Text('Test Fetching posts'),
               ),
             ],
           ),
