@@ -9,6 +9,7 @@ import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
+import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/pages/post/new_posts.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
@@ -136,6 +137,12 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(CategorizedPosts.routeName);
                 },
                 child: Text('Categorized Posts'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(NewPost.routeName);
+                },
+                child: Text('New Post'),
               ),
             ],
           ),
