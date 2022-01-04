@@ -17,9 +17,6 @@ class PostCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height * 0.05,
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -41,6 +38,7 @@ class PostCard extends StatelessWidget {
             ImageCarousel(
               imageUrls: post.images,
             ),
+            Divider(),
           ],
         ),
       ),
