@@ -49,7 +49,7 @@ class PostService {
   }
 
   Future<List<Post>> fetchPostsByCategory(String category) async {
-    if (category == 'EMPTY') {
+    if (category == 'NEW') {
       return await this.fetchNewPosts();
     }
 
