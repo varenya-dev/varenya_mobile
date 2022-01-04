@@ -14,20 +14,27 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PostUserDetails(
-            serverUser: post.user,
-          ),
-          PostCategories(
-            categories: this.post.categories,
-          ),
-          ImageCarousel(
-            imageUrls: post.images,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height * 0.05,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PostUserDetails(
+              postId: this.post.id,
+              serverUser: this.post.user,
+            ),
+            PostCategories(
+              categories: this.post.categories,
+            ),
+            ImageCarousel(
+              imageUrls: post.images,
+            ),
+          ],
+        ),
       ),
     );
   }

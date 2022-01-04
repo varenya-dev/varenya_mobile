@@ -62,12 +62,17 @@ class _NewPostsState extends State<NewPosts> {
       appBar: AppBar(
         title: Text('Posts'),
       ),
-      body: Column(
-        children: [
-          PostCard(
-            post: this.dummyPost,
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            PostCard(
+              post: this.dummyPost,
+            ),
+            PostCard(
+              post: this.dummyPost,
+            ),
+          ],
+        ),
       ),
     );
   }
