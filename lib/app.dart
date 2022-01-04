@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
