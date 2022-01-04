@@ -8,13 +8,12 @@ import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
+import 'package:varenya_mobile/pages/post/new_posts.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
-import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
-import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
@@ -32,8 +31,6 @@ class _HomePageState extends State<HomePage> {
   late final UserService _userService;
   late final ChatService _chatService;
   late final AlertsService _alertsService;
-  late final AppointmentService _appointmentService;
-  late final PostService _postService;
 
   @override
   void initState() {
@@ -43,9 +40,6 @@ class _HomePageState extends State<HomePage> {
     this._userService = Provider.of<UserService>(context, listen: false);
     this._chatService = Provider.of<ChatService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
-    this._appointmentService =
-        Provider.of<AppointmentService>(context, listen: false);
-    this._postService = Provider.of<PostService>(context, listen: false);
 
     this._userService.generateAndSaveTokenToDatabase();
 
@@ -129,6 +123,12 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(AppointmentList.routeName);
                 },
                 child: Text('Appointments List'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(NewPosts.routeName);
+                },
+                child: Text('New Posts'),
               ),
             ],
           ),

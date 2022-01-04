@@ -11,6 +11,7 @@ import 'package:varenya_mobile/pages/common/splash_page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
+import 'package:varenya_mobile/pages/post/new_posts.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 
 class App extends StatelessWidget {
@@ -41,6 +42,7 @@ class App extends StatelessWidget {
         DoctorDetails.routeName: (context) => DoctorDetails(),
         AppointmentList.routeName: (context) => AppointmentList(),
         AppointmentSlots.routeName: (context) => AppointmentSlots(),
+        NewPosts.routeName: (context) => NewPosts(),
       },
       home: SplashPage(),
     );
