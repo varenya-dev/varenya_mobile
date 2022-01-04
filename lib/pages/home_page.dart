@@ -132,27 +132,6 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text('Appointments List'),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  print(
-                    await this._appointmentService.fetchAvailableSlots(
-                          new FetchAvailableSlotsDto(
-                            date: DateTime.now(),
-                            doctorId: "d5635a62-4da3-420c-9771-723360ca46e7",
-                          ),
-                        ),
-                  );
-                },
-                child: Text('Test Fetching available dates'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  print(
-                    await this._postService.fetchCategories(),
-                  );
-                },
-                child: Text('Test Fetching posts'),
-              ),
             ],
           ),
         ),
