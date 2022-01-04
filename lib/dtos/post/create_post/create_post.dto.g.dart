@@ -12,7 +12,7 @@ CreatePostDto _$CreatePostDtoFromJson(Map<String, dynamic> json) =>
       images:
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       categories: (json['categories'] as List<dynamic>)
-          .map((e) => PostCategory.fromJson(e as Map<String, dynamic>))
+          .map((e) => e as String)
           .toList(),
     );
 

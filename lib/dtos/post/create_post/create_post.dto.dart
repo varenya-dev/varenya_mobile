@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 
 part 'create_post.dto.g.dart';
 
@@ -7,7 +6,7 @@ part 'create_post.dto.g.dart';
 class CreatePostDto {
   final String body;
   final List<String> images;
-  final List<PostCategory> categories;
+  final List<String> categories;
 
   const CreatePostDto({
     required this.body,
