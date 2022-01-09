@@ -13,6 +13,7 @@ import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
 import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/pages/post/new_posts.page.dart';
+import 'package:varenya_mobile/pages/post/post.page.dart';
 import 'package:varenya_mobile/pages/post/update_post.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 
@@ -48,6 +49,7 @@ class App extends StatelessWidget {
         CategorizedPosts.routeName: (context) => CategorizedPosts(),
         NewPost.routeName: (context) => NewPost(),
         UpdatePost.routeName: (context) => UpdatePost(),
+        Post.routeName: (context) => Post(),
       },
       home: SplashPage(),
     );
