@@ -58,7 +58,7 @@ class PostService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/post");
+    Uri uri = Uri.parse("$ENDPOINT/post/new");
 
     // Prepare authorization headers.
     Map<String, String> headers = {
