@@ -7,6 +7,7 @@ import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -35,8 +36,13 @@ class _SplashPageState extends State<SplashPage> {
           FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           Provider.of<UserProvider>(context, listen: false).user = user;
+
+          log.i("Firebase User Signed In");
+
           Navigator.of(context).pushReplacementNamed(HomePage.routeName);
         } else {
+          log.i("Firebase User Not Present");
+
           Navigator.of(context).pushReplacementNamed(AuthPage.routeName);
         }
       });

@@ -11,6 +11,7 @@ import 'package:varenya_mobile/exceptions/auth/weak_password_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 /*
  * Service implementation for user module.
@@ -49,8 +50,8 @@ class UserService {
 
       // Returning updated user data.
       return this._firebaseAuth.currentUser!;
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("UserService:updateFullName Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -81,7 +82,7 @@ class UserService {
 
       // Returning updated user data.
       return this._firebaseAuth.currentUser!;
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error, stackTrace) {
       // Firebase Error: If the user has typed a weak password.
       if (error.code == "email-already-in-use") {
         throw UserAlreadyExistsException(
@@ -98,11 +99,11 @@ class UserService {
 
       // Handle other unknown errors
       else {
-        print(error);
+        log.e("UserService:updateEmailAddress Error", error, stackTrace);
         throw Exception("Something went wrong, please try again later");
       }
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("UserService:updateEmailAddress Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -130,7 +131,7 @@ class UserService {
 
       // Update password for the user.
       await loggedInUser.updatePassword(updatePasswordDto.newPassword);
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error, stackTrace) {
       // Firebase Error: If the user has typed a weak password.
       if (error.code == "weak-password") {
         throw WeakPasswordException(message: "Password provided is weak.");
@@ -145,11 +146,11 @@ class UserService {
 
       // Handle other unknown errors
       else {
-        print(error);
+        log.e("UserService:updatePassword Error", error, stackTrace);
         throw Exception("Something went wrong, please try again later");
       }
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("UserService:updatePassword Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -179,7 +180,7 @@ class UserService {
 
       // Deleting user account.
       await loggedInUser.delete();
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error, stackTrace) {
       // Firebase Error: If the user has typed the wrong password.
       if (error.code == 'wrong-password') {
         throw WrongPasswordException(
@@ -189,13 +190,13 @@ class UserService {
 
       // Handle other unknown errors
       else {
-        print(error);
+        log.e("UserService:deleteAccount Error", error, stackTrace);
         throw Exception("Something went wrong, please try again later");
       }
     } on ServerException catch (error) {
-      throw ServerException(message: error.message);
-    } catch (error) {
-      print(error);
+      throw ServerException(message: error.message.toString());
+    } catch (error, stackTrace) {
+      log.e("UserService:deleteAccount Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -221,7 +222,7 @@ class UserService {
     String? token = await this._firebaseMessaging.getToken();
     this.saveTokenToDatabase(token!);
 
-    print('TOKEN GENERATED AND SAVED.');
+    log.i('FCM Token Generated and Saved');
   }
 
   /*
@@ -251,6 +252,10 @@ class UserService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+
+      log.e("UserService:_deleteUserFromServer Error", body['message']);
+
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

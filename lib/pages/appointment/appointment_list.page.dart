@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
-import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 
 class AppointmentList extends StatefulWidget {
@@ -53,6 +53,11 @@ class _AppointmentListState extends State<AppointmentList> {
                 }
               default:
                 {
+                  log.e(
+                    "AppointmentList Error",
+                    snapshot.error,
+                    snapshot.stackTrace,
+                  );
                   return Text("Something went wrong, please try again later");
                 }
             }
@@ -64,8 +69,7 @@ class _AppointmentListState extends State<AppointmentList> {
               itemCount: this._appointments.length,
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                Appointment appointmentResponse =
-                    this._appointments[index];
+                Appointment appointmentResponse = this._appointments[index];
 
                 return AppointmentCard(
                   appointment: appointmentResponse,

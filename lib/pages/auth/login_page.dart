@@ -10,6 +10,7 @@ import 'package:varenya_mobile/pages/auth/register_page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
 
@@ -71,8 +72,8 @@ class _LoginPageState extends State<LoginPage> {
       displaySnackbar(error.message, context);
     } on WrongPasswordException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("Login:_onFormSubmit", error, stackTrace);
       displaySnackbar("Something went wrong, please try again later.", context);
     }
   }

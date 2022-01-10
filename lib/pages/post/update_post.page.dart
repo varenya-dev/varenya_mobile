@@ -10,6 +10,7 @@ import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/image_picker.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
@@ -138,8 +139,7 @@ class _UpdatePostState extends State<UpdatePost> {
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
-      print(error);
-      print(stackTrace);
+      log.e("UpdatePost:_onUpdatePost", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,
@@ -190,6 +190,11 @@ class _UpdatePostState extends State<UpdatePost> {
                       }
                     default:
                       {
+                        log.e(
+                          "UpdatePost Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                             "Something went wrong, please try again later");
                       }
@@ -273,7 +278,7 @@ class _UpdatePostState extends State<UpdatePost> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Post'),
+        title: Text('Update Post'),
       ),
       body: SingleChildScrollView(
         child: Form(

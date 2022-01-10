@@ -9,6 +9,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/image_picker.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
@@ -138,8 +139,7 @@ class _NewPostState extends State<NewPost> {
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
-      print(error);
-      print(stackTrace);
+      log.e("NewPost:_onCreateNewPost", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,
@@ -190,6 +190,11 @@ class _NewPostState extends State<NewPost> {
                       }
                     default:
                       {
+                        log.e(
+                          "NewPost:_openPostCategories Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                             "Something went wrong, please try again later");
                       }

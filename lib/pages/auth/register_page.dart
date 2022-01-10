@@ -12,6 +12,7 @@ import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/utils/image_picker.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
@@ -85,8 +86,8 @@ class _RegisterPageState extends State<RegisterPage> {
     // Handle errors gracefully.
     on UserAlreadyExistsException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("Register:_onFormSubmit", error, stackTrace);
       displaySnackbar("Something went wrong, please try again later.", context);
     }
   }

@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -75,7 +76,7 @@ class AuthService {
       }
 
       return this.firebaseAuth.currentUser!;
-    } on FirebaseException catch (error) {
+    } on FirebaseException catch (error, stackTrace) {
       // If email is already in use, throw an error.
       if (error.code == 'email-already-in-use') {
         throw new UserAlreadyExistsException(
@@ -85,14 +86,18 @@ class AuthService {
 
       // Handle other unknown errors
       else {
-        print(error);
+        log.e(
+          "AuthService:registerWithEmailAndPassword Error",
+          error,
+          stackTrace,
+        );
         throw Exception("Something went wrong, please try again later");
       }
     } on ServerException catch (error) {
       throw ServerException(message: error.message);
-    } catch (error, stacktrace) {
-      print("ERROR: $error");
-      print("STACKTRACE: $stacktrace");
+    } catch (error, stackTrace) {
+      log.e(
+          "AuthService:registerWithEmailAndPassword Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -111,7 +116,7 @@ class AuthService {
       );
 
       return this.firebaseAuth.currentUser!;
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error, stackTrace) {
       // Firebase Error: If the user does not exist.
       if (error.code == 'user-not-found') {
         throw UserNotFoundException(
@@ -127,11 +132,11 @@ class AuthService {
 
       // Handle other unknown errors
       else {
-        print(error);
+        log.e("AuthService:loginWithEmailAndPassword Error", error, stackTrace);
         throw Exception("Something went wrong, please try again later");
       }
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("AuthService:loginWithEmailAndPassword Error", error, stackTrace);
       throw Exception("Something went wrong, please try again later");
     }
   }
@@ -176,6 +181,8 @@ class AuthService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AuthService:_setupFirebaseRoles Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

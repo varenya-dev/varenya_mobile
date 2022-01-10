@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/image_picker.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart' as SBS;
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
@@ -32,7 +33,6 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     // Initializing the user provider.
@@ -44,7 +44,6 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
     // Disposing off the controllers
@@ -153,8 +152,8 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
       }
     }
     // Handle errors gracefully.
-    catch (error) {
-      print(error);
+    catch (error, stackTrace) {
+      log.e("UserProfileUpdate:_onFormSubmit", error, stackTrace);
       displaySnackbar("Something went wrong, please try again later", context);
     }
   }

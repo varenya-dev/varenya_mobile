@@ -17,6 +17,7 @@ import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class HomePage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     this
         ._alertsService
         .toggleSubscribeToSOSTopic(true)
-        .then((_) => print('SOS TOPIC SUBSCRIBED'))
+        .then((_) => log.i("SOS Topic Subscribed"))
         .catchError((error) => print(error));
   }
 

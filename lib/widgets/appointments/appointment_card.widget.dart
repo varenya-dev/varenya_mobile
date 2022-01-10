@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class AppointmentCard extends StatefulWidget {
@@ -82,8 +83,8 @@ class _AppointmentCardState extends State<AppointmentCard> {
       );
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("AppointmentCard:_onDeleteAppointment", error, stackTrace);
       displaySnackbar(
         'Something went wrong, please try again later.',
         context,

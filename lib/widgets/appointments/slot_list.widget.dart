@@ -4,6 +4,7 @@ import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_avai
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/appointments/timing_slot.widget.dart';
 
 class SlotList extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SlotListState extends State<SlotList> {
               }
             default:
               {
-                print(snapshot.error);
+                log.e("SlotList Error", snapshot.error, snapshot.stackTrace);
                 return Text("Something went wrong, please try again later");
               }
           }

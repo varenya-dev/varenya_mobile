@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
-import 'package:varenya_mobile/enum/job.enum.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
 
@@ -54,6 +53,11 @@ class _DoctorListState extends State<DoctorList> {
                       }
                     default:
                       {
+                        log.e(
+                          "DoctorList:_openSpecializationFilters Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                             "Something went wrong, please try again later");
                       }
@@ -145,7 +149,11 @@ class _DoctorListState extends State<DoctorList> {
                       }
                     default:
                       {
-                        print(snapshot.error);
+                        log.e(
+                          "DoctorList:_openJobFilters Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                             "Something went wrong, please try again later");
                       }
@@ -236,7 +244,11 @@ class _DoctorListState extends State<DoctorList> {
                     }
                   default:
                     {
-                      print(snapshot.error);
+                      log.e(
+                        "DoctorList Error",
+                        snapshot.error,
+                        snapshot.stackTrace,
+                      );
                       return Text(
                           "Something went wrong, please try again later");
                     }

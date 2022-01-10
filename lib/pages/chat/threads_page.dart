@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class ThreadsPage extends StatefulWidget {
   const ThreadsPage({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class _ThreadsPageState extends State<ThreadsPage> {
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
         ) {
           if (snapshot.hasError) {
-            print(snapshot.error);
+            log.e("Threads Error", snapshot.error, snapshot.stackTrace);
             return Text('Something went wrong, please try again later.');
           }
 

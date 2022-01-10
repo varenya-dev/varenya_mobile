@@ -7,14 +7,14 @@ import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appoin
 import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_available_slots.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
-import 'package:varenya_mobile/models/appointments/patient_appointment_response/patient_appointment_response.model.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class AppointmentService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<List<DateTime>> fetchAvailableSlots(
-      FetchAvailableSlotsDto fetchAvailableSlotsDto) async {
-
+    FetchAvailableSlotsDto fetchAvailableSlotsDto,
+  ) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
         await this._firebaseAuth.currentUser!.getIdToken();
@@ -42,6 +42,8 @@ class AppointmentService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AppointmentService:fetchAvailableSlots Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -80,6 +82,8 @@ class AppointmentService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AppointmentService:bookAppointment Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -109,15 +113,17 @@ class AppointmentService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AppointmentService:fetchScheduledAppointments Error",
+          body['message']);
       throw ServerException(
         message: 'Something went wrong, please try again later.',
       );
     }
 
     List<dynamic> jsonResponse = json.decode(response.body);
-    List<Appointment> appointments = jsonResponse
-        .map((json) => Appointment.fromJson(json))
-        .toList();
+    List<Appointment> appointments =
+        jsonResponse.map((json) => Appointment.fromJson(json)).toList();
 
     return appointments;
   }
@@ -151,6 +157,8 @@ class AppointmentService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AppointmentService:deleteAppointment Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
