@@ -7,6 +7,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:http/http.dart' as http;
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class DoctorService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -40,6 +41,8 @@ class DoctorService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("DoctorService:fetchDoctorsWithFiltering Error", body['message']);
       throw ServerException(
         message: 'Something went wrong, please try again later.',
       );
@@ -76,6 +79,8 @@ class DoctorService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("DoctorService:fetchSpecializations Error", body['message']);
       throw ServerException(
         message: 'Something went wrong, please try again later.',
       );
@@ -112,6 +117,8 @@ class DoctorService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("DoctorService:fetchJobTitles Error", body['message']);
       throw ServerException(
         message: 'Something went wrong, please try again later.',
       );

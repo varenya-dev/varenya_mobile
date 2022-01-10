@@ -10,6 +10,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/chat/chat_bubble_widget.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
@@ -63,8 +64,8 @@ class _ChatPageState extends State<ChatPage> {
           .sendMessage(this._chatController.text, this._chatThread);
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("Chat:onMessageSubmit", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,
@@ -76,8 +77,18 @@ class _ChatPageState extends State<ChatPage> {
    * Method to handle deleting chat message.
    */
   Future<void> onMessageDelete(String id) async {
-    // Delete the message from the thread.
-    await this._chatService.deleteMessage(id, this._chatThread);
+    try {
+      // Delete the message from the thread.
+      await this._chatService.deleteMessage(id, this._chatThread);
+    } on ServerException catch (error) {
+      displaySnackbar(error.message, context);
+    } catch (error, stackTrace) {
+      log.e("Chat:onMessageDelete", error, stackTrace);
+      displaySnackbar(
+        "Something went wrong, please try again later.",
+        context,
+      );
+    }
   }
 
   /*
@@ -116,6 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                 AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
                     snapshot) {
               if (snapshot.hasError) {
+                log.e("Chat Error", snapshot.error, snapshot.stackTrace);
                 return Text('Something went wrong');
               }
 

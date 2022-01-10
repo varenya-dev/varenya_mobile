@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class AlertsService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -41,6 +42,8 @@ class AlertsService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AlertsService:sendSOSNotifications Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -75,6 +78,8 @@ class AlertsService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AlertsService:sendSOSResponseNotification Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

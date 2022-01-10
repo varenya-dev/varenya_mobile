@@ -8,6 +8,7 @@ import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:uuid/uuid.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:http/http.dart' as http;
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 /*
  * Service implementation for chat module.
@@ -137,6 +138,8 @@ class ChatService {
       Map<String, dynamic> body = json.decode(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("ChatService:_sendChatNotification Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

@@ -5,6 +5,7 @@ import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appoin
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class TimingSlot extends StatefulWidget {
@@ -48,8 +49,8 @@ class _TimingSlotState extends State<TimingSlot> {
       Navigator.of(context).pop();
     } on ServerException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("TimingSlot:_bookAppointment", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,

@@ -7,6 +7,7 @@ import 'package:varenya_mobile/dtos/comments/create_comment/create_comment.dto.d
 import 'package:varenya_mobile/dtos/comments/delete_comment/delete_comment.dto.dart';
 import 'package:varenya_mobile/dtos/comments/update_comment/update_comment.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 class CommentsService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -37,6 +38,8 @@ class CommentsService {
       print(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("CommentsService:createNewComment Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -68,6 +71,8 @@ class CommentsService {
       print(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("CommentsService:updateComment Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
@@ -99,6 +104,8 @@ class CommentsService {
       print(response.body);
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("CommentsService:deleteComment Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

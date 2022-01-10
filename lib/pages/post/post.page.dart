@@ -7,6 +7,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart' as PM;
 import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/comments/comment_form.widget.dart';
@@ -111,9 +112,7 @@ class _PostState extends State<Post> {
         context,
       );
     } catch (error, stackTrace) {
-      print(error);
-      print(stackTrace);
-
+      log.e("PostPage:_confirmCommentDeletion", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
         context,
@@ -146,7 +145,11 @@ class _PostState extends State<Post> {
                 }
               default:
                 {
-                  print(snapshot.error);
+                  log.e(
+                    "Post Error",
+                    snapshot.error,
+                    snapshot.stackTrace,
+                  );
                   return Text("Something went wrong, please try again later");
                 }
             }

@@ -4,6 +4,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 
@@ -47,7 +48,11 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                       }
                     default:
                       {
-                        print(snapshot.error);
+                        log.e(
+                          "CategorizedPosts:_openPostCategoriesFilters Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                           "Something went wrong, please try again later",
                         );
@@ -136,7 +141,11 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                       }
                     default:
                       {
-                        print(snapshot.error);
+                        log.e(
+                          "CategorizedPosts Error",
+                          snapshot.error,
+                          snapshot.stackTrace,
+                        );
                         return Text(
                             "Something went wrong, please try again later");
                       }

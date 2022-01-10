@@ -12,6 +12,7 @@ import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ void main() async {
     provisional: false,
     sound: true,
   );
-  print("FCM STATUS: ${settings.authorizationStatus}");
+  log.i("FCM Status: ${settings.authorizationStatus}");
 
   runApp(Root());
 }

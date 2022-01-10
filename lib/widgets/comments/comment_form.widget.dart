@@ -7,6 +7,7 @@ import 'package:varenya_mobile/enum/comment_form_type.enum.dart';
 import 'package:varenya_mobile/exceptions/auth/not_logged_in_exception.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/services/comments.service.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
 
@@ -69,8 +70,8 @@ class _CommentFormState extends State<CommentForm> {
       displaySnackbar(error.message, context);
     } on NotLoggedInException catch (error) {
       displaySnackbar(error.message, context);
-    } catch (error) {
-      print(error);
+    } catch (error, stackTrace) {
+      log.e("CommentForm:_onFormSubmit", error, stackTrace);
       displaySnackbar("Something went wrong, please try again later.", context);
     }
   }
