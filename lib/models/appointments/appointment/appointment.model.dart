@@ -1,17 +1,30 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:varenya_mobile/enum/confirmation_status.enum.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 
 part 'appointment.model.g.dart';
 
+@HiveType(typeId: 10)
 @JsonSerializable()
 class Appointment {
+
+  @HiveField(0, defaultValue: '')
   String id;
+
+  @HiveField(1)
   DateTime scheduledFor;
+
+  @HiveField(2)
   DateTime createdAt;
+
+  @HiveField(3)
   DateTime updatedAt;
+
+  @HiveField(4)
   ServerUser patientUser;
+  
+  @HiveField(5)
   Doctor doctorUser;
 
   Appointment({

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
+import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
@@ -43,6 +44,7 @@ void main() async {
   Hive.registerAdapter<RandomName>(new RandomNameAdapter());
   Hive.registerAdapter<Roles>(new RolesAdapter());
   Hive.registerAdapter<ServerUser>(new ServerUserAdapter());
+  Hive.registerAdapter<Appointment>(new AppointmentAdapter());
   Hive.registerAdapter<PostCategory>(new PostCategoryAdapter());
   Hive.registerAdapter<PostImage>(new PostImageAdapter());
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
@@ -54,6 +56,7 @@ void main() async {
 
   await Hive.openBox<List<Doctor>>(VARENYA_DOCTORS_BOX);
   await Hive.openBox<List<Post>>(VARENYA_POSTS_BOX);
+  await Hive.openBox<List<Appointment>>(VARENYA_APPOINTMENT_BOX);
 
   log.i("Opened Hive Boxes");
 
