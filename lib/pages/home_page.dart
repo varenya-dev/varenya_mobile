@@ -17,6 +17,7 @@ import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
+import 'package:varenya_mobile/utils/check_connectivity.util.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
@@ -44,16 +45,24 @@ class _HomePageState extends State<HomePage> {
     this._chatService = Provider.of<ChatService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
-    this._userService.generateAndSaveTokenToDatabase();
+    checkConnectivity().then((value) {
+      if (value) {
+        this._userService.generateAndSaveTokenToDatabase();
+        FirebaseMessaging.instance.onTokenRefresh
+            .listen(this._userService.saveTokenToDatabase);
 
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen(this._userService.saveTokenToDatabase);
-
-    this
-        ._alertsService
-        .toggleSubscribeToSOSTopic(true)
-        .then((_) => log.i("SOS Topic Subscribed"))
-        .catchError((error) => print(error));
+        this
+            ._alertsService
+            .toggleSubscribeToSOSTopic(true)
+            .then((_) => log.i("SOS Topic Subscribed"))
+            .catchError((error) => print(error));
+      } else {
+        log.i(
+            "Device offline, suspending FCM Token Generation and Topic Subscription");
+      }
+    }).catchError((error, stackTrace) {
+      log.e("HomePage Error", error, stackTrace);
+    });
   }
 
   @override
