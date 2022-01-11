@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
+import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
@@ -27,6 +28,7 @@ void main() async {
 
   Hive.registerAdapter<PostCategory>(new PostCategoryAdapter());
   Hive.registerAdapter<PostImage>(new PostImageAdapter());
+  Hive.registerAdapter<PostType>(new PostTypeAdapter());
 
   await Hive.openBox(VARENYA_DOCTORS_BOX);
   await Hive.openBox(VARENYA_POSTS_BOX);
