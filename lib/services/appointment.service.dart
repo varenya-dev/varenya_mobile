@@ -195,14 +195,8 @@ class AppointmentService {
 
   List<Appointment> _fetchAppointmentsFromDevice() {
     log.i("Fetching Appointments From Device");
-    List<Appointment>? appointments = this
+    return this
         ._appointmentsBox
-        .get(VARENYA_APPOINTMENT_LIST) as List<Appointment>?;
-
-    if (appointments == null) {
-      return [];
-    } else {
-      return appointments;
-    }
+        .get(VARENYA_APPOINTMENT_LIST, defaultValue: [])!.cast<Appointment>();
   }
 }

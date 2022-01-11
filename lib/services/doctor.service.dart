@@ -197,14 +197,10 @@ class DoctorService {
 
   List<Doctor> _fetchFilteredDoctorsFromDevice() {
     log.i("Fetching Doctors From Device");
-    List<Doctor>? doctors =
-        this._doctorsBox.get(VARENYA_FILTERED_DOCTORS_LIST) as List<Doctor>?;
-
-    if (doctors == null) {
-      return [];
-    } else {
-      return doctors;
-    }
+    List<Doctor> doctors = this
+        ._doctorsBox
+        .get(VARENYA_FILTERED_DOCTORS_LIST, defaultValue: [])!.cast<Doctor>();
+    return doctors;
   }
 
   void _saveSpecializationsToDevice(List<Specialization> specializations) {
@@ -215,15 +211,10 @@ class DoctorService {
 
   List<Specialization> _fetchSpecializationsFromDevice() {
     log.i("Fetching Specializations From Device");
-    List<Specialization>? specializations = this
-        ._specializationsBox
-        .get(VARENYA_SPECIALIZATION_LIST) as List<Specialization>?;
-
-    if (specializations == null) {
-      return [];
-    } else {
-      return specializations;
-    }
+    return this._specializationsBox.get(
+      VARENYA_SPECIALIZATION_LIST,
+      defaultValue: [],
+    )!.cast<Specialization>();
   }
 
   void _saveJobsToDevice(List<String> jobs) {
@@ -234,12 +225,8 @@ class DoctorService {
 
   List<String> _fetchJobsFromDevice() {
     log.i("Fetching Jobs From Device");
-    List<String>? jobs = this._jobsBox.get(VARENYA_JOB_LIST) as List<String>?;
-
-    if (jobs == null) {
-      return [];
-    } else {
-      return jobs;
-    }
+    return this
+        ._jobsBox
+        .get(VARENYA_JOB_LIST, defaultValue: [])!.cast<String>();
   }
 }

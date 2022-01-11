@@ -339,13 +339,7 @@ class PostService {
 
   List<Post> _fetchPostsFromDevice(String category) {
     log.i("Fetching Posts:$category From Device");
-    List<Post>? posts = this._postsBox.get(category) as List<Post>?;
-
-    if (posts == null) {
-      return [];
-    } else {
-      return posts;
-    }
+    return this._postsBox.get(category, defaultValue: [])!.cast<Post>();
   }
 
   void _saveCategoriesToDevice(List<PostCategory> categories) {
@@ -356,13 +350,8 @@ class PostService {
 
   List<PostCategory> _fetchCategoriesFromDevice() {
     log.i("Fetching Categories From Device");
-    List<PostCategory>? categories =
-        this._categoriesBox.get(VARENYA_CATEGORY_LIST) as List<PostCategory>?;
-
-    if (categories == null) {
-      return [];
-    } else {
-      return categories;
-    }
+    return this
+        ._categoriesBox
+        .get(VARENYA_CATEGORY_LIST, defaultValue: [])!.cast<PostCategory>();
   }
 }
