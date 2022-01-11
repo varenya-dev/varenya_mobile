@@ -29,7 +29,7 @@ void main() async {
     provisional: false,
     sound: true,
   );
-  log.i("FCM AUthorization Status: ${settings.authorizationStatus}");
+  log.i("FCM Authorization Status: ${settings.authorizationStatus}");
 
   runApp(Root());
 }
