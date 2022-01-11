@@ -228,13 +228,13 @@ class DoctorService {
 
   void _saveJobsToDevice(List<String> jobs) {
     log.i("Saving Jobs to Device");
-    this._jobsBox.put(VARENYA_JOB_BOX, jobs);
+    this._jobsBox.put(VARENYA_JOB_LIST, jobs);
     log.i("Saved Jobs to Device");
   }
 
   List<String> _fetchJobsFromDevice() {
     log.i("Fetching Jobs From Device");
-    List<String>? jobs = this._jobsBox.get(VARENYA_JOB_BOX) as List<String>?;
+    List<String>? jobs = this._jobsBox.get(VARENYA_JOB_LIST) as List<String>?;
 
     if (jobs == null) {
       return [];

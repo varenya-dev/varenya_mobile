@@ -56,6 +56,7 @@ void main() async {
 
   await Hive.openBox<List<dynamic>>(VARENYA_DOCTORS_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_POSTS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_POST_CATEGORY_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_APPOINTMENT_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
