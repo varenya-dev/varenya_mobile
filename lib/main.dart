@@ -8,6 +8,7 @@ import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
+import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
@@ -26,6 +27,7 @@ void main() async {
   await Firebase.initializeApp();
   await Hive.initFlutter();
 
+  Hive.registerAdapter<Specialization>(new SpecializationAdapter());
   Hive.registerAdapter<PostCategory>(new PostCategoryAdapter());
   Hive.registerAdapter<PostImage>(new PostImageAdapter());
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
