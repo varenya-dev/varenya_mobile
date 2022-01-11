@@ -1,31 +1,43 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 
 part 'doctor.model.g.dart';
 
+@HiveType(typeId: 5)
 @JsonSerializable()
 class Doctor {
+  @HiveField(0, defaultValue: '')
   final String id;
 
+  @HiveField(1, defaultValue: '')
   @JsonKey(defaultValue: '')
   final String imageUrl;
 
+  @HiveField(2, defaultValue: '')
   @JsonKey(defaultValue: '')
   final String fullName;
 
+  @HiveField(3, defaultValue: '')
   @JsonKey(defaultValue: '')
   final String clinicAddress;
 
+  @HiveField(4, defaultValue: 0.0)
   @JsonKey(defaultValue: 0.0)
   final double cost;
 
+  @HiveField(5, defaultValue: '')
   @JsonKey(defaultValue: "")
   final String jobTitle;
 
+  @HiveField(6, defaultValue: [])
   @JsonKey(defaultValue: [])
   final List<Specialization> specializations;
 
+  @HiveField(7)
   final DateTime shiftStartTime;
+
+  @HiveField(8)
   final DateTime shiftEndTime;
 
   const Doctor({

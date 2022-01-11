@@ -150,8 +150,8 @@ class ChatService {
         this._firestore.collection('threads').doc();
 
     List<String> participants = [
-      "AogJeR814fgYkTzTvNSwnQx8o8p1",
-      "QTLZElOg8KUONNRZiZmD90NIR2r1"
+      "hvSnXNJ75JMU6pKhcOOO7IJ0q143",
+      "KkAqaqu5TSh3RQkWXEunuvE27aD3"
     ];
 
     ChatThread chatThread = new ChatThread(

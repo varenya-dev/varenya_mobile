@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
@@ -37,26 +38,51 @@ class _DoctorDetailsState extends State<DoctorDetails> {
           DoctorCard(
             doctor: doctorDetails,
           ),
-          ElevatedButton(
-            onPressed: () async {
-              String threadId =
-                  await this._chatService.createNewThread(doctorDetails.id);
+          OfflineBuilder(
+            connectivityBuilder:
+                (BuildContext context, ConnectivityResult result, _) {
+              final bool connected = result != ConnectivityResult.none;
 
-              Navigator.of(context).pushNamed(
-                ChatPage.routeName,
-                arguments: threadId,
+              return ElevatedButton(
+                onPressed: connected
+                    ? () async {
+                        String threadId = await this
+                            ._chatService
+                            .createNewThread(doctorDetails.id);
+
+                        Navigator.of(context).pushNamed(
+                          ChatPage.routeName,
+                          arguments: threadId,
+                        );
+                      }
+                    : null,
+                child: Text(
+                  connected ? 'Start Chatting' : 'You Are Offline',
+                ),
               );
             },
-            child: Text('Start Chatting'),
+            child: SizedBox(),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(
-                AppointmentSlots.routeName,
-                arguments: doctorDetails,
+          OfflineBuilder(
+            connectivityBuilder:
+                (BuildContext context, ConnectivityResult result, _) {
+              final bool connected = result != ConnectivityResult.none;
+
+              return ElevatedButton(
+                onPressed: connected
+                    ? () {
+                        Navigator.of(context).pushNamed(
+                          AppointmentSlots.routeName,
+                          arguments: doctorDetails,
+                        );
+                      }
+                    : null,
+                child: Text(
+                  connected ? 'Book Appointment' : 'You Are Offline',
+                ),
               );
             },
-            child: Text('Book Appointment'),
+            child: SizedBox(),
           ),
         ],
       ),

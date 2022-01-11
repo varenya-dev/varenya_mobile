@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
@@ -175,9 +176,17 @@ class _ChatPageState extends State<ChatPage> {
                   RequiredValidator(errorText: "Please type in your message")
                 ],
                 textInputType: TextInputType.text,
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: this.onMessageSubmit,
+                suffixIcon: OfflineBuilder(
+                  connectivityBuilder:
+                      (BuildContext context, ConnectivityResult result, _) {
+                    final bool connected = result != ConnectivityResult.none;
+
+                    return IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: connected ? this.onMessageSubmit : null,
+                    );
+                  },
+                  child: SizedBox(),
                 ),
               ),
             ),
