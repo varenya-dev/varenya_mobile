@@ -54,9 +54,11 @@ void main() async {
 
   log.i("Opening Hive Boxes");
 
-  await Hive.openBox<List<Doctor>>(VARENYA_DOCTORS_BOX);
-  await Hive.openBox<List<Post>>(VARENYA_POSTS_BOX);
-  await Hive.openBox<List<Appointment>>(VARENYA_APPOINTMENT_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_DOCTORS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_POSTS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_APPOINTMENT_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
 
   log.i("Opened Hive Boxes");
 
