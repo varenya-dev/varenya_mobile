@@ -12,6 +12,7 @@ import 'package:varenya_mobile/models/post/post_category/post_category.model.dar
 import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/models/user/random_name/random_name.model.dart';
+import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
@@ -34,6 +35,7 @@ void main() async {
   Hive.registerAdapter<Doctor>(new DoctorAdapter());
   Hive.registerAdapter<RandomName>(new RandomNameAdapter());
   Hive.registerAdapter<Roles>(new RolesAdapter());
+  Hive.registerAdapter<ServerUser>(new ServerUserAdapter());
   Hive.registerAdapter<PostCategory>(new PostCategoryAdapter());
   Hive.registerAdapter<PostImage>(new PostImageAdapter());
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
