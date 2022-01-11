@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'roles.enum.g.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 8)
 enum Roles {
   @HiveField(0)
   MAIN,

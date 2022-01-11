@@ -8,6 +8,7 @@ import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
+import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
@@ -28,8 +29,14 @@ import 'package:hive/hive.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  log.i("Firebase and Hive Initializing");
+
   await Firebase.initializeApp();
   await Hive.initFlutter();
+
+  log.i("Firebase and Hive Initialized");
+
+  log.i("Registering Hive Adapters");
 
   Hive.registerAdapter<Specialization>(new SpecializationAdapter());
   Hive.registerAdapter<Doctor>(new DoctorAdapter());
@@ -39,9 +46,16 @@ void main() async {
   Hive.registerAdapter<PostCategory>(new PostCategoryAdapter());
   Hive.registerAdapter<PostImage>(new PostImageAdapter());
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
+  Hive.registerAdapter<Post>(new PostAdapter());
 
-  await Hive.openBox(VARENYA_DOCTORS_BOX);
-  await Hive.openBox(VARENYA_POSTS_BOX);
+  log.i("Registered Hive Adapters");
+
+  log.i("Opening Hive Boxes");
+
+  await Hive.openBox<List<Doctor>>(VARENYA_DOCTORS_BOX);
+  await Hive.openBox<List<Post>>(VARENYA_POSTS_BOX);
+
+  log.i("Opened Hive Boxes");
 
   NotificationSettings settings =
       await FirebaseMessaging.instance.requestPermission(

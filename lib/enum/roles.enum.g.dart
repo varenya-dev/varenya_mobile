@@ -8,7 +8,7 @@ part of 'roles.enum.dart';
 
 class RolesAdapter extends TypeAdapter<Roles> {
   @override
-  final int typeId = 7;
+  final int typeId = 8;
 
   @override
   Roles read(BinaryReader reader) {
