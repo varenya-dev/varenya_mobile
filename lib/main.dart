@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
@@ -20,6 +21,9 @@ void main() async {
 
   await Firebase.initializeApp();
   await Hive.initFlutter();
+
+  await Hive.openBox(VARENYA_DOCTORS_BOX);
+  await Hive.openBox(VARENYA_POSTS_BOX);
 
   NotificationSettings settings =
       await FirebaseMessaging.instance.requestPermission(
