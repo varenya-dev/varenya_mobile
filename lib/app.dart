@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:varenya_mobile/pages/activity/activity.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
@@ -50,6 +51,7 @@ class App extends StatelessWidget {
         NewPost.routeName: (context) => NewPost(),
         UpdatePost.routeName: (context) => UpdatePost(),
         Post.routeName: (context) => Post(),
+        Activity.routeName: (context) => Activity(),
       },
       home: SplashPage(),
     );
