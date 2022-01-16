@@ -17,6 +17,7 @@ import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/models/user/random_name/random_name.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
+import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
@@ -112,7 +113,10 @@ class Root extends StatelessWidget {
         ),
         Provider<CommentsService>(
           create: (context) => CommentsService(),
-        )
+        ),
+        Provider<ActivityService>(
+          create: (context) => ActivityService(),
+        ),
       ],
       child: App(),
     );
