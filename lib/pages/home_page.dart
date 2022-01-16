@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/notification_handler.dart';
+import 'package:varenya_mobile/pages/activity/activity.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
@@ -153,6 +154,12 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed(NewPost.routeName);
                 },
                 child: Text('New Post'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(Activity.routeName);
+                },
+                child: Text('Activity'),
               ),
             ],
           ),
