@@ -45,4 +45,26 @@ class LocalNotificationsService {
 
   Future<NotificationAppLaunchDetails?> get notificationAppLaunchDetails =>
       this.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
+  Future<void> instantNotification() async {
+    var android = AndroidNotificationDetails(
+      "id",
+      "channel",
+    );
+
+    var ios = IOSNotificationDetails();
+
+    var platform = new NotificationDetails(
+      android: android,
+      iOS: ios,
+    );
+
+    await this.flutterLocalNotificationsPlugin.show(
+          0,
+          "Demo instant notification",
+          "Tap to do something",
+          platform,
+          payload: "instant",
+        );
+  }
 }

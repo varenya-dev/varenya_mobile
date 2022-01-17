@@ -20,6 +20,7 @@ import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/models/user/random_name/random_name.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
+import 'package:varenya_mobile/providers/notification_action.provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
@@ -122,10 +123,17 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log.i("Action Status: $action");
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserProvider>(
           create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider<NotificationActionProvider>(
+          create: (context) => NotificationActionProvider(
+            action: action,
+          ),
         ),
         Provider<AuthService>(
           create: (context) => AuthService(),
