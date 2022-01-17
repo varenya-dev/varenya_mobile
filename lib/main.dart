@@ -9,6 +9,8 @@ import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
+import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
+import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
@@ -52,6 +54,8 @@ void main() async {
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
   Hive.registerAdapter<Post>(new PostAdapter());
   Hive.registerAdapter<Activity>(new ActivityAdapter());
+  Hive.registerAdapter<QuestionAnswer>(new QuestionAnswerAdapter());
+  Hive.registerAdapter<DailyProgressData>(new DailyProgressDataAdapter());
 
   log.i("Registered Hive Adapters");
 
@@ -64,6 +68,7 @@ void main() async {
   await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_PROGESS_BOX);
 
   log.i("Opened Hive Boxes");
 
