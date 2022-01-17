@@ -1,14 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
+import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
+import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
+import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
@@ -16,6 +20,7 @@ import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/models/user/random_name/random_name.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
+import 'package:varenya_mobile/providers/notification_action.provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
@@ -23,7 +28,9 @@ import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/comments.service.dart';
+import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
@@ -52,6 +59,8 @@ void main() async {
   Hive.registerAdapter<PostType>(new PostTypeAdapter());
   Hive.registerAdapter<Post>(new PostAdapter());
   Hive.registerAdapter<Activity>(new ActivityAdapter());
+  Hive.registerAdapter<QuestionAnswer>(new QuestionAnswerAdapter());
+  Hive.registerAdapter<DailyProgressData>(new DailyProgressDataAdapter());
 
   log.i("Registered Hive Adapters");
 
@@ -64,6 +73,7 @@ void main() async {
   await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_PROGESS_BOX);
 
   log.i("Opened Hive Boxes");
 
@@ -79,16 +89,51 @@ void main() async {
   );
   log.i("FCM Authorization Status: ${settings.authorizationStatus}");
 
-  runApp(Root());
+  log.i("Initializing Local Notifications");
+  LocalNotificationsService localNotificationsService =
+      LocalNotificationsService();
+  await localNotificationsService.initializeLocalNotifications();
+  log.i("Initialized Local Notifications");
+
+  log.i("Checking Notification Triggered App Launch");
+  String action = DO_NOTHING;
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+      await localNotificationsService.notificationAppLaunchDetails;
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    log.i("Notification Triggered App Launch: TRUE");
+    action = DO_SOMETHING;
+  } else {
+    log.i("Notification Triggered App Launch: FALSE");
+  }
+
+  runApp(
+    Root(
+      action: action,
+    ),
+  );
 }
 
 class Root extends StatelessWidget {
+  final String action;
+
+  Root({
+    required this.action,
+  });
+
   @override
   Widget build(BuildContext context) {
+    log.i("Action Status: $action");
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserProvider>(
           create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider<NotificationActionProvider>(
+          create: (context) => NotificationActionProvider(
+            action: action,
+          ),
         ),
         Provider<AuthService>(
           create: (context) => AuthService(),
@@ -116,6 +161,9 @@ class Root extends StatelessWidget {
         ),
         Provider<ActivityService>(
           create: (context) => ActivityService(),
+        ),
+        Provider<DailyQuestionnaireService>(
+          create: (context) => DailyQuestionnaireService(),
         ),
       ],
       child: App(),

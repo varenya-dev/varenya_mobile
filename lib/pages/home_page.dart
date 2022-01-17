@@ -17,6 +17,7 @@ import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/check_connectivity.util.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
@@ -36,6 +37,9 @@ class _HomePageState extends State<HomePage> {
   late final UserService _userService;
   late final ChatService _chatService;
   late final AlertsService _alertsService;
+
+  final LocalNotificationsService localNotificationsService =
+      LocalNotificationsService();
 
   @override
   void initState() {
@@ -73,95 +77,103 @@ class _HomePageState extends State<HomePage> {
         title: Text('Varenya'),
       ),
       body: NotificationsHandler(
-        child: Center(
-          child: Column(
-            children: [
-              Consumer<UserProvider>(
-                builder: (context, state, child) {
-                  User user = state.user;
-                  return Text(user.email!);
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(UserUpdatePage.routeName);
-                },
-                child: Text('User Update'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(ThreadsPage.routeName);
-                },
-                child: Text('Threads'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await this._authService.logOut();
-                  Navigator.of(context).pushNamed(AuthPage.routeName);
-                },
-                child: Text('Logout'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await this._chatService.openDummyThread();
-                },
-                child: Text('Dummy Chat'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await this._alertsService.sendSOSNotifications();
-                  } on ServerException catch (error) {
-                    displaySnackbar(
-                      error.message,
-                      context,
-                    );
-                  } catch (error) {
-                    displaySnackbar(
-                      "Something went wrong, please try again later.",
-                      context,
-                    );
-                  }
-                },
-                child: Text('SOS Notification'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(DoctorList.routeName);
-                },
-                child: Text('Doctor List'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(AppointmentList.routeName);
-                },
-                child: Text('Appointments List'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(NewPosts.routeName);
-                },
-                child: Text('New Posts'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(CategorizedPosts.routeName);
-                },
-                child: Text('Categorized Posts'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(NewPost.routeName);
-                },
-                child: Text('New Post'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(Activity.routeName);
-                },
-                child: Text('Activity'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Consumer<UserProvider>(
+                  builder: (context, state, child) {
+                    User user = state.user;
+                    return Text(user.email!);
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(UserUpdatePage.routeName);
+                  },
+                  child: Text('User Update'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(ThreadsPage.routeName);
+                  },
+                  child: Text('Threads'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await this._authService.logOut();
+                    Navigator.of(context).pushNamed(AuthPage.routeName);
+                  },
+                  child: Text('Logout'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await this._chatService.openDummyThread();
+                  },
+                  child: Text('Dummy Chat'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await this._alertsService.sendSOSNotifications();
+                    } on ServerException catch (error) {
+                      displaySnackbar(
+                        error.message,
+                        context,
+                      );
+                    } catch (error) {
+                      displaySnackbar(
+                        "Something went wrong, please try again later.",
+                        context,
+                      );
+                    }
+                  },
+                  child: Text('SOS Notification'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(DoctorList.routeName);
+                  },
+                  child: Text('Doctor List'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(AppointmentList.routeName);
+                  },
+                  child: Text('Appointments List'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(NewPosts.routeName);
+                  },
+                  child: Text('New Posts'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(CategorizedPosts.routeName);
+                  },
+                  child: Text('Categorized Posts'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(NewPost.routeName);
+                  },
+                  child: Text('New Post'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(Activity.routeName);
+                  },
+                  child: Text('Activity'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    this.localNotificationsService.instantNotification();
+                  },
+                  child: Text('Instant Notification'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
