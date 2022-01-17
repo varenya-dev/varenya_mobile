@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:varenya_mobile/app.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
+import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart';
@@ -27,6 +29,7 @@ import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
+import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
@@ -85,10 +88,38 @@ void main() async {
   );
   log.i("FCM Authorization Status: ${settings.authorizationStatus}");
 
-  runApp(Root());
+  log.i("Initializing Local Notifications");
+  LocalNotificationsService localNotificationsService =
+      LocalNotificationsService();
+  await localNotificationsService.initializeLocalNotifications();
+  log.i("Initialized Local Notifications");
+
+  log.i("Checking Notification Triggered App Launch");
+  String action = DO_NOTHING;
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+      await localNotificationsService.notificationAppLaunchDetails;
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    log.i("Notification Triggered App Launch: TRUE");
+    action = DO_SOMETHING;
+  } else {
+    log.i("Notification Triggered App Launch: FALSE");
+  }
+
+  runApp(
+    Root(
+      action: action,
+    ),
+  );
 }
 
 class Root extends StatelessWidget {
+  final String action;
+
+  Root({
+    required this.action,
+  });
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
