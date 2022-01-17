@@ -11,8 +11,12 @@ class DailyProgressData {
   @HiveField(1, defaultValue: 0)
   final int moodRating;
 
+  @HiveField(2)
+  final DateTime createdAt;
+
   DailyProgressData({
     required this.answers,
     required this.moodRating,
+    required this.createdAt,
   });
 }

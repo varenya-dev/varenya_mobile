@@ -20,17 +20,20 @@ class DailyProgressDataAdapter extends TypeAdapter<DailyProgressData> {
       answers:
           fields[0] == null ? [] : (fields[0] as List).cast<QuestionAnswer>(),
       moodRating: fields[1] == null ? 0 : fields[1] as int,
+      createdAt: fields[2] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, DailyProgressData obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.answers)
       ..writeByte(1)
-      ..write(obj.moodRating);
+      ..write(obj.moodRating)
+      ..writeByte(2)
+      ..write(obj.createdAt);
   }
 
   @override
