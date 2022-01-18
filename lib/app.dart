@@ -8,6 +8,7 @@ import 'package:varenya_mobile/pages/auth/register_page.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/common/splash_page.dart';
+import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
@@ -52,6 +53,7 @@ class App extends StatelessWidget {
         UpdatePost.routeName: (context) => UpdatePost(),
         Post.routeName: (context) => Post(),
         Activity.routeName: (context) => Activity(),
+        Question.routeName: (context) => Question(),
       },
       home: SplashPage(),
     );
