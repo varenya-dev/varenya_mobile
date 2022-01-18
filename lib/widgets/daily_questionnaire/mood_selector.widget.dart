@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:varenya_mobile/constants/emoji_mood.constant.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_indicator.widget.dart';
 
 class MoodSelector extends StatefulWidget {
@@ -14,7 +15,6 @@ class MoodSelector extends StatefulWidget {
 }
 
 class _MoodSelectorState extends State<MoodSelector> {
-  final List<String> emojis = ['😭', '😟', '😐', '😊', '😄'];
   int mood = 0;
 
   @override
@@ -33,18 +33,17 @@ class _MoodSelectorState extends State<MoodSelector> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: this
-                .emojis
+            children: EMOJIS
                 .map(
                   (emoji) => MoodIndicator(
                     onPress: () {
-                      widget.emitMood(this.emojis.indexOf(emoji) + 1);
+                      widget.emitMood(EMOJIS.indexOf(emoji) + 1);
                       setState(() {
-                        this.mood = this.emojis.indexOf(emoji) + 1;
+                        this.mood = EMOJIS.indexOf(emoji) + 1;
                       });
                     },
                     emoji: emoji,
-                    activated: this.emojis.indexOf(emoji) + 1 == mood,
+                    activated: EMOJIS.indexOf(emoji) + 1 == mood,
                   ),
                 )
                 .toList(),
