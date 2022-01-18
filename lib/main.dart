@@ -103,7 +103,7 @@ void main() async {
 
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
     log.i("Notification Triggered App Launch: TRUE");
-    action = DO_SOMETHING;
+    action = notificationAppLaunchDetails!.payload!;
   } else {
     log.i("Notification Triggered App Launch: FALSE");
   }

@@ -1,5 +1,8 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationsService {
   static final LocalNotificationsService _localNotificationsService =
@@ -15,6 +18,14 @@ class LocalNotificationsService {
   LocalNotificationsService._internal();
 
   Future<void> initializeLocalNotifications() async {
+    tz.initializeTimeZones();
+
+    tz.setLocalLocation(
+      tz.getLocation(
+        "Asia/Colombo",
+      ),
+    );
+
     final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
 
@@ -61,10 +72,41 @@ class LocalNotificationsService {
 
     await this.flutterLocalNotificationsPlugin.show(
           0,
-          "Demo instant notification",
-          "Tap to do something",
+          "Time for you check in!",
+          "How was your day?",
           platform,
-          payload: "instant",
+          payload: INSTANT_NOTIFICATION,
         );
+  }
+
+  Future scheduledNotification(DateTime dateTime) async {
+    var android = AndroidNotificationDetails(
+      "id",
+      "channel",
+    );
+
+    var notificationDetails = new NotificationDetails(android: android);
+
+    await this.flutterLocalNotificationsPlugin.zonedSchedule(
+          0,
+          "Time for you check in!",
+          "How was your day?",
+          tz.TZDateTime.from(
+            dateTime,
+            tz.getLocation(
+              "Asia/Colombo",
+            ),
+          ),
+          notificationDetails,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          androidAllowWhileIdle: true,
+          payload: QUESTIONNAIRE_NOTIFICATION,
+          matchDateTimeComponents: DateTimeComponents.time,
+        );
+  }
+
+  Future<void> cancelNotification() async {
+    await this.flutterLocalNotificationsPlugin.cancelAll();
   }
 }

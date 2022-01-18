@@ -50,7 +50,7 @@ class _SplashPageState extends State<SplashPage> {
           log.i("Notification Action: $action");
           if (action == DO_NOTHING) {
             Navigator.of(context).pushReplacementNamed(HomePage.routeName);
-          } else {
+          } else if (action == INSTANT_NOTIFICATION || action == QUESTIONNAIRE_NOTIFICATION) {
             Navigator.of(context)
                 .pushReplacementNamed(Questionnaire.routeName);
           }

@@ -193,6 +193,18 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Text('Past Progress Page'),
                 ),
+                ElevatedButton(
+                  onPressed: () async {
+                    LocalNotificationsService().scheduledNotification(
+                      DateTime.now().add(
+                        Duration(
+                          seconds: 10,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Schedule Daily Notification for 10s from now'),
+                ),
               ],
             ),
           ),
