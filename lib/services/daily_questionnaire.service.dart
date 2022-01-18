@@ -28,7 +28,7 @@ class DailyQuestionnaireService {
     existingData.add(dailyProgressData);
 
     existingData.sort((prevData, nextData) =>
-        nextData.createdAt.compareTo(prevData.createdAt));
+        prevData.createdAt.compareTo(nextData.createdAt));
 
     this._progressBox.put(VARENYA_PROGRESS_LIST, existingData);
   }
