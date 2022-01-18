@@ -3,8 +3,8 @@ import 'package:varenya_mobile/models/daily_progress_data/question_answer/questi
 
 class QuestionDisplay extends StatelessWidget {
   final QuestionAnswer question;
-  final VoidCallback onEditQuestion;
-  final VoidCallback onDeleteQuestion;
+  final Function onEditQuestion;
+  final Function onDeleteQuestion;
 
   const QuestionDisplay({
     Key? key,
@@ -17,16 +17,20 @@ class QuestionDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(this.question.question),
-      leading: Wrap(
+      trailing: Wrap(
         children: [
           IconButton(
-            onPressed: this.onEditQuestion,
+            onPressed: () {
+              this.onEditQuestion(question);
+            },
             icon: Icon(
               Icons.edit,
             ),
           ),
           IconButton(
-            onPressed: this.onDeleteQuestion,
+            onPressed: () {
+              this.onDeleteQuestion(question);
+            },
             icon: Icon(
               Icons.delete,
             ),
