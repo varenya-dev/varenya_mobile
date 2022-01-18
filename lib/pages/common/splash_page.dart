@@ -6,6 +6,7 @@ import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/notification_action.provider.dart';
@@ -51,7 +52,7 @@ class _SplashPageState extends State<SplashPage> {
             Navigator.of(context).pushReplacementNamed(HomePage.routeName);
           } else {
             Navigator.of(context)
-                .pushReplacementNamed(UserUpdatePage.routeName);
+                .pushReplacementNamed(Questionnaire.routeName);
           }
         } else {
           log.i("Firebase User Not Present");
