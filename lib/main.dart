@@ -73,7 +73,8 @@ void main() async {
   await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_PROGESS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_PROGRESS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_QUESTION_BOX);
 
   log.i("Opened Hive Boxes");
 
@@ -102,7 +103,7 @@ void main() async {
 
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
     log.i("Notification Triggered App Launch: TRUE");
-    action = DO_SOMETHING;
+    action = notificationAppLaunchDetails!.payload!;
   } else {
     log.i("Notification Triggered App Launch: FALSE");
   }

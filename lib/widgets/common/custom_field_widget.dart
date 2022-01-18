@@ -25,8 +25,8 @@ class CustomFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        vertical: 10.0,
-        horizontal: 10.0,
+        horizontal: MediaQuery.of(context).size.width * 0.05,
+        vertical: MediaQuery.of(context).size.height * 0.01,
       ),
       child: TextFormField(
         obscureText: this.obscureText,
