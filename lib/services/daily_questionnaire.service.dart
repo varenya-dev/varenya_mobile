@@ -7,6 +7,12 @@ class DailyQuestionnaireService {
   final Box<List<dynamic>> _progressBox = Hive.box(VARENYA_PROGRESS_BOX);
   final Box<List<dynamic>> _questionBox = Hive.box(VARENYA_QUESTION_BOX);
 
+  List<QuestionAnswer> fetchDailyQuestions() {
+    return this
+        ._questionBox
+        .get(VARENYA_QUESTION_LIST, defaultValue: [])!.cast<QuestionAnswer>();
+  }
+
   List<DailyProgressData> fetchDailyProgressData() {
     return this._progressBox.get(VARENYA_PROGRESS_LIST,
         defaultValue: [])!.cast<DailyProgressData>();
