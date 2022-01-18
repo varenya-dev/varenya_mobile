@@ -65,7 +65,7 @@ class _QuestionnaireState extends State<Questionnaire> {
         ._questionControllers
         .map((e) => new QuestionAnswer(
               id: uuid.v4(),
-              question: e.question.answer,
+              question: e.question.question,
               answer: e.textEditingController.text,
             ))
         .toList();
