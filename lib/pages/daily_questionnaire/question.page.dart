@@ -93,6 +93,8 @@ class _QuestionState extends State<Question> {
       this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
     });
 
+    this._createQuestionController.text = '';
+
     Navigator.of(context).pop();
   }
 
@@ -156,6 +158,8 @@ class _QuestionState extends State<Question> {
     setState(() {
       this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
     });
+
+    this._editQuestionController.text = '';
 
     Navigator.of(context).pop();
   }
