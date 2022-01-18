@@ -160,6 +160,47 @@ class _QuestionState extends State<Question> {
     Navigator.of(context).pop();
   }
 
+  void _handleDeleteQuestion(QuestionAnswer question) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: Text(
+          'Are you sure you want to delete this question?',
+        ),
+        content: Text(
+          question.question,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              this._deleteQuestion(question);
+            },
+            child: Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteQuestion(QuestionAnswer question) {
+    this._questions.removeWhere((element) => element.id == question.id);
+
+    this._dailyQuestionnaireService.saveQuestions(this._questions);
+
+    setState(() {
+      this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
+    });
+
+    Navigator.of(context).pop();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -182,7 +223,7 @@ class _QuestionState extends State<Question> {
           return QuestionDisplay(
             question: question,
             onEditQuestion: this._handleUpdateQuestion,
-            onDeleteQuestion: _handleCreateNewQuestion,
+            onDeleteQuestion: this._handleDeleteQuestion,
           );
         },
       ),
