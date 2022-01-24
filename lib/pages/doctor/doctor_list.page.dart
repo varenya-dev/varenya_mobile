@@ -1,4 +1,3 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
@@ -10,6 +9,7 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/job_filter.widget.dart';
+import 'package:varenya_mobile/widgets/doctor/main_filter.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/specialization_filter.widget.dart';
 
 class DoctorList extends StatefulWidget {
@@ -176,57 +176,9 @@ class _DoctorListState extends State<DoctorList> {
   }
 
   Widget _buildFilterMain() {
-    return ExpandableNotifier(
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: <Widget>[
-            ScrollOnExpand(
-              scrollOnExpand: true,
-              scrollOnCollapse: false,
-              child: ExpandablePanel(
-                theme: const ExpandableThemeData(
-                  headerAlignment: ExpandablePanelHeaderAlignment.center,
-                  tapBodyToCollapse: true,
-                ),
-                header: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                  ),
-                  child: Text(
-                    "Filter Options",
-                  ),
-                ),
-                collapsed: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 20.0,
-                  ),
-                  child: Text(
-                    "Tap To Show Filter Options",
-                  ),
-                ),
-                expanded: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildJobFilter(),
-                    _buildSpecializationFilter(),
-                  ],
-                ),
-                builder: (_, collapsed, expanded) {
-                  return Expandable(
-                    collapsed: collapsed,
-                    expanded: expanded,
-                    theme: const ExpandableThemeData(
-                      crossFadePoint: 0,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+    return MainFilter(
+      buildJobFilter: this._buildJobFilter,
+      buildSpecializationFilter: this._buildSpecializationFilter,
     );
   }
 

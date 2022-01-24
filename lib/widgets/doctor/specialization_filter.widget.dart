@@ -81,6 +81,7 @@ class _SpecializationFilterState extends State<SpecializationFilter> {
             child: TextButton(
               child: Text('Clear Filters'),
               onPressed: () {
+                this.widget.resetSpecializationFilter();
                 setStateInner(() {});
               },
             ),
