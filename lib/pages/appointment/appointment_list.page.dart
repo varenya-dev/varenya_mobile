@@ -18,7 +18,7 @@ class AppointmentList extends StatefulWidget {
 class _AppointmentListState extends State<AppointmentList> {
   late final AppointmentService _appointmentService;
 
-  List<Appointment> _appointments = [];
+  List<Appointment>? _appointments;
 
   @override
   void initState() {
@@ -38,51 +38,66 @@ class _AppointmentListState extends State<AppointmentList> {
       appBar: AppBar(
         title: Text('Scheduled Appointments'),
       ),
-      body: FutureBuilder(
-        future: this._appointmentService.fetchScheduledAppointments(),
-        builder: (
-          BuildContext buildContext,
-          AsyncSnapshot<List<Appointment>> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            switch (snapshot.error.runtimeType) {
-              case ServerException:
-                {
-                  ServerException exception = snapshot.error as ServerException;
-                  return Text(exception.message);
-                }
-              default:
-                {
-                  log.e(
-                    "AppointmentList Error",
-                    snapshot.error,
-                    snapshot.stackTrace,
-                  );
-                  return Text("Something went wrong, please try again later");
-                }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: FutureBuilder(
+          future: this._appointmentService.fetchScheduledAppointments(),
+          builder: (
+            BuildContext buildContext,
+            AsyncSnapshot<List<Appointment>> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              switch (snapshot.error.runtimeType) {
+                case ServerException:
+                  {
+                    ServerException exception =
+                        snapshot.error as ServerException;
+                    return Text(exception.message);
+                  }
+                default:
+                  {
+                    log.e(
+                      "AppointmentList Error",
+                      snapshot.error,
+                      snapshot.stackTrace,
+                    );
+                    return Text("Something went wrong, please try again later");
+                  }
+              }
             }
-          }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            this._appointments = snapshot.data!;
-            return ListView.builder(
-              itemCount: this._appointments.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                Appointment appointmentResponse = this._appointments[index];
+            if (snapshot.connectionState == ConnectionState.done) {
+              this._appointments = snapshot.data!;
+              return _buildAppointmentsBody();
+            }
 
-                return AppointmentCard(
-                  appointment: appointmentResponse,
-                  refreshAppointments: this._refreshAppointmentLists,
-                );
-              },
-            );
-          }
+            return this._appointments == null
+                ? Column(
+                    children: [
+                      CircularProgressIndicator(),
+                    ],
+                  )
+                : this._buildAppointmentsBody();
+          },
+        ),
+      ),
+    );
+  }
 
-          return Column(
-            children: [
-              CircularProgressIndicator(),
-            ],
+  Widget _buildAppointmentsBody() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: ListView.builder(
+        itemCount: this._appointments!.length,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          Appointment appointmentResponse = this._appointments![index];
+
+          return AppointmentCard(
+            appointment: appointmentResponse,
+            refreshAppointments: this._refreshAppointmentLists,
           );
         },
       ),
