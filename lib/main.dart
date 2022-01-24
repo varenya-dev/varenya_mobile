@@ -36,16 +36,37 @@ import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:hive/hive.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> setupFCM() async {
+  NotificationSettings settings =
+      await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  log.i("FCM Authorization Status: ${settings.authorizationStatus}");
+}
 
-  log.i("Firebase and Hive Initializing");
+Future<void> openHiveBoxes() async {
+  log.i("Opening Hive Boxes");
 
-  await Firebase.initializeApp();
-  await Hive.initFlutter();
+  await Hive.openBox<List<dynamic>>(VARENYA_DOCTORS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_POSTS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_POST_CATEGORY_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_APPOINTMENT_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_PROGRESS_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_QUESTION_BOX);
 
-  log.i("Firebase and Hive Initialized");
+  log.i("Opened Hive Boxes");
+}
 
+void registerHiveAdapters() {
   log.i("Registering Hive Adapters");
 
   Hive.registerAdapter<Specialization>(new SpecializationAdapter());
@@ -63,41 +84,22 @@ void main() async {
   Hive.registerAdapter<DailyProgressData>(new DailyProgressDataAdapter());
 
   log.i("Registered Hive Adapters");
+}
 
-  log.i("Opening Hive Boxes");
-
-  await Hive.openBox<List<dynamic>>(VARENYA_DOCTORS_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_POSTS_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_POST_CATEGORY_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_APPOINTMENT_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_SPECIALIZATION_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_JOB_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_PROGRESS_BOX);
-  await Hive.openBox<List<dynamic>>(VARENYA_QUESTION_BOX);
-
-  log.i("Opened Hive Boxes");
-
-  NotificationSettings settings =
-      await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-  log.i("FCM Authorization Status: ${settings.authorizationStatus}");
-
+Future<LocalNotificationsService> setupLocalNotifications() async {
   log.i("Initializing Local Notifications");
   LocalNotificationsService localNotificationsService =
       LocalNotificationsService();
   await localNotificationsService.initializeLocalNotifications();
   log.i("Initialized Local Notifications");
+  return localNotificationsService;
+}
 
+Future<String> checkNotificationLaunchedApp(
+  LocalNotificationsService localNotificationsService,
+  String action,
+) async {
   log.i("Checking Notification Triggered App Launch");
-  String action = DO_NOTHING;
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await localNotificationsService.notificationAppLaunchDetails;
 
@@ -107,6 +109,33 @@ void main() async {
   } else {
     log.i("Notification Triggered App Launch: FALSE");
   }
+  return action;
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  log.i("Firebase and Hive Initializing");
+
+  await Firebase.initializeApp();
+  await Hive.initFlutter();
+
+  log.i("Firebase and Hive Initialized");
+
+  registerHiveAdapters();
+
+  await openHiveBoxes();
+
+  await setupFCM();
+
+  LocalNotificationsService localNotificationsService =
+      await setupLocalNotifications();
+
+  String action = DO_NOTHING;
+  action = await checkNotificationLaunchedApp(
+    localNotificationsService,
+    action,
+  );
 
   runApp(
     Root(

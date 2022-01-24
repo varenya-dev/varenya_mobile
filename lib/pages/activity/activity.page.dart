@@ -19,6 +19,7 @@ class Activity extends StatefulWidget {
 
 class _ActivityState extends State<Activity> {
   late final ActivityService _activityService;
+  List<AM.Activity>? _activities;
 
   @override
   void initState() {
@@ -34,74 +35,86 @@ class _ActivityState extends State<Activity> {
       appBar: AppBar(
         title: Text('Activity'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Your Mood Cycle'),
-            MoodChart(),
-            FutureBuilder(
-              future: this._activityService.fetchActivity(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<List<AM.Activity>> snapshot,
-              ) {
-                if (snapshot.hasError) {
-                  switch (snapshot.error.runtimeType) {
-                    case ServerException:
-                      {
-                        ServerException exception =
-                            snapshot.error as ServerException;
-                        return Text(exception.message);
-                      }
-                    default:
-                      {
-                        log.e(
-                          "Activity Error",
-                          snapshot.error,
-                          snapshot.stackTrace,
-                        );
-                        return Text(
-                            "Something went wrong, please try again later");
-                      }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Your Mood Cycle'),
+              MoodChart(),
+              FutureBuilder(
+                future: this._activityService.fetchActivity(),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<AM.Activity>> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    switch (snapshot.error.runtimeType) {
+                      case ServerException:
+                        {
+                          ServerException exception =
+                              snapshot.error as ServerException;
+                          return Text(exception.message);
+                        }
+                      default:
+                        {
+                          log.e(
+                            "Activity Error",
+                            snapshot.error,
+                            snapshot.stackTrace,
+                          );
+                          return Text(
+                              "Something went wrong, please try again later");
+                        }
+                    }
                   }
-                }
 
-                if (snapshot.connectionState == ConnectionState.done) {
-                  List<AM.Activity> activities = snapshot.data!;
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    this._activities = snapshot.data!;
 
-                  return Flexible(
-                    fit: FlexFit.loose,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: activities.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        AM.Activity activity = activities[index];
+                    return _buildActivitiesBody();
+                  }
 
-                        return activity.activityType == "POST"
-                            ? PostCard(post: activity.post!)
-                            : activity.activityType == "APPOINTMENT"
-                                ? AppointmentCard(
-                                    appointment: activity.appointment!,
-                                    refreshAppointments: () {
-                                      setState(() {});
-                                    })
-                                : SizedBox();
-                      },
-                    ),
-                  );
-                }
-
-                return Column(
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                );
-              },
-            ),
-          ],
+                  return this._activities == null
+                      ? Column(
+                          children: [
+                            CircularProgressIndicator(),
+                          ],
+                        )
+                      : _buildActivitiesBody();
+                },
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Flexible _buildActivitiesBody() {
+    return Flexible(
+      fit: FlexFit.loose,
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: this._activities!.length,
+        itemBuilder: (BuildContext context, int index) {
+          AM.Activity activity = this._activities![index];
+
+          return activity.activityType == "POST"
+              ? PostCard(post: activity.post!)
+              : activity.activityType == "APPOINTMENT"
+                  ? AppointmentCard(
+                      appointment: activity.appointment!,
+                      refreshAppointments: () {
+                        setState(() {});
+                      })
+                  : SizedBox();
+        },
       ),
     );
   }
