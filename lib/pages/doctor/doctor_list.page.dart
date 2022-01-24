@@ -105,57 +105,65 @@ class _DoctorListState extends State<DoctorList> {
       appBar: AppBar(
         title: Text('Doctors'),
       ),
-      body: Column(
-        children: [
-          _buildFilterMain(),
-          FutureBuilder(
-            future: this._doctorService.fetchDoctorsWithFiltering(
-                  new DoctorFilterDto(
-                    jobTitle: this._jobFilter,
-                    specializations: this._specializationsFilter,
-                  ),
-                ),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<List<Doctor>> snapshot,
-            ) {
-              if (snapshot.hasError) {
-                switch (snapshot.error.runtimeType) {
-                  case ServerException:
-                    {
-                      ServerException exception =
-                          snapshot.error as ServerException;
-                      return Text(exception.message);
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              _buildFilterMain(),
+              FutureBuilder(
+                future: this._doctorService.fetchDoctorsWithFiltering(
+                      new DoctorFilterDto(
+                        jobTitle: this._jobFilter,
+                        specializations: this._specializationsFilter,
+                      ),
+                    ),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<Doctor>> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    switch (snapshot.error.runtimeType) {
+                      case ServerException:
+                        {
+                          ServerException exception =
+                              snapshot.error as ServerException;
+                          return Text(exception.message);
+                        }
+                      default:
+                        {
+                          log.e(
+                            "DoctorList Error",
+                            snapshot.error,
+                            snapshot.stackTrace,
+                          );
+                          return Text(
+                              "Something went wrong, please try again later");
+                        }
                     }
-                  default:
-                    {
-                      log.e(
-                        "DoctorList Error",
-                        snapshot.error,
-                        snapshot.stackTrace,
-                      );
-                      return Text(
-                          "Something went wrong, please try again later");
-                    }
-                }
-              }
+                  }
 
-              if (snapshot.connectionState == ConnectionState.done) {
-                this._doctors = snapshot.data!;
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    this._doctors = snapshot.data!;
 
-                return _buildDoctorsList();
-              }
+                    return _buildDoctorsList();
+                  }
 
-              return this._doctors == null
-                  ? Column(
-                      children: [
-                        CircularProgressIndicator(),
-                      ],
-                    )
-                  : this._buildDoctorsList();
-            },
+                  return this._doctors == null
+                      ? Column(
+                          children: [
+                            CircularProgressIndicator(),
+                          ],
+                        )
+                      : this._buildDoctorsList();
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
