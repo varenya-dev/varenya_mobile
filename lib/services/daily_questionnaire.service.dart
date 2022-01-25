@@ -4,7 +4,7 @@ import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.mo
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 
 /*
- * Service Implementation for Daily Questionnaire Service.
+ * Service Implementation for Daily Questionnaire Module.
  */
 class DailyQuestionnaireService {
   final Box<List<dynamic>> _progressBox = Hive.box(VARENYA_PROGRESS_BOX);

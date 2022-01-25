@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 class Questionnaire extends StatefulWidget {
   const Questionnaire({Key? key}) : super(key: key);
 
+  // Page Route Name.
   static const routeName = "/questionnaire";
 
   @override
@@ -19,9 +20,12 @@ class Questionnaire extends StatefulWidget {
 }
 
 class _QuestionnaireState extends State<Questionnaire> {
-  late final DailyQuestionnaireService _dailyQuestionnaireService;
-  final List<QuestionController> _questionControllers = [];
 
+  // Daily Questionnaire Service
+  late final DailyQuestionnaireService _dailyQuestionnaireService;
+
+  // List of question and text controllers and form state key.
+  final List<QuestionController> _questionControllers = [];
   final GlobalKey<FormState> _questionnaireKey = new GlobalKey<FormState>();
 
   int mood = 0;
@@ -32,9 +36,12 @@ class _QuestionnaireState extends State<Questionnaire> {
   void initState() {
     super.initState();
 
+    // Injecting the daily questionnaire service from global state.
     this._dailyQuestionnaireService =
         Provider.of<DailyQuestionnaireService>(context, listen: false);
 
+    // Fetch all daily questions from storage
+    // and mapping them to text editing controllers.
     this._dailyQuestionnaireService.fetchDailyQuestions().forEach(
       (element) {
         this._questionControllers.add(
@@ -47,11 +54,17 @@ class _QuestionnaireState extends State<Questionnaire> {
     );
   }
 
+  /*
+   * Method to handle saving responses from the questionnaire.
+   */
   void _handleSubmit() {
+
+    // Checking for form validation.
     if (!this._questionnaireKey.currentState!.validate()) {
       return;
     }
 
+    // Check for validating mood data.
     if (this.mood > 5 || this.mood < 1) {
       displaySnackbar(
         "Please select a valid mood",
@@ -61,6 +74,8 @@ class _QuestionnaireState extends State<Questionnaire> {
       return;
     }
 
+    // Map the question controllers to
+    // Question Answer object with answers.
     List<QuestionAnswer> questions = this
         ._questionControllers
         .map((e) => new QuestionAnswer(
@@ -70,14 +85,18 @@ class _QuestionnaireState extends State<Questionnaire> {
             ))
         .toList();
 
+    // Creating a daily progress data object
+    // with question answer list and mood.
     DailyProgressData dailyProgressData = new DailyProgressData(
       answers: questions,
       moodRating: this.mood,
       createdAt: DateTime.now(),
     );
 
+    // Save Daily Progress Data to device storage.
     this._dailyQuestionnaireService.saveProgressData(dailyProgressData);
 
+    // Display confirmation for progress save.
     displaySnackbar(
       "Progress recorded!",
       context,

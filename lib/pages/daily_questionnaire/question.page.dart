@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 class Question extends StatefulWidget {
   const Question({Key? key}) : super(key: key);
 
+  // Page Route Name.
   static const routeName = "/question";
 
   @override
@@ -17,9 +18,13 @@ class Question extends StatefulWidget {
 }
 
 class _QuestionState extends State<Question> {
+  // Daily Questionnaire Service.
   late final DailyQuestionnaireService _dailyQuestionnaireService;
+
+  // List of questions.
   late List<QuestionAnswer> _questions;
 
+  // Form State keys and Text Editing Controllers.
   final GlobalKey<FormState> _createFormKey = new GlobalKey<FormState>();
   final TextEditingController _createQuestionController =
       new TextEditingController();
@@ -28,16 +33,23 @@ class _QuestionState extends State<Question> {
   final TextEditingController _editQuestionController =
       new TextEditingController();
 
+  // UUID
   final Uuid uuid = new Uuid();
 
   @override
   void initState() {
     super.initState();
 
+    // Injecting Daily Questionnaire Service from global state.
     this._dailyQuestionnaireService = Provider.of(context, listen: false);
+
+    // Fetch questions from device storage.
     this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
   }
 
+  /*
+   * Method to handle creation of new question.
+   */
   void _handleCreateNewQuestion() {
     showDialog(
       context: context,
@@ -74,11 +86,16 @@ class _QuestionState extends State<Question> {
     );
   }
 
+  /*
+   * Method handling saving new question to device storage.
+   */
   void _createQuestion() {
+    // Check for form validation
     if (!this._createFormKey.currentState!.validate()) {
       return;
     }
 
+    // Save question to the list of questions.
     this._questions.add(
           new QuestionAnswer(
             id: uuid.v4(),
@@ -87,8 +104,10 @@ class _QuestionState extends State<Question> {
           ),
         );
 
+    // Saving the updated list to the device storage.
     this._dailyQuestionnaireService.saveQuestions(this._questions);
 
+    // State change to get the new updated list of questions.
     setState(() {
       this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
     });
@@ -98,7 +117,12 @@ class _QuestionState extends State<Question> {
     Navigator.of(context).pop();
   }
 
+  /*
+   * Method to handle updating of an existing question.
+   * @param question QuestionAnswer object to be updated.
+   */
   void _handleUpdateQuestion(QuestionAnswer question) {
+    // Set the controller text as the original question.
     this._editQuestionController.text = question.question;
 
     showDialog(
@@ -138,23 +162,31 @@ class _QuestionState extends State<Question> {
     );
   }
 
+  /*
+   * Method handling saving the updated question to device storage.
+   * @param question Question answer object to be updated.
+   */
   void _updateQuestion(QuestionAnswer question) {
     if (!this._editFormKey.currentState!.validate()) {
       return;
     }
 
+    // Find the index of where the question exists in the list of questions.
     int questionIndex = this._questions.indexWhere(
           (element) => element.id == question.id,
         );
 
+    // Save the updated question to the list.
     this._questions[questionIndex] = new QuestionAnswer(
       id: uuid.v4(),
       question: this._editQuestionController.text,
       answer: '',
     );
 
+    // Save the updated list to the device storage.
     this._dailyQuestionnaireService.saveQuestions(this._questions);
 
+    // State change to get the new updated list of questions.
     setState(() {
       this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
     });
@@ -164,6 +196,10 @@ class _QuestionState extends State<Question> {
     Navigator.of(context).pop();
   }
 
+  /*
+   * Method to handle deleting of an existing question.
+   * @param question QuestionAnswer object to be deleted.
+   */
   void _handleDeleteQuestion(QuestionAnswer question) {
     showDialog(
       context: context,
@@ -193,11 +229,18 @@ class _QuestionState extends State<Question> {
     );
   }
 
+  /*
+   * Method handling deleting question from device storage.
+   * @param question Question answer object to be deleted.
+   */
   void _deleteQuestion(QuestionAnswer question) {
+    // Remove the question from the list.
     this._questions.removeWhere((element) => element.id == question.id);
 
+    // Save the updated list to the device storage.
     this._dailyQuestionnaireService.saveQuestions(this._questions);
 
+    // State change to get the new updated list of questions.
     setState(() {
       this._questions = this._dailyQuestionnaireService.fetchDailyQuestions();
     });

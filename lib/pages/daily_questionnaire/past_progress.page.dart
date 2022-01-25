@@ -8,6 +8,7 @@ import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 class PastProgress extends StatefulWidget {
   const PastProgress({Key? key}) : super(key: key);
 
+  // Page Route Name.
   static const routeName = "/past-progress";
 
   @override
@@ -15,16 +16,21 @@ class PastProgress extends StatefulWidget {
 }
 
 class _PastProgressState extends State<PastProgress> {
+  // Daily Questionnaire Service.
   late final DailyQuestionnaireService _dailyQuestionnaireService;
+
+  // Daily Progress Data List.
   late final List<DailyProgressData> _dailyProgressList;
 
   @override
   void initState() {
     super.initState();
 
+    // Injecting daily questionnaire service from global state.
     this._dailyQuestionnaireService =
         Provider.of<DailyQuestionnaireService>(context, listen: false);
 
+    // Fetching daily progress data from device.
     this._dailyProgressList =
         this._dailyQuestionnaireService.fetchDailyProgressData();
   }
