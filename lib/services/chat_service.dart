@@ -18,29 +18,39 @@ class ChatService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Uuid uuid = new Uuid();
 
+  /*
+   * Method to create a new chat thread.
+   * @param userId ID to create a chat thread with.
+   */
   Future<String> createNewThread(String userId) async {
+    // Generate a document ID from an empty document.
     DocumentReference threadDocumentReference =
         this._firestore.collection('threads').doc();
 
+    // Get logged in user ID.
     String loggedInUserId = this._auth.currentUser!.uid;
 
+    // Preparing participants list.
     List<String> participants = [
       userId,
       loggedInUserId,
     ];
 
+    // Preparing chat thread object
     ChatThread chatThread = new ChatThread(
       id: threadDocumentReference.id,
       participants: participants,
       messages: [],
     );
 
+    // Save chat thread object to firestore.
     await this
         ._firestore
         .collection('threads')
         .doc(chatThread.id)
         .set(chatThread.toJson());
 
+    // Return the thread id.
     return threadDocumentReference.id;
   }
 
