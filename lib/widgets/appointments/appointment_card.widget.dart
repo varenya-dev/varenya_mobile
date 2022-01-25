@@ -8,7 +8,10 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class AppointmentCard extends StatefulWidget {
+  // Appointment details.
   final Appointment appointment;
+
+  // Method to refresh the page and appointments.
   final Function refreshAppointments;
 
   AppointmentCard({
@@ -22,12 +25,14 @@ class AppointmentCard extends StatefulWidget {
 }
 
 class _AppointmentCardState extends State<AppointmentCard> {
+  // Appointment service.
   late final AppointmentService _appointmentService;
 
   @override
   void initState() {
     super.initState();
 
+    // Injecting appointment service from global state.
     this._appointmentService =
         Provider.of<AppointmentService>(context, listen: false);
   }
@@ -71,17 +76,25 @@ class _AppointmentCardState extends State<AppointmentCard> {
     );
   }
 
-  void _onDeleteAppointment(int? value) async {
+  /*
+   * Method to delete/cancel an appointment.
+   */
+  void _onDeleteAppointment(_) async {
     try {
+      // Sending request to the server to delete appointment.
       await this._appointmentService.deleteAppointment(widget.appointment);
 
+      // Refresh appointments on page
       widget.refreshAppointments();
 
+      // Display confirmation to user.
       displaySnackbar(
         'Appointment Cancelled!',
         context,
       );
-    } on ServerException catch (error) {
+    }
+    // Handling errors gracefully.
+    on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
       log.e("AppointmentCard:_onDeleteAppointment", error, stackTrace);

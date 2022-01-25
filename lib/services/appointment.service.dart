@@ -13,10 +13,18 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 
+/*
+ * Service Implementation for Appointments Module.
+ */
 class AppointmentService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Box<List<dynamic>> _appointmentsBox = Hive.box(VARENYA_APPOINTMENT_BOX);
 
+  /*
+   * Method to fetch available time slots for
+   * a particular day for a particular doctors.
+   * @param fetchAvailableSlotsDto DTO Object for fetching available slots.
+   */
   Future<List<DateTime>> fetchAvailableSlots(
     FetchAvailableSlotsDto fetchAvailableSlotsDto,
   ) async {
@@ -53,13 +61,20 @@ class AppointmentService {
           message: 'Something went wrong, please try again later.');
     }
 
+    // Decode JSON and create objects based on it.
     List<dynamic> rawDates = json.decode(response.body);
     List<DateTime> availableDates =
         rawDates.map((date) => DateTime.parse(date)).toList();
 
+    // Return available slots to user.
     return availableDates;
   }
 
+  /*
+   * Method to confirm booking on a particular time slot
+   * for a particular doctor.
+   * @param createAppointmentDto DTO Object for booking a time slot for a doctor.
+   */
   Future<void> bookAppointment(
     CreateAppointmentDto createAppointmentDto,
   ) async {
@@ -94,6 +109,9 @@ class AppointmentService {
     }
   }
 
+  /*
+   * Method to fetch scheduled appointments by the user.
+   */
   Future<List<Appointment>> fetchScheduledAppointments() async {
     try {
       // Fetch the ID token for the user.
@@ -129,21 +147,29 @@ class AppointmentService {
         );
       }
 
+      // Decode JSON and create objects based on it.
       List<dynamic> jsonResponse = json.decode(response.body);
       List<Appointment> appointments =
           jsonResponse.map((json) => Appointment.fromJson(json)).toList();
 
+      // Saved scheduled appointments to device storage.
       this._saveAppointmentsToDevice(appointments);
 
+      // Return schedule appointments.
       return appointments;
     } on SocketException {
       log.wtf("Dedicated Server Offline");
+
+      // Fetch scheduled appointments from device storage.
       return this._fetchAppointmentsFromDevice();
     } on TimeoutException {
       log.wtf("Dedicated Server Offline");
+
+      // Fetch scheduled appointments from device storage.
       return this._fetchAppointmentsFromDevice();
     } on FirebaseAuthException catch (error) {
       if (error.code == "network-request-failed") {
+        // Fetch scheduled appointments from device storage.
         return this._fetchAppointmentsFromDevice();
       } else {
         throw error;
@@ -151,6 +177,9 @@ class AppointmentService {
     }
   }
 
+  /*
+   * Method to delete appointment from the server.
+   */
   Future<void> deleteAppointment(Appointment appointment) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
@@ -164,6 +193,7 @@ class AppointmentService {
       "Authorization": "Bearer $firebaseAuthToken",
     };
 
+    // Convert appointment object to JSON.
     Map<String, dynamic> appointmentJson = appointment.toJson();
     appointmentJson.remove('patientUser');
     appointmentJson.remove('doctorUser');
@@ -187,14 +217,24 @@ class AppointmentService {
     }
   }
 
+  /*
+   * Method to save fetched appointments to device storage.
+   */
   void _saveAppointmentsToDevice(List<Appointment> appointments) {
     log.i("Saving Appointments to Device");
+
+    // Save appointments to device storage.
     this._appointmentsBox.put(VARENYA_APPOINTMENT_LIST, appointments);
     log.i("Saved Appointments to Device");
   }
 
+  /*
+   * Method to fetch saved appointments from device storage.
+   */
   List<Appointment> _fetchAppointmentsFromDevice() {
     log.i("Fetching Appointments From Device");
+
+    // Fetching and returning appointments from device storage.
     return this
         ._appointmentsBox
         .get(VARENYA_APPOINTMENT_LIST, defaultValue: [])!.cast<Appointment>();

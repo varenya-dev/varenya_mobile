@@ -14,19 +14,26 @@ class MoodChart extends StatefulWidget {
 }
 
 class _MoodChartState extends State<MoodChart> {
+
+  // Daily Questionnaire Service.
   late final DailyQuestionnaireService _dailyQuestionnaireService;
+
+  // Daily Progress Data
   late List<DailyProgressData> _dailyProgressData;
 
   @override
   void initState() {
     super.initState();
 
+    // Inject Daily Questionnaire Service from global state.
     this._dailyQuestionnaireService =
         Provider.of<DailyQuestionnaireService>(context, listen: false);
 
+    // Fetch daily progress data from device
     this._dailyProgressData =
         this._dailyQuestionnaireService.fetchDailyProgressData();
 
+    // Display progress from past 7 days.
     this._dailyProgressData = this._dailyProgressData.length > 7
         ? this._dailyProgressData.sublist(
               this._dailyProgressData.length - 7,

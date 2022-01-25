@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 
 class PostCategories extends StatelessWidget {
+  // List of categories to display.
   final List<PostCategory> categories;
 
   const PostCategories({
