@@ -5,6 +5,7 @@ import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.mo
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 
 class SingleProgress extends StatefulWidget {
+  // Page Route Name.
   static const routeName = "/single-progress";
 
   @override
@@ -12,10 +13,12 @@ class SingleProgress extends StatefulWidget {
 }
 
 class _SingleProgressState extends State<SingleProgress> {
+  // Daily Progress Data.
   DailyProgressData? dailyProgressData;
 
   @override
   Widget build(BuildContext context) {
+    // Fetch Daily Progress Data from route arguments
     if (this.dailyProgressData == null) {
       this.dailyProgressData =
           ModalRoute.of(context)!.settings.arguments as DailyProgressData;

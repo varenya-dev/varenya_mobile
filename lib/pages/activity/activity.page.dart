@@ -11,6 +11,7 @@ import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 class Activity extends StatefulWidget {
   const Activity({Key? key}) : super(key: key);
 
+  // Activity Page Route Name.
   static const routeName = "/activity";
 
   @override
@@ -18,13 +19,17 @@ class Activity extends StatefulWidget {
 }
 
 class _ActivityState extends State<Activity> {
+  // Activity Service to fetch recent activities from.
   late final ActivityService _activityService;
+
+  // Fetched activities.
   List<AM.Activity>? _activities;
 
   @override
   void initState() {
     super.initState();
 
+    // Inject Activity Service from global state.
     this._activityService =
         Provider.of<ActivityService>(context, listen: false);
   }
@@ -48,45 +53,7 @@ class _ActivityState extends State<Activity> {
               MoodChart(),
               FutureBuilder(
                 future: this._activityService.fetchActivity(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<List<AM.Activity>> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    switch (snapshot.error.runtimeType) {
-                      case ServerException:
-                        {
-                          ServerException exception =
-                              snapshot.error as ServerException;
-                          return Text(exception.message);
-                        }
-                      default:
-                        {
-                          log.e(
-                            "Activity Error",
-                            snapshot.error,
-                            snapshot.stackTrace,
-                          );
-                          return Text(
-                              "Something went wrong, please try again later");
-                        }
-                    }
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    this._activities = snapshot.data!;
-
-                    return _buildActivitiesBody();
-                  }
-
-                  return this._activities == null
-                      ? Column(
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        )
-                      : _buildActivitiesBody();
-                },
+                builder: _handleActivityFutureBuild,
               ),
             ],
           ),
@@ -95,7 +62,58 @@ class _ActivityState extends State<Activity> {
     );
   }
 
-  Flexible _buildActivitiesBody() {
+  /*
+   * Method to build page based on the future results.
+   */
+  Widget _handleActivityFutureBuild(
+    BuildContext context,
+    AsyncSnapshot<List<AM.Activity>> snapshot,
+  ) {
+    // Check for errors
+    if (snapshot.hasError) {
+      // Check for error type and handle them accordingly.
+      switch (snapshot.error.runtimeType) {
+        case ServerException:
+          {
+            ServerException exception = snapshot.error as ServerException;
+            return Text(exception.message);
+          }
+        default:
+          {
+            log.e(
+              "Activity Error",
+              snapshot.error,
+              snapshot.stackTrace,
+            );
+            return Text("Something went wrong, please try again later");
+          }
+      }
+    }
+
+    // Check if data has been loaded
+    if (snapshot.connectionState == ConnectionState.done) {
+      // Save fetched activities in local state.
+      this._activities = snapshot.data!;
+
+      // Returning page build function.
+      return _buildActivitiesBody();
+    }
+
+    // If previously fetched activities exist,
+    // display them else display loading indicator.
+    return this._activities == null
+        ? Column(
+            children: [
+              CircularProgressIndicator(),
+            ],
+          )
+        : _buildActivitiesBody();
+  }
+
+  /*
+   * Method to build activity page body.
+   */
+  Widget _buildActivitiesBody() {
     return Flexible(
       fit: FlexFit.loose,
       child: ListView.builder(

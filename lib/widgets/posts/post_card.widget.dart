@@ -7,7 +7,11 @@ import 'package:varenya_mobile/widgets/posts/post_user_details.widget.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart' as PostPage;
 
 class PostCard extends StatelessWidget {
+  // Post data
   final Post post;
+
+  // Check if the post in displayed
+  // in a list or a single post page.
   final bool fullPagePost;
 
   PostCard({
@@ -28,6 +32,8 @@ class PostCard extends StatelessWidget {
               ? null
               : connected
                   ? () {
+                      // Push the Full Post Page on
+                      // top with required arguments.
                       Navigator.of(context).pushNamed(
                         PostPage.Post.routeName,
                         arguments: this.post.id,

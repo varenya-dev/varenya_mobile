@@ -12,6 +12,7 @@ import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
+import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
 
 class UserDeleteTab extends StatefulWidget {
   const UserDeleteTab({Key? key}) : super(key: key);
@@ -28,6 +29,8 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
   late UserService _userService;
 
   late UserProvider _userProvider;
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -55,11 +58,19 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
     try {
       // Validate the form.
       if (this._formKey.currentState!.validate()) {
+        setState(() {
+          loading = true;
+        });
+
         // Delete the account from the server.
         await this._userService.deleteAccount(this._passwordController.text);
 
         // Clear off the provider state.
         this._userProvider.removeUser();
+
+        setState(() {
+          loading = false;
+        });
 
         // Log out to the authentication page.
         Navigator.of(context).pushReplacementNamed(AuthPage.routeName);
@@ -67,14 +78,34 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
     }
     // Handle errors gracefully.
     on WrongPasswordException catch (error) {
+      setState(() {
+        loading = false;
+      });
+
       displaySnackbar(error.message, context);
     } on WeakPasswordException catch (error) {
+      setState(() {
+        loading = false;
+      });
+
       displaySnackbar(error.message, context);
     } on NotLoggedInException catch (error) {
+      setState(() {
+        loading = false;
+      });
+
       displaySnackbar(error.message, context);
     } on ServerException catch (error) {
+      setState(() {
+        loading = false;
+      });
+
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
+      setState(() {
+        loading = false;
+      });
+
       log.e("UserDelete:_onFormSubmit", error, stackTrace);
       displaySnackbar(
         'Something went wrong, please try again later.',
@@ -138,11 +169,22 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
                     (BuildContext context, ConnectivityResult result, _) {
                   final bool connected = result != ConnectivityResult.none;
 
-                  return ElevatedButton(
-                    onPressed: connected ? this._onFormSubmit : null,
-                    child:
-                        Text(connected ? 'Delete Account' : 'You Are Offline'),
-                  );
+                  return connected
+                      ? LoadingIconButton(
+                          connected: true,
+                          loading: loading,
+                          onFormSubmit: this._onFormSubmit,
+                          text: 'Delete Account',
+                          loadingText: 'Updating',
+                        )
+                      : LoadingIconButton(
+                          connected: false,
+                          loading: loading,
+                          onFormSubmit: this._onFormSubmit,
+                          text: 'Delete Account',
+                          loadingText: 'Updating',
+                        );
+                  ;
                 },
                 child: SizedBox(),
               ),

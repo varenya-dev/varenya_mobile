@@ -14,6 +14,7 @@ import 'package:varenya_mobile/utils/modal_bottom_sheet.dart' as SBS;
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
+import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 
 class UserProfileUpdateTab extends StatefulWidget {
@@ -31,6 +32,8 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late UserService _userService;
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -60,6 +63,10 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
     // Run if there is an image selected.
     if (imageXFile != null) {
+      setState(() {
+        loading = true;
+      });
+
       // Prepare the file from the selected image.
       File imageFile = new File(imageXFile.path);
 
@@ -72,6 +79,10 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
       // Save the updated state.
       this._userProvider.user = user;
+
+      setState(() {
+        loading = false;
+      });
 
       // Display a success snackbar.
       displaySnackbar(
@@ -90,6 +101,10 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
     // Run if there is an image selected.
     if (imageXFile != null) {
+      setState(() {
+        loading = true;
+      });
+
       // Prepare the file from the selected image.
       File imageFile = new File(imageXFile.path);
 
@@ -102,6 +117,10 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
 
       // Save the updated state.
       this._userProvider.user = user;
+
+      setState(() {
+        loading = false;
+      });
 
       // Display a success snackbar.
       displaySnackbar(
@@ -141,12 +160,20 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
     try {
       // Validate the form.
       if (this._formKey.currentState!.validate()) {
+        setState(() {
+          loading = true;
+        });
+
         // Update it on server and also update the state as well.
         User user = await this
             ._userService
             .updateFullName(this._fullNameController.text);
 
         this._userProvider.user = user;
+
+        setState(() {
+          loading = false;
+        });
 
         // Display success snackbar.
         displaySnackbar("Your profile name has been updated!", context);
@@ -156,6 +183,10 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
     catch (error, stackTrace) {
       log.e("UserProfileUpdate:_onFormSubmit", error, stackTrace);
       displaySnackbar("Something went wrong, please try again later", context);
+
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -208,12 +239,21 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                       (BuildContext context, ConnectivityResult result, _) {
                     final bool connected = result != ConnectivityResult.none;
 
-                    return ElevatedButton(
-                      onPressed: connected ? this._onFormSubmit : null,
-                      child: Text(
-                        connected ? 'Update Profile' : 'You Are Offline',
-                      ),
-                    );
+                    return connected
+                        ? LoadingIconButton(
+                      connected: true,
+                      loading: loading,
+                      onFormSubmit: this._onFormSubmit,
+                      text: 'Update Email Address',
+                      loadingText: 'Updating',
+                    )
+                        : LoadingIconButton(
+                      connected: false,
+                      loading: loading,
+                      onFormSubmit: this._onFormSubmit,
+                      text: 'Update Email Address',
+                      loadingText: 'Updating',
+                    );;
                   },
                   child: SizedBox(),
                 ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +16,10 @@ import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
+import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
 import 'package:varenya_mobile/widgets/posts/mixed_image_carousel.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_categories.widget.dart';
+import 'package:varenya_mobile/widgets/posts/select_categories.widget.dart';
 
 class UpdatePost extends StatefulWidget {
   const UpdatePost({Key? key}) : super(key: key);
@@ -34,6 +37,8 @@ class _UpdatePostState extends State<UpdatePost> {
   final TextEditingController _bodyController = new TextEditingController();
   List<PostCategory> _categories = [];
   List<String> _images = [];
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -174,91 +179,30 @@ class _UpdatePostState extends State<UpdatePost> {
     displayBottomSheet(
       context,
       StatefulBuilder(
-        builder: (context, setStateInner) => Wrap(
-          children: [
-            FutureBuilder(
-              future: this._postService.fetchCategories(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<PostCategory>> snapshot) {
-                if (snapshot.hasError) {
-                  switch (snapshot.error.runtimeType) {
-                    case ServerException:
-                      {
-                        ServerException exception =
-                            snapshot.error as ServerException;
-                        return Text(exception.message);
-                      }
-                    default:
-                      {
-                        log.e(
-                          "UpdatePost Error",
-                          snapshot.error,
-                          snapshot.stackTrace,
-                        );
-                        return Text(
-                            "Something went wrong, please try again later");
-                      }
-                  }
-                }
+        builder: (context, setStateInner) => SelectCategories(
+          categories: this._categories,
+          onChanged: (bool? value, PostCategory category) {
+            if (value == true) {
+              setState(() {
+                this._categories.add(category);
+              });
+            } else {
+              setState(() {
+                this._categories = this
+                    ._categories
+                    .where((cty) => cty.id != category.id)
+                    .toList();
+              });
+            }
+            setStateInner(() {});
+          },
+          onClear: () {
+            setState(() {
+              this._categories.clear();
+            });
 
-                if (snapshot.connectionState == ConnectionState.done) {
-                  List<PostCategory> fetchedCategories = snapshot.data!;
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: fetchedCategories
-                        .map(
-                          (category) => ListTile(
-                            title: Text(
-                              category.categoryName,
-                            ),
-                            leading: Checkbox(
-                              value: this
-                                  ._categories
-                                  .where((cty) => cty.id == category.id)
-                                  .isNotEmpty,
-                              onChanged: (bool? value) {
-                                if (value == true) {
-                                  setState(() {
-                                    this._categories.add(category);
-                                  });
-                                } else {
-                                  setState(() {
-                                    this._categories = this
-                                        ._categories
-                                        .where((cty) => cty.id != category.id)
-                                        .toList();
-                                  });
-                                }
-                                setStateInner(() {});
-                              },
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  );
-                }
-
-                return Column(
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                );
-              },
-            ),
-            Center(
-              child: TextButton(
-                child: Text('Clear Filters'),
-                onPressed: () {
-                  setState(() {
-                    this._categories.clear();
-                  });
-
-                  setStateInner(() {});
-                },
-              ),
-            )
-          ],
+            setStateInner(() {});
+          },
         ),
       ),
     );
@@ -319,11 +263,35 @@ class _UpdatePostState extends State<UpdatePost> {
                 images: this._images,
                 onDelete: this._removeImage,
               ),
-              TextButton(
-                onPressed: this._onUpdatePost,
-                child: Text(
-                  'Update Post',
-                ),
+              OfflineBuilder(
+                connectivityBuilder:
+                    (BuildContext context, ConnectivityResult result, _) {
+                  final bool connected = result != ConnectivityResult.none;
+
+                  return connected
+                      ? LoadingIconButton(
+                          connected: true,
+                          loading: loading,
+                          onFormSubmit: this._onUpdatePost,
+                          text: 'Update Post',
+                          loadingText: 'Updating',
+                          icon: Icon(
+                            Icons.edit,
+                          ),
+                        )
+                      : LoadingIconButton(
+                          connected: false,
+                          loading: loading,
+                          onFormSubmit: this._onUpdatePost,
+                          text: 'Create Post',
+                          loadingText: 'Creating',
+                          icon: Icon(
+                            Icons.edit,
+                          ),
+                        );
+                  ;
+                },
+                child: SizedBox(),
               ),
             ],
           ),
