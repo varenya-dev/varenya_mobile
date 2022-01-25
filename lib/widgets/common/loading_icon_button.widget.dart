@@ -8,6 +8,8 @@ class LoadingIconButton extends StatelessWidget {
   final String text;
   final String loadingText;
 
+  final Icon icon;
+
   const LoadingIconButton({
     Key? key,
     required this.connected,
@@ -15,6 +17,7 @@ class LoadingIconButton extends StatelessWidget {
     required this.onFormSubmit,
     required this.text,
     required this.loadingText,
+    this.icon = const Icon(Icons.edit),
   }) : super(key: key);
 
   @override
@@ -43,9 +46,7 @@ class LoadingIconButton extends StatelessWidget {
       ),
       icon: connected
           ? !this.loading
-              ? Icon(
-                  Icons.edit,
-                )
+              ? this.icon
               : SizedBox(
                   height: MediaQuery.of(context).size.longestSide * 0.025,
                   width: MediaQuery.of(context).size.longestSide * 0.025,
