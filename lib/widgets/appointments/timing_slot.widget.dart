@@ -9,7 +9,10 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class TimingSlot extends StatefulWidget {
+  // Slot Timing.
   final DateTime slotTiming;
+
+  // Doctor details.
   final Doctor doctor;
 
   const TimingSlot({
@@ -23,31 +26,41 @@ class TimingSlot extends StatefulWidget {
 }
 
 class _TimingSlotState extends State<TimingSlot> {
+  // Appointment Service.
   late final AppointmentService _appointmentService;
 
   @override
   void initState() {
     super.initState();
 
+    // Injecting appointment service from global state.
     this._appointmentService =
         Provider.of<AppointmentService>(context, listen: false);
   }
 
+  /*
+   * Method to book an appointment for a time slot.
+   */
   Future<void> _bookAppointment() async {
     try {
+      // Send request to server to book appointment.
       await this._appointmentService.bookAppointment(
             CreateAppointmentDto(
                 doctorId: this.widget.doctor.id,
                 timing: this.widget.slotTiming),
           );
 
+      // Confirm appointment booking.
       displaySnackbar(
         "Appointment has been booked!",
         context,
       );
 
+      // Go back to previous page.
       Navigator.of(context).pop();
-    } on ServerException catch (error) {
+    }
+    // Handle errors gracefully.
+    on ServerException catch (error) {
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
       log.e("TimingSlot:_bookAppointment", error, stackTrace);

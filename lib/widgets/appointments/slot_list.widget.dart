@@ -8,7 +8,10 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/appointments/timing_slot.widget.dart';
 
 class SlotList extends StatefulWidget {
+  // Date data
   final DateTime dateTime;
+
+  // Doctor's data.
   final Doctor doctor;
 
   const SlotList({
@@ -22,12 +25,17 @@ class SlotList extends StatefulWidget {
 }
 
 class _SlotListState extends State<SlotList> {
+  // Appointment Service.
   late final AppointmentService _appointmentService;
+
+  // List of available appointment slots.
+  List<DateTime>? _dateTimeList;
 
   @override
   void initState() {
     super.initState();
 
+    // Injecting Appointment service from global state.
     this._appointmentService =
         Provider.of<AppointmentService>(context, listen: false);
   }
@@ -41,46 +49,68 @@ class _SlotListState extends State<SlotList> {
               doctorId: widget.doctor.id,
             ),
           ),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<List<DateTime>> snapshot,
-      ) {
-        if (snapshot.hasError) {
-          switch (snapshot.error.runtimeType) {
-            case ServerException:
-              {
-                ServerException exception = snapshot.error as ServerException;
-                return Text(exception.message);
-              }
-            default:
-              {
-                log.e("SlotList Error", snapshot.error, snapshot.stackTrace);
-                return Text("Something went wrong, please try again later");
-              }
+      builder: _handleTimeSlotsFuture,
+    );
+  }
+
+  /*
+   * Method to handle consuming future and build page body.
+   */
+  Widget _handleTimeSlotsFuture(
+    BuildContext context,
+    AsyncSnapshot<List<DateTime>> snapshot,
+  ) {
+    // Check for errors
+    if (snapshot.hasError) {
+      // Check for error type and handle them accordingly
+      switch (snapshot.error.runtimeType) {
+        case ServerException:
+          {
+            ServerException exception = snapshot.error as ServerException;
+            return Text(exception.message);
           }
-        }
+        default:
+          {
+            log.e("SlotList Error", snapshot.error, snapshot.stackTrace);
+            return Text("Something went wrong, please try again later");
+          }
+      }
+    }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          List<DateTime> dateTimeList = snapshot.data!;
+    // Check if data has loaded or not.
+    if (snapshot.connectionState == ConnectionState.done) {
+      // Save data in local state.
+      this._dateTimeList = snapshot.data!;
 
-          return Wrap(
-            children: dateTimeList
-                .map(
-                  (dateTime) => TimingSlot(
-                    slotTiming: dateTime,
-                    doctor: widget.doctor,
-                  ),
-                )
-                .toList(),
-          );
-        }
+      // Return and build time slot page.
+      return _buildTimeSlots();
+    }
 
-        return Column(
-          children: [
-            CircularProgressIndicator(),
-          ],
-        );
-      },
+    // If previously fetched time slots,
+    // display them or display loading indicator.
+    return this._dateTimeList == null
+        ? Column(
+            children: [
+              CircularProgressIndicator(),
+            ],
+          )
+        : _buildTimeSlots();
+  }
+
+  /*
+   * Method to build time slots data.
+   */
+  Wrap _buildTimeSlots() {
+    return Wrap(
+      children: this
+          ._dateTimeList!
+          .map(
+            (dateTime) => TimingSlot(
+              slotTiming: dateTime,
+              doctor: widget.doctor,
+            ),
+          )
+          .toList(),
     );
   }
 }
