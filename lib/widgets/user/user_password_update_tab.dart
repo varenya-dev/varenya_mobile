@@ -11,6 +11,7 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/validators/value_validator.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
+import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
 
 class UserPasswordUpdateTab extends StatefulWidget {
   const UserPasswordUpdateTab({Key? key}) : super(key: key);
@@ -28,6 +29,8 @@ class _UserPasswordUpdateTabState extends State<UserPasswordUpdateTab> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late UserService _userService;
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -54,6 +57,10 @@ class _UserPasswordUpdateTabState extends State<UserPasswordUpdateTab> {
     try {
       // Validate the form.
       if (this._formKey.currentState!.validate()) {
+        setState(() {
+          loading = true;
+        });
+
         // Prepare DTO for updating password.
         UpdatePasswordDto updatePasswordDto = new UpdatePasswordDto(
           oldPassword: this._oldPasswordController.text,
@@ -63,18 +70,34 @@ class _UserPasswordUpdateTabState extends State<UserPasswordUpdateTab> {
         // Update it on the server.
         await this._userService.updatePassword(updatePasswordDto);
 
+        setState(() {
+          loading = false;
+        });
+
         // Display success snackbar.
         displaySnackbar("Password updated!", context);
       }
     }
     // Handle errors gracefully.
     on WrongPasswordException catch (error) {
+      setState(() {
+        loading = false;
+      });
       displaySnackbar(error.message, context);
     } on WeakPasswordException catch (error) {
+      setState(() {
+        loading = false;
+      });
       displaySnackbar(error.message, context);
     } on NotLoggedInException catch (error) {
+      setState(() {
+        loading = false;
+      });
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
+      setState(() {
+        loading = false;
+      });
       log.e("UserPasswordUpdate:_onFormSubmit", error, stackTrace);
       displaySnackbar(
         'Something went wrong, please try again later.',
@@ -152,11 +175,21 @@ class _UserPasswordUpdateTabState extends State<UserPasswordUpdateTab> {
                     (BuildContext context, ConnectivityResult result, _) {
                   final bool connected = result != ConnectivityResult.none;
 
-                  return ElevatedButton(
-                    onPressed: connected ? this._onFormSubmit : null,
-                    child:
-                    Text(connected ? 'Update Password' : 'You Are Offline'),
-                  );
+                  return connected
+                      ? LoadingIconButton(
+                    connected: true,
+                    loading: loading,
+                    onFormSubmit: this._onFormSubmit,
+                    text: 'Update Email Address',
+                    loadingText: 'Updating',
+                  )
+                      : LoadingIconButton(
+                    connected: false,
+                    loading: loading,
+                    onFormSubmit: this._onFormSubmit,
+                    text: 'Update Email Address',
+                    loadingText: 'Updating',
+                  );;
                 },
                 child: SizedBox(),
               ),
