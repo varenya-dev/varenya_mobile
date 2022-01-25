@@ -43,16 +43,21 @@ class _SplashPageState extends State<SplashPage> {
 
           log.i("Firebase User Signed In");
 
+          // Fetch local notification action from global state.
           String action =
               Provider.of<NotificationActionProvider>(context, listen: false)
                   .action;
 
           log.i("Notification Action: $action");
+
+          // Check what does the action requires the app to do.
           if (action == DO_NOTHING) {
+            // Push to home page if no action needs to be taken.
             Navigator.of(context).pushReplacementNamed(HomePage.routeName);
-          } else if (action == INSTANT_NOTIFICATION || action == QUESTIONNAIRE_NOTIFICATION) {
-            Navigator.of(context)
-                .pushReplacementNamed(Questionnaire.routeName);
+          } else if (action == INSTANT_NOTIFICATION ||
+              action == QUESTIONNAIRE_NOTIFICATION) {
+            // Push to questionnaire page on questionnaire notification action.
+            Navigator.of(context).pushReplacementNamed(Questionnaire.routeName);
           }
         } else {
           log.i("Firebase User Not Present");
