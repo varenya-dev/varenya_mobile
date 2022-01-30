@@ -323,7 +323,7 @@ class _NewPostState extends State<NewPost> {
                                   ),
                                   child: !loading
                                       ? Text(
-                                          'Create',
+                                          'Update',
                                           style: TextStyle(
                                             color: Colors.black,
                                           ),

@@ -16,10 +16,8 @@ import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
-import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
+import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/mixed_image_carousel.widget.dart';
-import 'package:varenya_mobile/widgets/posts/post_categories.widget.dart';
-import 'package:varenya_mobile/widgets/posts/select_categories.widget.dart';
 
 class UpdatePost extends StatefulWidget {
   const UpdatePost({Key? key}) : super(key: key);
@@ -34,6 +32,7 @@ class _UpdatePostState extends State<UpdatePost> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   late final PostService _postService;
   Post? _post;
+  final TextEditingController _titleController = new TextEditingController();
   final TextEditingController _bodyController = new TextEditingController();
   List<PostCategory> _categories = [];
   List<String> _images = [];
@@ -51,6 +50,7 @@ class _UpdatePostState extends State<UpdatePost> {
   void dispose() {
     super.dispose();
 
+    this._titleController.dispose();
     this._bodyController.dispose();
   }
 
@@ -106,6 +106,11 @@ class _UpdatePostState extends State<UpdatePost> {
     if (!this._formKey.currentState!.validate()) {
       return;
     }
+
+    setState(() {
+      this.loading = true;
+    });
+
     try {
       List<String> uploadedImages = await Future.wait(
         this._images.map(
@@ -130,7 +135,7 @@ class _UpdatePostState extends State<UpdatePost> {
       String body = this._bodyController.text;
 
       UpdatePostDto updatePostDto = new UpdatePostDto(
-        title: '',
+        title: this._titleController.text,
         id: this._post!.id,
         body: body,
         images: uploadedImages,
@@ -139,12 +144,24 @@ class _UpdatePostState extends State<UpdatePost> {
 
       await this._postService.updatePost(updatePostDto);
 
+      setState(() {
+        this.loading = false;
+      });
+
       displaySnackbar("Post Updated!", context);
 
       Navigator.of(context).pop();
     } on ServerException catch (error) {
+      setState(() {
+        this.loading = false;
+      });
+
       displaySnackbar(error.message, context);
     } catch (error, stackTrace) {
+      setState(() {
+        this.loading = false;
+      });
+
       log.e("UpdatePost:_onUpdatePost", error, stackTrace);
       displaySnackbar(
         "Something went wrong, please try again later.",
@@ -176,45 +193,13 @@ class _UpdatePostState extends State<UpdatePost> {
     );
   }
 
-  void _openPostCategories() {
-    displayBottomSheet(
-      context,
-      StatefulBuilder(
-        builder: (context, setStateInner) => SelectCategories(
-          categories: this._categories,
-          onChanged: (bool? value, PostCategory category) {
-            if (value == true) {
-              setState(() {
-                this._categories.add(category);
-              });
-            } else {
-              setState(() {
-                this._categories = this
-                    ._categories
-                    .where((cty) => cty.id != category.id)
-                    .toList();
-              });
-            }
-            setStateInner(() {});
-          },
-          onClear: () {
-            setState(() {
-              this._categories.clear();
-            });
-
-            setStateInner(() {});
-          },
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (this._post == null) {
       this._post = ModalRoute.of(context)!.settings.arguments as Post;
 
       setState(() {
+        this._titleController.text = this._post!.title;
         this._bodyController.text = this._post!.body;
         this._images = this._post!.images.map((img) => img.imageUrl).toList();
         this._categories = this._post!.categories;
@@ -225,76 +210,176 @@ class _UpdatePostState extends State<UpdatePost> {
       appBar: AppBar(
         title: Text('Update Post'),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: this._formKey,
-          child: Column(
-            children: [
-              CustomTextArea(
-                textFieldController: this._bodyController,
-                label: 'Body of the post',
-                validators: [
-                  RequiredValidator(
-                    errorText: 'Body is required.',
-                  ),
-                  MinLengthValidator(
-                    10,
-                    errorText: 'Body should be at least 10 characters long.',
-                  )
-                ],
-                textInputType: TextInputType.text,
-                minLines: 1,
-              ),
-              TextButton(
-                onPressed: this._openPostCategories,
-                child: Text(
-                  'Select Categories',
+      body: Container(
+        decoration: BoxDecoration(color: Colors.grey[900]),
+        child: SingleChildScrollView(
+          child: Form(
+            key: this._formKey,
+            child: Column(
+              children: [
+                this._images.length == 0
+                    ? GestureDetector(
+                        onTap: this._onUploadImage,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          decoration: BoxDecoration(color: Colors.black26),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.photo_camera_back,
+                                  size:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Click to add image.',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : MixedImageCarousel(
+                        images: this._images,
+                        onDelete: this._removeImage,
+                      ),
+                CustomTextArea(
+                  textFieldController: this._titleController,
+                  helperText: 'Title',
+                  validators: [
+                    RequiredValidator(
+                      errorText: 'Title is required.',
+                    ),
+                    MinLengthValidator(
+                      10,
+                      errorText: 'Title should be at least 10 characters long.',
+                    )
+                  ],
+                  textInputType: TextInputType.text,
+                  minLines: 1,
+                  maxLines: 1,
                 ),
-              ),
-              PostCategories(
-                categories: this._categories,
-              ),
-              TextButton(
-                onPressed: this._onUploadImage,
-                child: Text(
-                  'Upload Images',
+                CustomTextArea(
+                  textFieldController: this._bodyController,
+                  helperText: 'Write Something...',
+                  validators: [
+                    RequiredValidator(
+                      errorText: 'Body is required.',
+                    ),
+                    MinLengthValidator(
+                      10,
+                      errorText: 'Body should be at least 10 characters long.',
+                    )
+                  ],
+                  textInputType: TextInputType.text,
+                  minLines: 5,
                 ),
-              ),
-              MixedImageCarousel(
-                images: this._images,
-                onDelete: this._removeImage,
-              ),
-              OfflineBuilder(
-                connectivityBuilder:
-                    (BuildContext context, ConnectivityResult result, _) {
-                  final bool connected = result != ConnectivityResult.none;
+                DisplayCategories(
+                  selectedCategories: this._categories,
+                  addOrRemoveCategory: (PostCategory postCategory) {
+                    if (this
+                        ._categories
+                        .where((category) => category.id == postCategory.id)
+                        .isEmpty) {
+                      setState(() {
+                        this._categories.add(postCategory);
+                      });
+                    } else {
+                      setState(() {
+                        this._categories.removeWhere(
+                            (category) => category.id == postCategory.id);
+                      });
+                    }
+                  },
+                ),
+                OfflineBuilder(
+                  connectivityBuilder:
+                      (BuildContext context, ConnectivityResult result, _) {
+                    final bool connected = result != ConnectivityResult.none;
 
-                  return connected
-                      ? LoadingIconButton(
-                          connected: true,
-                          loading: loading,
-                          onFormSubmit: this._onUpdatePost,
-                          text: 'Update Post',
-                          loadingText: 'Updating',
-                          icon: Icon(
-                            Icons.edit,
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[850],
+                            borderRadius: BorderRadius.circular(
+                              15.0,
+                            ),
                           ),
-                        )
-                      : LoadingIconButton(
-                          connected: false,
-                          loading: loading,
-                          onFormSubmit: this._onUpdatePost,
-                          text: 'Create Post',
-                          loadingText: 'Creating',
-                          icon: Icon(
-                            Icons.edit,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: connected ? this._onUpdatePost : null,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(
+                                      15.0,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height *
+                                            0.02,
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.07,
+                                  ),
+                                  child: !loading
+                                      ? Text(
+                                          'Update',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .longestSide *
+                                              0.025,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .longestSide *
+                                              0.025,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height *
+                                            0.02,
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.07,
+                                  ),
+                                  child: Text('Cancel'),
+                                ),
+                              )
+                            ],
                           ),
-                        );
-                  ;
-                },
-                child: SizedBox(),
-              ),
-            ],
+                        ),
+                      ],
+                    );
+                  },
+                  child: SizedBox(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
