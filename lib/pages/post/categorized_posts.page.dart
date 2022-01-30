@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
+import 'package:varenya_mobile/pages/post/new_post.page.dart';
+import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 
@@ -130,6 +133,59 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    NewPost.routeName,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[850],
+                    borderRadius: BorderRadius.circular(
+                      15.0,
+                    ),
+                  ),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                    vertical: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.03,
+                    vertical: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  child: Row(
+                    children: [
+                      Consumer<UserProvider>(
+                        builder: (
+                          BuildContext context,
+                          UserProvider user,
+                          _,
+                        ) =>
+                            Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.03,
+                            vertical:
+                                MediaQuery.of(context).size.height * 0.005,
+                          ),
+                          child: ProfilePictureWidget(
+                            imageUrl: user.user.photoURL ?? '',
+                            size: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Write Something...',
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.022,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               FutureBuilder(
                 future:
                     this._postService.fetchPostsByCategory(this._categoryName),
