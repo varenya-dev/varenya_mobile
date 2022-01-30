@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
+import 'package:varenya_mobile/widgets/posts/post_card_responses.widget.dart';
+import 'package:varenya_mobile/widgets/posts/post_card_title.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_user_details.widget.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart' as PostPage;
@@ -9,14 +11,9 @@ class PostCard extends StatelessWidget {
   // Post data
   final Post post;
 
-  // Check if the post in displayed
-  // in a list or a single post page.
-  final bool fullPagePost;
-
   PostCard({
     Key? key,
     required this.post,
-    this.fullPagePost = false,
   }) : super(key: key);
 
   @override
@@ -27,18 +24,16 @@ class PostCard extends StatelessWidget {
         final bool connected = result != ConnectivityResult.none;
 
         return GestureDetector(
-          onTap: fullPagePost
-              ? null
-              : connected
-                  ? () {
-                      // Push the Full Post Page on
-                      // top with required arguments.
-                      Navigator.of(context).pushNamed(
-                        PostPage.Post.routeName,
-                        arguments: this.post.id,
-                      );
-                    }
-                  : null,
+          onTap: connected
+              ? () {
+                  // Push the Full Post Page on
+                  // top with required arguments.
+                  Navigator.of(context).pushNamed(
+                    PostPage.Post.routeName,
+                    arguments: this.post.id,
+                  );
+                }
+              : null,
           child: child,
         );
       },
@@ -66,33 +61,13 @@ class PostCard extends StatelessWidget {
                 this.post.createdAt,
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(
-                MediaQuery.of(context).size.height * 0.01,
-              ),
-              child: Text(
-                this.post.title,
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.04,
-                ),
-              ),
-            ),
+            PostCardTitle(post: post),
             PostUserDetails(
               post: this.post,
               serverUser: this.post.user,
             ),
             Divider(),
-            Container(
-              margin: EdgeInsets.all(
-                MediaQuery.of(context).size.height * 0.01,
-              ),
-              child: Text(
-                '${this.post.comments.length} responses',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            )
+            PostCardResponses(post: post)
           ],
         ),
       ),
