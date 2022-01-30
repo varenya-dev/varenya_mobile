@@ -44,28 +44,56 @@ class PostCard extends StatelessWidget {
         );
       },
       child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[850],
+          borderRadius: BorderRadius.circular(
+            15.0,
+          ),
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.01,
+          horizontal: MediaQuery.of(context).size.width * 0.05,
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.02,
+          horizontal: MediaQuery.of(context).size.width * 0.02,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            PostCategories(
+              categories: this.post.categories,
+              duration: DateTime.now().difference(
+                this.post.createdAt,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(
+                MediaQuery.of(context).size.height * 0.01,
+              ),
+              child: Text(
+                this.post.title,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.04,
+                ),
+              ),
+            ),
             PostUserDetails(
               post: this.post,
               serverUser: this.post.user,
             ),
+            Divider(),
             Container(
-              margin: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.03,
+              margin: EdgeInsets.all(
+                MediaQuery.of(context).size.height * 0.01,
               ),
               child: Text(
-                this.post.body,
+                '${this.post.comments.length} responses',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            PostCategories(
-              categories: this.post.categories,
-            ),
-            ImageCarousel(
-              imageUrls: post.images,
-            ),
-            Divider(),
+            )
           ],
         ),
       ),
