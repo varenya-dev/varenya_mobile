@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
-import 'package:varenya_mobile/widgets/posts/image_carousel.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_user_details.widget.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart' as PostPage;
