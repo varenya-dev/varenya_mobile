@@ -111,90 +111,44 @@ class _PostUserDetailsState extends State<PostUserDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        this.widget.serverUser.role == Roles.PROFESSIONAL
-            ? Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: ProfilePictureWidget(
-                      imageUrl: this.widget.serverUser.doctor!.imageUrl,
-                      size: 40,
-                    ),
-                  ),
-                  Text(
-                    "Dr. ${this.widget.serverUser.doctor!.fullName} posted",
-                  ),
-                ],
-              )
-            : Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: ProfilePictureWidget(
-                      imageUrl: '',
-                      size: 40,
-                    ),
-                  ),
-                  Text(
-                    "${this.widget.serverUser.randomName!.randomName} posted",
-                  ),
-                ],
+    return this.widget.serverUser.role == Roles.PROFESSIONAL
+        ? Row(
+            children: [
+              Container(
+                margin: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.02,
+                ),
+                child: ProfilePictureWidget(
+                  imageUrl: this.widget.serverUser.doctor!.imageUrl,
+                  size: 30,
+                ),
               ),
-        Column(
-          children: [
-            Consumer<UserProvider>(
-              builder: (context, user, _) =>
-                  this.widget.serverUser.firebaseId == user.user.uid
-                      ? Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.of(context).size.width * 0.05,
-                          ),
-                          child: OfflineBuilder(
-                            connectivityBuilder: (
-                              BuildContext context,
-                              ConnectivityResult value,
-                              Widget child,
-                            ) {
-                              final bool connected =
-                                  value != ConnectivityResult.none;
-                              return PopupMenuButton(
-                                enabled: connected,
-                                child: Icon(Icons.more_vert),
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    child: Text("Update Post"),
-                                    value: PostOptionsType.UPDATE,
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text("Delete Post"),
-                                    value: PostOptionsType.DELETE,
-                                  ),
-                                ],
-                                onSelected: (PostOptionsType selectedData) {
-                                  if (selectedData == PostOptionsType.UPDATE) {
-                                    Navigator.of(context).pushNamed(
-                                      UpdatePost.routeName,
-                                      arguments: this.widget.post,
-                                    );
-                                  }
-                                  if (selectedData == PostOptionsType.DELETE) {
-                                    this._onDeletePost(context);
-                                  }
-                                },
-                              );
-                            },
-                            child: SizedBox(),
-                          ),
-                        )
-                      : SizedBox(),
-            ),
-          ],
-        ),
-      ],
-    );
+              Text(
+                "Dr. ${this.widget.serverUser.doctor!.fullName}",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Container(
+                margin: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.02,
+                ),
+                child: ProfilePictureWidget(
+                  imageUrl: '',
+                  size: 30,
+                ),
+              ),
+              Text(
+                this.widget.serverUser.randomName!.randomName,
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          );
   }
 }

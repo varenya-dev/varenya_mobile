@@ -8,6 +8,7 @@ import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
+import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/notification_action.provider.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';

@@ -1,12 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
+import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
+import 'package:varenya_mobile/pages/post/new_post.page.dart';
+import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
+import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
+import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
+import 'package:varenya_mobile/widgets/posts/display_create_post.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
-import 'package:varenya_mobile/widgets/posts/posts_filter.widget.dart';
+import 'package:varenya_mobile/widgets/posts/post_filter.widget.dart';
 
 class CategorizedPosts extends StatefulWidget {
   const CategorizedPosts({Key? key}) : super(key: key);
@@ -20,6 +26,7 @@ class CategorizedPosts extends StatefulWidget {
 class _CategorizedPostsState extends State<CategorizedPosts> {
   late final PostService _postService;
   String _categoryName = 'NEW';
+  String _categoryId = '';
   List<Post>? _posts;
 
   @override
@@ -30,29 +37,46 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
   }
 
   void _openPostCategoriesFilters() {
-    displayBottomSheet(
-      context,
-      StatefulBuilder(
-        builder: (context, setStateInner) => PostsFilter(
-          selectCategory: (String? categoryValue) {
-            if (categoryValue != null) {
-              setState(() {
-                this._categoryName = categoryValue;
-              });
-              setStateInner(() {});
-            }
-          },
-          categoryName: this._categoryName,
-          resetCategory: () {
-            setState(() {
-              this._categoryName = 'NEW';
-            });
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.grey[900],
+      context: context,
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (context, setStateInner) => PostFilter(
+          addOrRemoveCategory: (PostCategory category) {
+            _handleAddOrRemoveCategory(category);
 
             setStateInner(() {});
           },
+          categoryName: this._categoryName,
+          categoryId: this._categoryId,
         ),
       ),
     );
+  }
+
+  void _handleAddOrRemoveCategory(PostCategory category) {
+    if (this._categoryName == category.categoryName) {
+      setState(() {
+        this._categoryName = 'NEW';
+        this._categoryId = '';
+      });
+    } else {
+      setState(() {
+        this._categoryName = category.categoryName;
+        this._categoryId = category.id;
+      });
+    }
   }
 
   @override
@@ -60,6 +84,16 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Posts'),
+        centerTitle: true,
+        backgroundColor: Colors.grey[900],
+        actions: [
+          IconButton(
+            onPressed: this._openPostCategoriesFilters,
+            icon: Icon(
+              Icons.filter_list_outlined,
+            ),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -69,7 +103,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              _buildFilter(),
+              DisplayCreatePost(),
               FutureBuilder(
                 future:
                     this._postService.fetchPostsByCategory(this._categoryName),
@@ -132,30 +166,6 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           post: post,
         );
       },
-    );
-  }
-
-  Widget _buildFilter() {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.03,
-        horizontal: MediaQuery.of(context).size.width * 0.05,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Show Posts By'),
-          GestureDetector(
-            onTap: this._openPostCategoriesFilters,
-            child: Text(
-              this._categoryName,
-              style: TextStyle(
-                color: Colors.yellow,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
