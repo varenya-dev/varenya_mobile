@@ -3,6 +3,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 
 class CustomTextArea extends StatelessWidget {
   final String label;
+  final String helperText;
   final TextEditingController textFieldController;
   final List<FieldValidator> validators;
   final TextInputType textInputType;
@@ -12,7 +13,8 @@ class CustomTextArea extends StatelessWidget {
   CustomTextArea({
     Key? key,
     required this.textFieldController,
-    required this.label,
+    this.label = '',
+    this.helperText = '',
     required this.validators,
     required this.textInputType,
     this.minLines = 1,
@@ -31,9 +33,19 @@ class CustomTextArea extends StatelessWidget {
         maxLines: this.maxLines,
         keyboardType: textInputType,
         decoration: InputDecoration(
+          hintText: this.helperText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          filled: true,
+          fillColor: Colors.grey[850],
           labelText: label,
           border: OutlineInputBorder(
-            borderSide: BorderSide(),
+            borderRadius: BorderRadius.circular(
+              15.0,
+            ),
+            borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.none,
+            ),
           ),
         ),
         controller: this.textFieldController,
