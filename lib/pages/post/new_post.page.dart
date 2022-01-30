@@ -136,6 +136,7 @@ class _NewPostState extends State<NewPost> {
       String body = this._bodyController.text;
 
       CreatePostDto createPostDto = new CreatePostDto(
+        title: '',
         body: body,
         images: uploadedImages,
         categories: selectedCategories,

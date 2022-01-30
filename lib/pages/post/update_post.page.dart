@@ -130,6 +130,7 @@ class _UpdatePostState extends State<UpdatePost> {
       String body = this._bodyController.text;
 
       UpdatePostDto updatePostDto = new UpdatePostDto(
+        title: '',
         id: this._post!.id,
         body: body,
         images: uploadedImages,
