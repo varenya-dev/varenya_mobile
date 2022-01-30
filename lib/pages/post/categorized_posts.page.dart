@@ -8,7 +8,6 @@ import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';

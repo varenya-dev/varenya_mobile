@@ -13,6 +13,7 @@ class Post {
   @HiveField(0, defaultValue: '')
   final String id;
 
+  @JsonKey(defaultValue: '')
   @HiveField(9, defaultValue: '')
   final String title;
 

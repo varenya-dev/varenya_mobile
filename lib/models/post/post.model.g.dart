@@ -74,7 +74,7 @@ class PostAdapter extends TypeAdapter<Post> {
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
       id: json['id'] as String,
-      title: json['title'] as String,
+      title: json['title'] as String? ?? '',
       postType: $enumDecode(_$PostTypeEnumMap, json['postType']),
       body: json['body'] as String,
       images: (json['images'] as List<dynamic>?)

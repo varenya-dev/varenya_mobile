@@ -9,6 +9,8 @@ class CustomTextArea extends StatelessWidget {
   final TextInputType textInputType;
   final int minLines;
   final int? maxLines;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   CustomTextArea({
     Key? key,
@@ -19,6 +21,8 @@ class CustomTextArea extends StatelessWidget {
     required this.textInputType,
     this.minLines = 1,
     this.maxLines,
+    this.prefixIcon,
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
@@ -47,6 +51,8 @@ class CustomTextArea extends StatelessWidget {
               style: BorderStyle.none,
             ),
           ),
+          prefixIcon: this.prefixIcon,
+          suffixIcon: this.suffixIcon,
         ),
         controller: this.textFieldController,
         validator: MultiValidator(validators),

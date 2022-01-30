@@ -37,7 +37,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.yellow,
-        scaffoldBackgroundColor: Colors.black
+        scaffoldBackgroundColor: Colors.black,
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Colors.transparent,
+        ),
       ),
       routes: {
         HomePage.routeName: (context) => HomePage(),
