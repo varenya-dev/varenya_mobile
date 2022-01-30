@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
+import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
+import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 import 'package:varenya_mobile/widgets/posts/posts_filter.widget.dart';
+import 'package:varenya_mobile/widgets/posts/select_categories.widget.dart';
 
 class CategorizedPosts extends StatefulWidget {
   const CategorizedPosts({Key? key}) : super(key: key);
@@ -20,6 +24,7 @@ class CategorizedPosts extends StatefulWidget {
 class _CategorizedPostsState extends State<CategorizedPosts> {
   late final PostService _postService;
   String _categoryName = 'NEW';
+  String _categoryId = '';
   List<Post>? _posts;
 
   @override
@@ -30,26 +35,75 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
   }
 
   void _openPostCategoriesFilters() {
-    displayBottomSheet(
-      context,
-      StatefulBuilder(
-        builder: (context, setStateInner) => PostsFilter(
-          selectCategory: (String? categoryValue) {
-            if (categoryValue != null) {
-              setState(() {
-                this._categoryName = categoryValue;
-              });
-              setStateInner(() {});
-            }
-          },
-          categoryName: this._categoryName,
-          resetCategory: () {
-            setState(() {
-              this._categoryName = 'NEW';
-            });
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.grey[900],
+      context: context,
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (context, setStateInner) => SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.25,
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.03,
+              left: MediaQuery.of(context).size.width * 0.03,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.filter_list_outlined,
+                      size: MediaQuery.of(context).size.width * 0.08,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.02,
+                      ),
+                      child: Text(
+                        'Filters',
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.03,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                DisplayCategories(
+                  selectedCategories: [
+                    new PostCategory(
+                      id: this._categoryId,
+                      categoryName: this._categoryName,
+                    ),
+                  ],
+                  addOrRemoveCategory: (PostCategory category) {
+                    if (this._categoryName == category.categoryName) {
+                      setState(() {
+                        this._categoryName = 'NEW';
+                        this._categoryId = '';
+                      });
+                    } else {
+                      setState(() {
+                        this._categoryName = category.categoryName;
+                        this._categoryId = category.id;
+                      });
+                    }
 
-            setStateInner(() {});
-          },
+                    setStateInner(() {});
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -60,6 +114,16 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Posts'),
+        centerTitle: true,
+        backgroundColor: Colors.grey[900],
+        actions: [
+          IconButton(
+            onPressed: this._openPostCategoriesFilters,
+            icon: Icon(
+              Icons.filter_list_outlined,
+            ),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -69,7 +133,6 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              _buildFilter(),
               FutureBuilder(
                 future:
                     this._postService.fetchPostsByCategory(this._categoryName),
