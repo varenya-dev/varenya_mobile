@@ -6,11 +6,8 @@ import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
-import 'package:varenya_mobile/widgets/posts/posts_filter.widget.dart';
-import 'package:varenya_mobile/widgets/posts/select_categories.widget.dart';
 
 class CategorizedPosts extends StatefulWidget {
   const CategorizedPosts({Key? key}) : super(key: key);
@@ -195,30 +192,6 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           post: post,
         );
       },
-    );
-  }
-
-  Widget _buildFilter() {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.03,
-        horizontal: MediaQuery.of(context).size.width * 0.05,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Show Posts By'),
-          GestureDetector(
-            onTap: this._openPostCategoriesFilters,
-            child: Text(
-              this._categoryName,
-              style: TextStyle(
-                color: Colors.yellow,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
