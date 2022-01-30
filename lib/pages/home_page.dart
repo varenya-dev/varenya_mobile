@@ -13,8 +13,6 @@ import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
-import 'package:varenya_mobile/pages/post/new_post.page.dart';
-import 'package:varenya_mobile/pages/post/new_posts.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
@@ -147,21 +145,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    Navigator.of(context).pushNamed(NewPosts.routeName);
-                  },
-                  child: Text('New Posts'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
                     Navigator.of(context).pushNamed(CategorizedPosts.routeName);
                   },
                   child: Text('Categorized Posts'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(NewPost.routeName);
-                  },
-                  child: Text('New Post'),
                 ),
                 ElevatedButton(
                   onPressed: () async {
