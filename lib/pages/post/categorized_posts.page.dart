@@ -10,7 +10,9 @@ import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
+import 'package:varenya_mobile/widgets/posts/display_create_post.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
+import 'package:varenya_mobile/widgets/posts/post_filter.widget.dart';
 
 class CategorizedPosts extends StatefulWidget {
   const CategorizedPosts({Key? key}) : super(key: key);
@@ -50,63 +52,31 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
       backgroundColor: Colors.grey[900],
       context: context,
       builder: (BuildContext context) => StatefulBuilder(
-        builder: (context, setStateInner) => SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
-            margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.03,
-              left: MediaQuery.of(context).size.width * 0.03,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.filter_list_outlined,
-                      size: MediaQuery.of(context).size.width * 0.08,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.02,
-                      ),
-                      child: Text(
-                        'Filters',
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.03,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                DisplayCategories(
-                  selectedCategories: [
-                    new PostCategory(
-                      id: this._categoryId,
-                      categoryName: this._categoryName,
-                    ),
-                  ],
-                  addOrRemoveCategory: (PostCategory category) {
-                    if (this._categoryName == category.categoryName) {
-                      setState(() {
-                        this._categoryName = 'NEW';
-                        this._categoryId = '';
-                      });
-                    } else {
-                      setState(() {
-                        this._categoryName = category.categoryName;
-                        this._categoryId = category.id;
-                      });
-                    }
+        builder: (context, setStateInner) => PostFilter(
+          addOrRemoveCategory: (PostCategory category) {
+            _handleAddOrRemoveCategory(category);
 
-                    setStateInner(() {});
-                  },
-                ),
-              ],
-            ),
-          ),
+            setStateInner(() {});
+          },
+          categoryName: this._categoryName,
+          categoryId: this._categoryId,
         ),
       ),
     );
+  }
+
+  void _handleAddOrRemoveCategory(PostCategory category) {
+    if (this._categoryName == category.categoryName) {
+      setState(() {
+        this._categoryName = 'NEW';
+        this._categoryId = '';
+      });
+    } else {
+      setState(() {
+        this._categoryName = category.categoryName;
+        this._categoryId = category.id;
+      });
+    }
   }
 
   @override
@@ -133,59 +103,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    NewPost.routeName,
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[850],
-                    borderRadius: BorderRadius.circular(
-                      15.0,
-                    ),
-                  ),
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                    vertical: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.03,
-                    vertical: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  child: Row(
-                    children: [
-                      Consumer<UserProvider>(
-                        builder: (
-                          BuildContext context,
-                          UserProvider user,
-                          _,
-                        ) =>
-                            Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.of(context).size.width * 0.03,
-                            vertical:
-                                MediaQuery.of(context).size.height * 0.005,
-                          ),
-                          child: ProfilePictureWidget(
-                            imageUrl: user.user.photoURL ?? '',
-                            size: MediaQuery.of(context).size.width * 0.1,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        'Write Something...',
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.022,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              DisplayCreatePost(),
               FutureBuilder(
                 future:
                     this._postService.fetchPostsByCategory(this._categoryName),
