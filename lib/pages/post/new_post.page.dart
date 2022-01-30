@@ -48,6 +48,7 @@ class _NewPostState extends State<NewPost> {
   void dispose() {
     super.dispose();
 
+    this._titleController.dispose();
     this._bodyController.dispose();
   }
 
