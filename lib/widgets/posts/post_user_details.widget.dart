@@ -125,9 +125,7 @@ class _PostUserDetailsState extends State<PostUserDetails> {
               ),
               Text(
                 "Dr. ${this.widget.serverUser.doctor!.fullName}",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             ],
           )
@@ -144,9 +142,7 @@ class _PostUserDetailsState extends State<PostUserDetails> {
               ),
               Text(
                 this.widget.serverUser.randomName!.randomName,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             ],
           );

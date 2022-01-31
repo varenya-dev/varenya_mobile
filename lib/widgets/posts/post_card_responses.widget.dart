@@ -17,9 +17,7 @@ class PostCardResponses extends StatelessWidget {
       ),
       child: Text(
         '${this.post.comments.length} responses',
-        style: TextStyle(
-          color: Colors.grey,
-        ),
+        style: Theme.of(context).textTheme.subtitle1,
       ),
     );
   }

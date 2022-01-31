@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
 class PostCategories extends StatelessWidget {
   // List of categories to display.
@@ -31,9 +32,7 @@ class PostCategories extends StatelessWidget {
                   ),
                   child: Text(
                     category.categoryName,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ),
               )
@@ -45,9 +44,7 @@ class PostCategories extends StatelessWidget {
               ),
               child: Text(
                 '• ${duration.inSeconds}s ago',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             )
           else if (duration.inSeconds < 3600)
@@ -57,9 +54,7 @@ class PostCategories extends StatelessWidget {
               ),
               child: Text(
                 '• ${duration.inMinutes}m ago',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             )
           else
@@ -69,9 +64,7 @@ class PostCategories extends StatelessWidget {
               ),
               child: Text(
                 '• ${duration.inHours}h ago',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.subtitle1,
               ),
             )
         ],

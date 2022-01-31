@@ -4,12 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
-import 'package:varenya_mobile/pages/post/new_post.page.dart';
-import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
-import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/widgets/posts/display_create_post.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_filter.widget.dart';
@@ -49,7 +46,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
           ),
         ),
       ),
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (BuildContext context) => StatefulBuilder(
         builder: (context, setStateInner) => PostFilter(
@@ -85,7 +82,6 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
       appBar: AppBar(
         title: Text('Posts'),
         centerTitle: true,
-        backgroundColor: Colors.grey[900],
         actions: [
           IconButton(
             onPressed: this._openPostCategoriesFilters,
