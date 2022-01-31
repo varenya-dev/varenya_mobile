@@ -17,48 +17,49 @@ class DisplayCreatePost extends StatelessWidget {
           NewPost.routeName,
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[850],
+      child: Card(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            15.0,
+            20.0,
           ),
         ),
         margin: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.05,
           vertical: MediaQuery.of(context).size.height * 0.01,
         ),
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.03,
-          vertical: MediaQuery.of(context).size.height * 0.02,
-        ),
-        child: Row(
-          children: [
-            Consumer<UserProvider>(
-              builder: (
-                BuildContext context,
-                UserProvider user,
-                _,
-              ) =>
-                  Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.03,
-                  vertical: MediaQuery.of(context).size.height * 0.005,
-                ),
-                child: ProfilePictureWidget(
-                  imageUrl: user.user.photoURL ?? '',
-                  size: MediaQuery.of(context).size.width * 0.1,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.03,
+            vertical: MediaQuery.of(context).size.height * 0.02,
+          ),
+          child: Row(
+            children: [
+              Consumer<UserProvider>(
+                builder: (
+                  BuildContext context,
+                  UserProvider user,
+                  _,
+                ) =>
+                    Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.03,
+                    vertical: MediaQuery.of(context).size.height * 0.005,
+                  ),
+                  child: ProfilePictureWidget(
+                    imageUrl: user.user.photoURL ?? '',
+                    size: MediaQuery.of(context).size.width * 0.1,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              'Write Something...',
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.022,
-                color: Colors.grey,
+              Text(
+                'Write Something...',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.022,
+                  color: Theme.of(context).textTheme.subtitle1!.color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

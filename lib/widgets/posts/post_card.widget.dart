@@ -37,9 +37,8 @@ class PostCard extends StatelessWidget {
           child: child,
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[850],
+      child: Card(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
             15.0,
           ),
@@ -48,27 +47,29 @@ class PostCard extends StatelessWidget {
           vertical: MediaQuery.of(context).size.height * 0.01,
           horizontal: MediaQuery.of(context).size.width * 0.05,
         ),
-        padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.02,
-          horizontal: MediaQuery.of(context).size.width * 0.02,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PostCategories(
-              categories: this.post.categories,
-              duration: DateTime.now().difference(
-                this.post.createdAt,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height * 0.02,
+            horizontal: MediaQuery.of(context).size.width * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PostCategories(
+                categories: this.post.categories,
+                duration: DateTime.now().difference(
+                  this.post.createdAt,
+                ),
               ),
-            ),
-            PostCardTitle(post: post),
-            PostUserDetails(
-              post: this.post,
-              serverUser: this.post.user,
-            ),
-            Divider(),
-            PostCardResponses(post: post)
-          ],
+              PostCardTitle(post: post),
+              PostUserDetails(
+                post: this.post,
+                serverUser: this.post.user,
+              ),
+              Divider(),
+              PostCardResponses(post: post)
+            ],
+          ),
         ),
       ),
     );

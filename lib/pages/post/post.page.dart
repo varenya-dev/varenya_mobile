@@ -7,6 +7,7 @@ import 'package:varenya_mobile/models/post/post.model.dart' as PM;
 import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/comments/comment_form.widget.dart';
 import 'package:varenya_mobile/widgets/comments/comment_list.widget.dart';
@@ -28,46 +29,10 @@ class _PostState extends State<Post> {
   String? _postId;
   PM.Post? _post;
   late final PostService _postService;
-  late final CommentsService _commentsService;
 
   final DateTime _now = DateTime.now();
 
-  final TextEditingController _commentController = new TextEditingController();
-  final GlobalKey<FormState> _formKey = new GlobalKey();
-
   bool _showCommentForm = false;
-
-  Future<void> _onFormSubmit() async {
-    if (!this._formKey.currentState!.validate()) {
-      return;
-    }
-
-    try {
-      CreateCommentDto createCommentDto = new CreateCommentDto(
-        comment: this._commentController.text,
-        postId: this._post!.id,
-      );
-
-      await this._commentsService.createNewComment(createCommentDto);
-      setState(() {});
-
-      displaySnackbar("Comment created!", context);
-    } on ServerException catch (error) {
-      displaySnackbar(error.message, context);
-    } on NotLoggedInException catch (error) {
-      displaySnackbar(error.message, context);
-    } catch (error, stackTrace) {
-      log.e("CommentForm:_onFormSubmit", error, stackTrace);
-      displaySnackbar("Something went wrong, please try again later.", context);
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    this._commentController.dispose();
-  }
 
   @override
   void initState() {
@@ -152,7 +117,7 @@ class _PostState extends State<Post> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            color: Colors.grey[900],
+            color: Palette.secondary,
             child: FullPostUserDetails(
               context: context,
               post: _post,

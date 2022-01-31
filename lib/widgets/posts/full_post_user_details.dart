@@ -27,7 +27,7 @@ class FullPostUserDetails extends StatelessWidget {
               ),
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.03,
-                vertical: MediaQuery.of(context).size.height * 0.02,
+                vertical: MediaQuery.of(context).size.height * 0.01,
               ),
               child: ProfilePictureWidget(
                 imageUrl: this._post!.user.role == Roles.PROFESSIONAL

@@ -32,30 +32,22 @@ class FullPostDuration extends StatelessWidget {
             this._post!.user.role == Roles.PROFESSIONAL
                 ? "Dr. ${this._post!.user.doctor!.fullName}"
                 : this._post!.user.randomName!.randomName,
-            style: TextStyle(
-              color: Colors.grey,
-            ),
+            style: Theme.of(context).textTheme.subtitle1,
           ),
           if (duration.inSeconds < 60)
             Text(
               '${duration.inSeconds}s ago',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+              style: Theme.of(context).textTheme.subtitle1,
             )
           else if (duration.inSeconds < 3600)
             Text(
               '${duration.inMinutes}m ago',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+              style: Theme.of(context).textTheme.subtitle1,
             )
           else
             Text(
               '${duration.inHours}h ago',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+              style: Theme.of(context).textTheme.subtitle1,
             )
         ],
       ),

@@ -20,6 +20,8 @@ import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart';
 import 'package:varenya_mobile/pages/post/update_post.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
+import 'package:varenya_mobile/utils/generate_swatch.util.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
@@ -35,10 +37,35 @@ class App extends StatelessWidget {
       title: 'Varenya',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.yellow,
-        scaffoldBackgroundColor: Colors.black,
+        primarySwatch: generateMaterialColor(
+          Palette.primary,
+        ),
+        primaryColor: Palette.primary,
+        scaffoldBackgroundColor: Color(0xff1f1d24),
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.transparent,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              Palette.primary,
+            ),
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(
+            0XFF282A2E,
+          ),
+        ),
+        textTheme: TextTheme(
+          subtitle1: TextStyle(
+            color: Colors.white.withOpacity(
+              0.44,
+            ),
+          ),
+        ),
+        cardTheme: CardTheme(
+          color: Palette.secondary,
         ),
       ),
       routes: {

@@ -13,6 +13,7 @@ import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/image_picker.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
@@ -211,7 +212,6 @@ class _UpdatePostState extends State<UpdatePost> {
         title: Text('Update Post'),
       ),
       body: Container(
-        decoration: BoxDecoration(color: Colors.grey[900]),
         child: SingleChildScrollView(
           child: Form(
             key: this._formKey,
@@ -222,7 +222,9 @@ class _UpdatePostState extends State<UpdatePost> {
                         onTap: this._onUploadImage,
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.5,
-                          decoration: BoxDecoration(color: Colors.black26),
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                          ),
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -235,9 +237,7 @@ class _UpdatePostState extends State<UpdatePost> {
                                 ),
                                 Text(
                                   'Click to add image.',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
+                                  style: Theme.of(context).textTheme.subtitle1,
                                 )
                               ],
                             ),
@@ -307,7 +307,7 @@ class _UpdatePostState extends State<UpdatePost> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[850],
+                            color: Palette.secondary,
                             borderRadius: BorderRadius.circular(
                               15.0,
                             ),
@@ -319,7 +319,7 @@ class _UpdatePostState extends State<UpdatePost> {
                                 onTap: connected ? this._onUpdatePost : null,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.yellow,
+                                    color: Palette.primary,
                                     borderRadius: BorderRadius.circular(
                                       15.0,
                                     ),
