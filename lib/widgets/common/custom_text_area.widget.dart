@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
 class CustomTextArea extends StatelessWidget {
   final String label;
@@ -40,7 +41,7 @@ class CustomTextArea extends StatelessWidget {
           hintText: this.helperText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           filled: true,
-          fillColor: Colors.grey[850],
+          fillColor: Palette.secondary,
           labelText: label,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
