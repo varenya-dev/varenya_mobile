@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
-
-import 'display_categories.widget.dart';
+import 'package:varenya_mobile/widgets/posts/display_categories.widget.dart';
 
 class PostFilter extends StatelessWidget {
   final String categoryName;
