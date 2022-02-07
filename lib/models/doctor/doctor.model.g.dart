@@ -27,13 +27,14 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
           fields[6] == null ? [] : (fields[6] as List).cast<Specialization>(),
       shiftStartTime: fields[7] as DateTime,
       shiftEndTime: fields[8] as DateTime,
+      user: fields[9] as ServerUser?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Doctor obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -51,7 +52,9 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       ..writeByte(7)
       ..write(obj.shiftStartTime)
       ..writeByte(8)
-      ..write(obj.shiftEndTime);
+      ..write(obj.shiftEndTime)
+      ..writeByte(9)
+      ..write(obj.user);
   }
 
   @override
@@ -82,6 +85,9 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) => Doctor(
           [],
       shiftStartTime: DateTime.parse(json['shiftStartTime'] as String),
       shiftEndTime: DateTime.parse(json['shiftEndTime'] as String),
+      user: json['user'] == null
+          ? null
+          : ServerUser.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
@@ -94,4 +100,5 @@ Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
       'specializations': instance.specializations,
       'shiftStartTime': instance.shiftStartTime.toIso8601String(),
       'shiftEndTime': instance.shiftEndTime.toIso8601String(),
+      'user': instance.user,
     };

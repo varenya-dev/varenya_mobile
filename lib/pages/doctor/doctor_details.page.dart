@@ -48,7 +48,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                     ? () async {
                         String threadId = await this
                             ._chatService
-                            .createNewThread(doctorDetails.id);
+                            .createNewThread(doctorDetails.user!.firebaseId);
 
                         Navigator.of(context).pushNamed(
                           ChatPage.routeName,

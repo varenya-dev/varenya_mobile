@@ -21,6 +21,8 @@ class UserService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  // Future<User> findUserById(String userId)
+
   /*
    * Update profile picture for the given user.
    * @param imageUrl updated URL of the new profile picture.
