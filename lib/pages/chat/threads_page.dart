@@ -5,6 +5,7 @@ import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/widgets/chat/single_thread.widget.dart';
 
 class ThreadsPage extends StatefulWidget {
   const ThreadsPage({Key? key}) : super(key: key);
@@ -57,16 +58,8 @@ class _ThreadsPageState extends State<ThreadsPage> {
             itemCount: this._threads.length,
             itemBuilder: (context, index) {
               ChatThread thread = this._threads[index];
-              return ListTile(
-                leading: Icon(Icons.person),
-                title: Text(thread.id),
-                subtitle: Text(thread.participants.join(", ")),
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    ChatPage.routeName,
-                    arguments: thread.id,
-                  );
-                },
+              return SingleThread(
+                chatThread: thread,
               );
             },
           );
