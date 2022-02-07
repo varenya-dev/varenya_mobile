@@ -36,7 +36,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final AuthService _authService;
   late final UserService _userService;
-  late final ChatService _chatService;
   late final AlertsService _alertsService;
 
   final LocalNotificationsService localNotificationsService =
@@ -48,7 +47,6 @@ class _HomePageState extends State<HomePage> {
 
     this._authService = Provider.of<AuthService>(context, listen: false);
     this._userService = Provider.of<UserService>(context, listen: false);
-    this._chatService = Provider.of<ChatService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
     checkConnectivity().then((value) {
@@ -106,12 +104,6 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pushNamed(AuthPage.routeName);
                   },
                   child: Text('Logout'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await this._chatService.openDummyThread();
-                  },
-                  child: Text('Dummy Chat'),
                 ),
                 ElevatedButton(
                   onPressed: () async {

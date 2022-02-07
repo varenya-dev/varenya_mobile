@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
@@ -132,7 +133,10 @@ class _SingleThreadState extends State<SingleThread> {
       onTap: () {
         Navigator.of(context).pushNamed(
           ChatPage.routeName,
-          arguments: this.widget.chatThread.id,
+          arguments: ChatArgument(
+            serverUser: this._user!,
+            threadId: this.widget.chatThread.id,
+          ),
         );
       },
       leading: ProfilePictureWidget(

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
-import 'package:varenya_mobile/pages/chat/threads_page.dart';
 import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';

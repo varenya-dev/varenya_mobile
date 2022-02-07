@@ -7,14 +7,21 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/chat/chat_bubble_widget.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
+import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
+
+import '../../enum/roles.enum.dart';
+import '../../widgets/common/profile_picture_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -32,6 +39,9 @@ class _ChatPageState extends State<ChatPage> {
 
   final TextEditingController _chatController = new TextEditingController();
   final GlobalKey<FormState> _formKey = new GlobalKey();
+
+  String? _threadId;
+  ServerUser? _serverUser;
 
   @override
   void initState() {
@@ -92,10 +102,34 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  void _openThreadDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Do you want to delete this thread?'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await this._onThreadClose();
+            },
+            child: Text('YES'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('NO'),
+          ),
+        ],
+      ),
+    );
+  }
+
   /*
    * Method to handle closing a thread.
    */
-  Future<void> onThreadClose() async {
+  Future<void> _onThreadClose() async {
     // Close the thread and pop off from the chat screen.
     await this._chatService.closeThread(this._chatThread);
     Navigator.of(context).pop();
@@ -103,14 +137,32 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    String id = ModalRoute.of(context)!.settings.arguments as String;
+    if (this._serverUser == null || this._threadId == null) {
+      ChatArgument chatArgument =
+          ModalRoute.of(context)!.settings.arguments as ChatArgument;
+
+      this._serverUser = chatArgument.serverUser;
+      this._threadId = chatArgument.threadId;
+    }
 
     AppBar appBar = AppBar(
-      title: Text('Chat'),
+      elevation: 0,
+      backgroundColor: Colors.black54,
+      leading: null,
+      automaticallyImplyLeading: false,
+      title: ListTile(
+        leading: ProfilePictureWidget(
+          imageUrl: _getImageUrl(),
+          size: MediaQuery.of(context).size.width * 0.1,
+        ),
+        title: _getUserName(),
+      ),
       actions: [
-        TextButton(
-          onPressed: this.onThreadClose,
-          child: Text('Close Chat'),
+        IconButton(
+          onPressed: () => this._openThreadDeleteDialog(context),
+          icon: Icon(
+            Icons.delete_outline,
+          ),
         ),
       ],
     );
@@ -123,7 +175,7 @@ class _ChatPageState extends State<ChatPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: this._chatService.listenToThread(id),
+            stream: this._chatService.listenToThread(this._threadId!),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
                     snapshot) {
@@ -169,9 +221,9 @@ class _ChatPageState extends State<ChatPage> {
           Container(
             child: Form(
               key: this._formKey,
-              child: CustomFieldWidget(
+              child: CustomTextArea(
                 textFieldController: this._chatController,
-                label: "Your Message",
+                helperText: "Message...",
                 validators: [
                   RequiredValidator(errorText: "Please type in your message")
                 ],
@@ -182,7 +234,10 @@ class _ChatPageState extends State<ChatPage> {
                     final bool connected = result != ConnectivityResult.none;
 
                     return IconButton(
-                      icon: Icon(Icons.send),
+                      icon: Icon(
+                        Icons.send,
+                        color: Palette.primary,
+                      ),
                       onPressed: connected ? this.onMessageSubmit : null,
                     );
                   },
@@ -195,4 +250,24 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
+  Text _getUserName() {
+    return this._serverUser!.role == Roles.MAIN
+        ? Text(
+            this._serverUser!.randomName!.randomName,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )
+        : Text(
+            "Dr. ${this._serverUser!.doctor!.fullName}",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          );
+  }
+
+  String _getImageUrl() => this._serverUser!.role == Roles.MAIN
+      ? ''
+      : this._serverUser!.doctor!.imageUrl;
 }
