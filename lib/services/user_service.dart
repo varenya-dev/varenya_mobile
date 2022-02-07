@@ -11,6 +11,7 @@ import 'package:varenya_mobile/exceptions/auth/weak_password_exception.dart';
 import 'package:varenya_mobile/exceptions/auth/wrong_password_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/exceptions/server.exception.dart';
+import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 
 /*
@@ -20,6 +21,50 @@ class UserService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  Future<ServerUser> findUserById(String userId) async {
+    // Fetch the ID token for the user.
+    String firebaseAuthToken =
+        await this._firebaseAuth.currentUser!.getIdToken();
+
+    // Prepare URI for the request.
+    Uri uri = Uri.http(
+      RAW_ENDPOINT,
+      "/v1/api/user",
+      {
+        "id": userId,
+      },
+    );
+
+    // Prepare authorization headers.
+    Map<String, String> headers = {
+      "Authorization": "Bearer $firebaseAuthToken",
+    };
+
+    // Send the post request to the server.
+    http.Response response = await http.get(
+      uri,
+      headers: headers,
+    );
+
+    // Check for any errors.
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      throw ServerException(message: body['message']);
+    } else if (response.statusCode >= 500) {
+      Map<String, dynamic> body = json.decode(response.body);
+      log.e("AppointmentService:fetchAvailableSlots Error", body['message']);
+      throw ServerException(
+          message: 'Something went wrong, please try again later.');
+    }
+
+    // Decode JSON and create objects based on it.
+    dynamic rawJson = json.decode(response.body);
+    ServerUser serverUser = ServerUser.fromJson(rawJson);
+
+    // Return User details
+    return serverUser;
+  }
 
   /*
    * Update profile picture for the given user.

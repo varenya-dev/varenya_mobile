@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
+import 'package:varenya_mobile/models/user/server_user.model.dart';
 
 part 'doctor.model.g.dart';
 
@@ -40,6 +41,10 @@ class Doctor {
   @HiveField(8)
   final DateTime shiftEndTime;
 
+  @HiveField(9, defaultValue: null)
+  @JsonKey(defaultValue: null)
+  final ServerUser? user;
+
   const Doctor({
     required this.id,
     this.imageUrl = '',
@@ -50,6 +55,7 @@ class Doctor {
     this.specializations = const [],
     required this.shiftStartTime,
     required this.shiftEndTime,
+    required this.user,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) => _$DoctorFromJson(json);
