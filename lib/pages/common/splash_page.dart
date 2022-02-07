@@ -55,7 +55,7 @@ class _SplashPageState extends State<SplashPage> {
           // Check what does the action requires the app to do.
           if (action == DO_NOTHING) {
             // Push to home page if no action needs to be taken.
-            Navigator.of(context).pushReplacementNamed(ThreadsPage.routeName);
+            Navigator.of(context).pushReplacementNamed(HomePage.routeName);
           } else if (action == INSTANT_NOTIFICATION ||
               action == QUESTIONNAIRE_NOTIFICATION) {
             // Push to questionnaire page on questionnaire notification action.
