@@ -23,10 +23,6 @@ class ChatService {
    * @param userId ID to create a chat thread with.
    */
   Future<String> createNewThread(String userId) async {
-    // Generate a document ID from an empty document.
-    DocumentReference threadDocumentReference =
-        this._firestore.collection('threads').doc();
-
     // Get logged in user ID.
     String loggedInUserId = this._auth.currentUser!.uid;
 
@@ -35,6 +31,17 @@ class ChatService {
       userId,
       loggedInUserId,
     ];
+
+    String checkForDuplicates =
+        await this._checkForExistingThreads(participants);
+
+    if (checkForDuplicates != 'EMPTY') {
+      return checkForDuplicates;
+    }
+
+    // Generate a document ID from an empty document.
+    DocumentReference threadDocumentReference =
+        this._firestore.collection('threads').doc();
 
     // Preparing chat thread object
     ChatThread chatThread = new ChatThread(
@@ -52,6 +59,24 @@ class ChatService {
 
     // Return the thread id.
     return threadDocumentReference.id;
+  }
+
+  Future<String> _checkForExistingThreads(List<String> participants) async {
+
+    QuerySnapshot chatQuerySnapshot = await this
+        ._firestore
+        .collection('threads')
+        .where("participants", whereIn: [participants])
+        .get();
+
+    List<DocumentSnapshot> chatDocumentSnapshotList = chatQuerySnapshot.docs;
+
+    if (chatDocumentSnapshotList.isNotEmpty &&
+        chatDocumentSnapshotList[0].exists) {
+      return chatDocumentSnapshotList[0].reference.id;
+    } else {
+      return 'EMPTY';
+    }
   }
 
   /*
