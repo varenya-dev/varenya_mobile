@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:varenya_mobile/models/chat/chat_thread/thread.model.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/chat/single_thread.widget.dart';
 
-class ThreadsPage extends StatefulWidget {
-  const ThreadsPage({Key? key}) : super(key: key);
+class Threads extends StatefulWidget {
+  const Threads({Key? key}) : super(key: key);
 
   static const routeName = "/threads";
 
   @override
-  _ThreadsPageState createState() => _ThreadsPageState();
+  _ThreadsState createState() => _ThreadsState();
 }
 
-class _ThreadsPageState extends State<ThreadsPage> {
+class _ThreadsState extends State<Threads> {
   late ChatService _chatService;
-  List<ChatThread> _threads = [];
+  List<Thread> _threads = [];
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _ThreadsPageState extends State<ThreadsPage> {
 
           this._threads.clear();
           snapshot.data!.docs.forEach((thread) {
-            this._threads.add(ChatThread.fromJson(thread.data()));
+            this._threads.add(Thread.fromJson(thread.data()));
           });
 
           return _buildThreadsPage(context);
@@ -111,7 +111,7 @@ class _ThreadsPageState extends State<ThreadsPage> {
                   shrinkWrap: true,
                   itemCount: this._threads.length,
                   itemBuilder: (context, index) {
-                    ChatThread thread = this._threads[index];
+                    Thread thread = this._threads[index];
                     return SingleThread(
                       chatThread: thread,
                     );

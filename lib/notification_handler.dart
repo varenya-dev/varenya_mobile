@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
-import 'package:varenya_mobile/pages/chat/chat_page.dart';
+import 'package:varenya_mobile/pages/chat/chat.page.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
@@ -48,7 +48,7 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     if (message.data['type'] == 'chat') {
       Navigator.pushNamed(
         context,
-        ChatPage.routeName,
+        Chat.routeName,
         arguments: message.data['thread'],
       );
     }
@@ -60,7 +60,7 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
 
       Navigator.pushNamed(
         context,
-        ChatPage.routeName,
+        Chat.routeName,
         arguments: ChatArgument(
           serverUser: serverUser,
           threadId: threadId,

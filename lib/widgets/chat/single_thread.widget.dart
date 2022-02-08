@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/enum/roles.enum.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
-import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:varenya_mobile/models/chat/chat_thread/thread.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
-import 'package:varenya_mobile/pages/chat/chat_page.dart';
+import 'package:varenya_mobile/pages/chat/chat.page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
@@ -13,7 +13,7 @@ import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 
 class SingleThread extends StatefulWidget {
-  final ChatThread chatThread;
+  final Thread chatThread;
 
   const SingleThread({
     Key? key,
@@ -131,7 +131,7 @@ class _SingleThreadState extends State<SingleThread> {
     return ListTile(
       onTap: () {
         Navigator.of(context).pushNamed(
-          ChatPage.routeName,
+          Chat.routeName,
           arguments: ChatArgument(
             serverUser: this._user!,
             threadId: this.widget.chatThread.id,

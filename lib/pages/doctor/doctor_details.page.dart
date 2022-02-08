@@ -5,7 +5,7 @@ import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
-import 'package:varenya_mobile/pages/chat/chat_page.dart';
+import 'package:varenya_mobile/pages/chat/chat.page.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
@@ -64,7 +64,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                 );
 
                         Navigator.of(context).pushNamed(
-                          ChatPage.routeName,
+                          Chat.routeName,
                           arguments: ChatArgument(
                             serverUser: serverUser,
                             threadId: threadId,
