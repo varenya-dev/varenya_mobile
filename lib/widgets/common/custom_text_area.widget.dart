@@ -34,6 +34,9 @@ class CustomTextArea extends StatelessWidget {
         horizontal: 10.0,
       ),
       child: TextFormField(
+        style: TextStyle(
+          color: Colors.black,
+        ),
         minLines: this.minLines,
         maxLines: this.maxLines,
         keyboardType: textInputType,

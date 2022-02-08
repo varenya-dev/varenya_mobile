@@ -7,7 +7,7 @@ import 'package:varenya_mobile/notification_handler.dart';
 import 'package:varenya_mobile/pages/activity/activity.page.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
-import 'package:varenya_mobile/pages/chat/threads_page.dart';
+import 'package:varenya_mobile/pages/chat/threads.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/past_progress.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
@@ -17,7 +17,7 @@ import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
-import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/check_connectivity.util.dart';
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(ThreadsPage.routeName);
+                    Navigator.of(context).pushNamed(Threads.routeName);
                   },
                   child: Text('Threads'),
                 ),

@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:varenya_mobile/models/chat/chat/chat.dart';
+import 'package:varenya_mobile/models/chat/chat/chat.model.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 
-class ChatBubbleWidget extends StatelessWidget {
+class ChatBubble extends StatelessWidget {
   final Chat chat;
   final Function onDelete;
 
-  const ChatBubbleWidget({
+  const ChatBubble({
     Key? key,
     required this.chat,
     required this.onDelete,

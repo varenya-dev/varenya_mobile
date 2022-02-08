@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
-import 'package:varenya_mobile/models/chat/chat/chat.dart';
+import 'package:varenya_mobile/models/chat/chat/chat.model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:varenya_mobile/models/chat/chat_thread/chat_thread.dart';
+import 'package:varenya_mobile/models/chat/chat_thread/thread.model.dart';
 import 'package:http/http.dart' as http;
 import 'package:varenya_mobile/utils/logger.util.dart';
 
@@ -44,7 +44,7 @@ class ChatService {
         this._firestore.collection('threads').doc();
 
     // Preparing chat thread object
-    ChatThread chatThread = new ChatThread(
+    Thread chatThread = new Thread(
       id: threadDocumentReference.id,
       participants: participants,
       messages: [],
@@ -62,18 +62,27 @@ class ChatService {
   }
 
   Future<String> _checkForExistingThreads(List<String> participants) async {
-
-    QuerySnapshot chatQuerySnapshot = await this
+    QuerySnapshot firstChatQuerySnapshot = await this
         ._firestore
         .collection('threads')
-        .where("participants", whereIn: [participants])
-        .get();
+        .where("participants", whereIn: [participants]).get();
 
-    List<DocumentSnapshot> chatDocumentSnapshotList = chatQuerySnapshot.docs;
+    QuerySnapshot secondChatQuerySnapshot = await this
+        ._firestore
+        .collection('threads')
+        .where("participants", whereIn: [participants.reversed.toList()]).get();
 
-    if (chatDocumentSnapshotList.isNotEmpty &&
-        chatDocumentSnapshotList[0].exists) {
-      return chatDocumentSnapshotList[0].reference.id;
+    List<DocumentSnapshot> firstChatDocumentSnapshotList =
+        firstChatQuerySnapshot.docs;
+    List<DocumentSnapshot> secondChatDocumentSnapshotList =
+        secondChatQuerySnapshot.docs;
+
+    if (firstChatDocumentSnapshotList.isNotEmpty &&
+        firstChatDocumentSnapshotList[0].exists) {
+      return firstChatDocumentSnapshotList[0].reference.id;
+    } else if (secondChatDocumentSnapshotList.isNotEmpty &&
+        secondChatDocumentSnapshotList[0].exists) {
+      return secondChatDocumentSnapshotList[0].reference.id;
     } else {
       return 'EMPTY';
     }
@@ -100,7 +109,7 @@ class ChatService {
    * @param message Message text to be saved.
    * @param thread Thread where the message is to be saved.
    */
-  Future<void> sendMessage(String message, ChatThread thread) async {
+  Future<void> sendMessage(String message, Thread thread) async {
     // Create the chat message object based on the message.
     Chat chatMessage = new Chat(
       id: uuid.v4(),
@@ -126,7 +135,7 @@ class ChatService {
    * @param id ID for the message to be deleted.
    * @param thread Thread from which the message is needed to be deleted.
    */
-  Future<void> deleteMessage(String id, ChatThread thread) async {
+  Future<void> deleteMessage(String id, Thread thread) async {
     // Filter out the message list using the message ID.
     thread.messages = thread.messages.where((chat) => chat.id != id).toList();
 
@@ -140,7 +149,7 @@ class ChatService {
   /*
    * Close chat thread in firestore.
    */
-  Future<void> closeThread(ChatThread thread) async =>
+  Future<void> closeThread(Thread thread) async =>
       await this._firestore.collection("threads").doc(thread.id).delete();
 
   Future<void> _sendChatNotification(String threadId, String message) async {
@@ -178,27 +187,5 @@ class ChatService {
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }
-  }
-
-  Future<void> openDummyThread() async {
-    DocumentReference threadDocumentReference =
-        this._firestore.collection('threads').doc();
-
-    List<String> participants = [
-      "hvSnXNJ75JMU6pKhcOOO7IJ0q143",
-      "KkAqaqu5TSh3RQkWXEunuvE27aD3"
-    ];
-
-    ChatThread chatThread = new ChatThread(
-      id: threadDocumentReference.id,
-      participants: participants,
-      messages: [],
-    );
-
-    await this
-        ._firestore
-        .collection('threads')
-        .doc(chatThread.id)
-        .set(chatThread.toJson());
   }
 }

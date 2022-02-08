@@ -5,8 +5,8 @@ import 'package:varenya_mobile/pages/appointment/appointment_slots.page.dart';
 import 'package:varenya_mobile/pages/auth/auth_page.dart';
 import 'package:varenya_mobile/pages/auth/login_page.dart';
 import 'package:varenya_mobile/pages/auth/register_page.dart';
-import 'package:varenya_mobile/pages/chat/chat_page.dart';
-import 'package:varenya_mobile/pages/chat/threads_page.dart';
+import 'package:varenya_mobile/pages/chat/chat.page.dart';
+import 'package:varenya_mobile/pages/chat/threads.page.dart';
 import 'package:varenya_mobile/pages/common/splash_page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/past_progress.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
@@ -74,8 +74,8 @@ class App extends StatelessWidget {
         LoginPage.routeName: (context) => LoginPage(),
         RegisterPage.routeName: (context) => RegisterPage(),
         UserUpdatePage.routeName: (context) => UserUpdatePage(),
-        ThreadsPage.routeName: (context) => ThreadsPage(),
-        ChatPage.routeName: (context) => ChatPage(),
+        Threads.routeName: (context) => Threads(),
+        Chat.routeName: (context) => Chat(),
         DoctorList.routeName: (context) => DoctorList(),
         DoctorDetails.routeName: (context) => DoctorDetails(),
         AppointmentList.routeName: (context) => AppointmentList(),

@@ -26,7 +26,7 @@ import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
-import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';

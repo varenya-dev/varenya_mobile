@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'chat.g.dart';
+part 'chat.model.g.dart';
 
 @JsonSerializable()
 class Chat {
