@@ -188,26 +188,4 @@ class ChatService {
           message: 'Something went wrong, please try again later.');
     }
   }
-
-  Future<void> openDummyThread() async {
-    DocumentReference threadDocumentReference =
-        this._firestore.collection('threads').doc();
-
-    List<String> participants = [
-      "hvSnXNJ75JMU6pKhcOOO7IJ0q143",
-      "KkAqaqu5TSh3RQkWXEunuvE27aD3"
-    ];
-
-    Thread chatThread = new Thread(
-      id: threadDocumentReference.id,
-      participants: participants,
-      messages: [],
-    );
-
-    await this
-        ._firestore
-        .collection('threads')
-        .doc(chatThread.id)
-        .set(chatThread.toJson());
-  }
 }
