@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/arguments/chat.argument.dart';
+import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/chat/chat_page.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/user_service.dart';
 
 class NotificationsHandler extends StatefulWidget {
   final Widget child;
@@ -23,6 +26,7 @@ class NotificationsHandler extends StatefulWidget {
 class _NotificationsHandlerState extends State<NotificationsHandler> {
   late final FirebaseMessaging _firebaseMessaging;
   late final ChatService _chatService;
+  late final UserService _userService;
   late final AlertsService _alertsService;
   late StreamSubscription _fmSubscription;
 
@@ -51,12 +55,16 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     if (message.data['type'] == 'sos') {
       String userId = message.data['userId'];
       String threadId = await this._chatService.createNewThread(userId);
+      ServerUser serverUser = await this._userService.findUserById(userId);
       await this._alertsService.sendSOSResponseNotification(threadId);
 
       Navigator.pushNamed(
         context,
         ChatPage.routeName,
-        arguments: threadId,
+        arguments: ChatArgument(
+          serverUser: serverUser,
+          threadId: threadId,
+        ),
       );
     }
     if (message.data['type'] == 'appointment') {
@@ -71,6 +79,7 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     this._firebaseMessaging = FirebaseMessaging.instance;
     this._chatService = Provider.of<ChatService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
+    this._userService = Provider.of<UserService>(context, listen: false);
 
     setupInteractedMessage();
   }
