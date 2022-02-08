@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/chat/chat_thread/thread.model.dart';
-import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/widgets/chat/single_thread.widget.dart';
 

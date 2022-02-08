@@ -8,7 +8,7 @@ import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/chat/chat.page.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
-import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 
 class NotificationsHandler extends StatefulWidget {

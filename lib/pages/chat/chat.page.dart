@@ -12,7 +12,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/chat/chat/chat.model.dart' as CM;
 import 'package:varenya_mobile/models/chat/chat_thread/thread.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
-import 'package:varenya_mobile/services/chat_service.dart';
+import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
