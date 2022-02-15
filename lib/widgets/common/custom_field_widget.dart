@@ -29,6 +29,9 @@ class CustomFieldWidget extends StatelessWidget {
         vertical: MediaQuery.of(context).size.height * 0.01,
       ),
       child: TextFormField(
+        style: TextStyle(
+          color: Colors.white,
+        ),
         obscureText: this.obscureText,
         keyboardType: textInputType,
         decoration: InputDecoration(

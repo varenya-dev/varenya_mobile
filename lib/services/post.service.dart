@@ -140,6 +140,9 @@ class PostService {
    * @param category Category the posts should belong to.
    */
   Future<List<Post>> fetchPostsByCategory(String category) async {
+
+    print(ENDPOINT);
+
     try {
       // Check if new posts are to be fetched.
       if (category == 'NEW') {
