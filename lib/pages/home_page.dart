@@ -23,6 +23,7 @@ import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/check_connectivity.util.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -49,24 +50,25 @@ class _HomePageState extends State<HomePage> {
     this._userService = Provider.of<UserService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
-    checkConnectivity().then((value) {
-      if (value) {
-        this._userService.generateAndSaveTokenToDatabase();
-        FirebaseMessaging.instance.onTokenRefresh
-            .listen(this._userService.saveTokenToDatabase);
+    if (!kIsWeb)
+      checkConnectivity().then((value) {
+        if (value) {
+          this._userService.generateAndSaveTokenToDatabase();
+          FirebaseMessaging.instance.onTokenRefresh
+              .listen(this._userService.saveTokenToDatabase);
 
-        this
-            ._alertsService
-            .toggleSubscribeToSOSTopic(true)
-            .then((_) => log.i("SOS Topic Subscribed"))
-            .catchError((error) => print(error));
-      } else {
-        log.i(
-            "Device offline, suspending FCM Token Generation and Topic Subscription");
-      }
-    }).catchError((error, stackTrace) {
-      log.e("HomePage Error", error, stackTrace);
-    });
+          this
+              ._alertsService
+              .toggleSubscribeToSOSTopic(true)
+              .then((_) => log.i("SOS Topic Subscribed"))
+              .catchError((error) => print(error));
+        } else {
+          log.i(
+              "Device offline, suspending FCM Token Generation and Topic Subscription");
+        }
+      }).catchError((error, stackTrace) {
+        log.e("HomePage Error", error, stackTrace);
+      });
   }
 
   @override
