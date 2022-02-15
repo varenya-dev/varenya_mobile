@@ -6,7 +6,7 @@ import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/posts/display_create_post.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_filter.widget.dart';
@@ -97,53 +97,64 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              DisplayCreatePost(),
-              FutureBuilder(
-                future:
-                    this._postService.fetchPostsByCategory(this._categoryName),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<List<Post>> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    switch (snapshot.error.runtimeType) {
-                      case ServerException:
-                        {
-                          ServerException exception =
-                              snapshot.error as ServerException;
-                          return Text(exception.message);
-                        }
-                      default:
-                        {
-                          log.e(
-                            "CategorizedPosts Error",
-                            snapshot.error,
-                            snapshot.stackTrace,
-                          );
-                          return Text(
-                              "Something went wrong, please try again later");
-                        }
-                    }
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    this._posts = snapshot.data!;
-
-                    return _buildPostsList();
-                  }
-
-                  return this._posts == null
-                      ? Column(
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        )
-                      : this._buildPostsList();
-                },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: responsiveConfig(
+                context: context,
+                large: MediaQuery.of(context).size.width * 0.25,
+                medium: MediaQuery.of(context).size.width * 0.25,
+                small: 0,
               ),
-            ],
+            ),
+            child: Column(
+              children: [
+                DisplayCreatePost(),
+                FutureBuilder(
+                  future: this
+                      ._postService
+                      .fetchPostsByCategory(this._categoryName),
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<List<Post>> snapshot,
+                  ) {
+                    if (snapshot.hasError) {
+                      switch (snapshot.error.runtimeType) {
+                        case ServerException:
+                          {
+                            ServerException exception =
+                                snapshot.error as ServerException;
+                            return Text(exception.message);
+                          }
+                        default:
+                          {
+                            log.e(
+                              "CategorizedPosts Error",
+                              snapshot.error,
+                              snapshot.stackTrace,
+                            );
+                            return Text(
+                                "Something went wrong, please try again later");
+                          }
+                      }
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      this._posts = snapshot.data!;
+
+                      return _buildPostsList();
+                    }
+
+                    return this._posts == null
+                        ? Column(
+                            children: [
+                              CircularProgressIndicator(),
+                            ],
+                          )
+                        : this._buildPostsList();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

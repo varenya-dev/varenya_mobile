@@ -4,6 +4,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 
 class DisplayCategories extends StatefulWidget {
   final List<PostCategory> selectedCategories;
@@ -73,47 +74,58 @@ class _DisplayCategoriesState extends State<DisplayCategories> {
     );
   }
 
-  Wrap _buildCategoriesList() {
-    return Wrap(
-      children: this._fetchedCategories!.map(
-        (category) {
-          bool checkSelected = this
-              .widget
-              .selectedCategories
-              .where((c) => category.id == c.id)
-              .isNotEmpty;
+  Widget _buildCategoriesList() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.height * 0.05,
+          medium: MediaQuery.of(context).size.height * 0.05,
+          small: 0,
+        ),
+      ),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        children: this._fetchedCategories!.map(
+          (category) {
+            bool checkSelected = this
+                .widget
+                .selectedCategories
+                .where((c) => category.id == c.id)
+                .isNotEmpty;
 
-          return GestureDetector(
-            onTap: () {
-              this.widget.addOrRemoveCategory(category);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: !checkSelected
-                    ? Color(0XFF303439)
-                    : Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            return GestureDetector(
+              onTap: () {
+                this.widget.addOrRemoveCategory(category);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: !checkSelected
+                      ? Color(0XFF303439)
+                      : Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.02,
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                ),
+                margin: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.01,
+                  horizontal: MediaQuery.of(context).size.width * 0.015,
+                ),
+                child: Text(
+                  category.categoryName,
+                  style: TextStyle(
+                    color: checkSelected ? Colors.black : Colors.white,
+                  ),
                 ),
               ),
-              padding: EdgeInsets.symmetric(
-                vertical: MediaQuery.of(context).size.height * 0.02,
-                horizontal: MediaQuery.of(context).size.width * 0.05,
-              ),
-              margin: EdgeInsets.symmetric(
-                vertical: MediaQuery.of(context).size.height * 0.01,
-                horizontal: MediaQuery.of(context).size.width * 0.015,
-              ),
-              child: Text(
-                category.categoryName,
-                style: TextStyle(
-                  color: checkSelected ? Colors.black : Colors.white,
-                ),
-              ),
-            ),
-          );
-        },
-      ).toList(),
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 }

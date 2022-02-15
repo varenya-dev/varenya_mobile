@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 
 class ImageCarousel extends StatelessWidget {
   // List of all images.
@@ -16,9 +17,8 @@ class ImageCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: this.imageUrls.length != 0
-          ? MediaQuery.of(context).size.height * 0.45
-          : 0,
+      height:
+          this.imageUrls.length != 0 ? MediaQuery.of(context).size.height : 0,
       child: this.imageUrls.length != 0
           ? ListView.builder(
               physics: PageScrollPhysics(),
@@ -27,7 +27,12 @@ class ImageCarousel extends StatelessWidget {
               itemCount: this.imageUrls.length,
               itemBuilder: (context, index) => CachedNetworkImage(
                 imageUrl: this.imageUrls[index].imageUrl,
-                width: MediaQuery.of(context).size.width,
+                width: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.width * 0.4,
+                  medium: MediaQuery.of(context).size.width * 0.4,
+                  small: MediaQuery.of(context).size.width,
+                ),
                 progressIndicatorBuilder: (context, url, downloadProgress) {
                   return Center(
                     child: CircularProgressIndicator(

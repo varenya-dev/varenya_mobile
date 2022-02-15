@@ -14,6 +14,7 @@ import 'package:varenya_mobile/utils/image_picker.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_text_area.widget.dart';
@@ -212,6 +213,14 @@ class _UpdatePostState extends State<UpdatePost> {
         title: Text('Update Post'),
       ),
       body: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: responsiveConfig(
+            context: context,
+            large: MediaQuery.of(context).size.width * 0.3,
+            medium: MediaQuery.of(context).size.width * 0.3,
+            small: 0,
+          ),
+        ),
         child: SingleChildScrollView(
           child: Form(
             key: this._formKey,

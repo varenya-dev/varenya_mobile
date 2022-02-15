@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:varenya_mobile/dtos/comments/create_comment/create_comment.dto.dart';
-import 'package:varenya_mobile/exceptions/auth/not_logged_in_exception.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart' as PM;
-import 'package:varenya_mobile/services/comments.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
-import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/comments/comment_form.widget.dart';
 import 'package:varenya_mobile/widgets/comments/comment_list.widget.dart';
 import 'package:varenya_mobile/widgets/posts/full_post_body.widget.dart';
 import 'package:varenya_mobile/widgets/posts/full_post_duration.widget.dart';
 import 'package:varenya_mobile/widgets/posts/full_post_user_details.dart';
 import 'package:varenya_mobile/widgets/posts/image_carousel.widget.dart';
+
+import '../../utils/responsive_config.util.dart';
 
 class Post extends StatefulWidget {
   const Post({Key? key}) : super(key: key);
@@ -49,11 +47,24 @@ class _PostState extends State<Post> {
 
     return Scaffold(
       bottomSheet: this._showCommentForm
-          ? CommentForm(
-              refreshPost: () {
-                setState(() {});
-              },
-              postId: this._post!.id,
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.3,
+                    medium: MediaQuery.of(context).size.width * 0.3,
+                    small: MediaQuery.of(context).size.width,
+                  ),
+                  child: CommentForm(
+                    refreshPost: () {
+                      setState(() {});
+                    },
+                    postId: this._post!.id,
+                  ),
+                ),
+              ],
             )
           : null,
       appBar: AppBar(
@@ -112,52 +123,68 @@ class _PostState extends State<Post> {
   Widget _buildBody() {
     Duration duration = _now.difference(this._post!.createdAt);
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            color: Palette.secondary,
-            child: FullPostUserDetails(
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.width * 0.3,
+          medium: MediaQuery.of(context).size.width * 0.3,
+          small: 0,
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: responsiveConfig(
+                context: context,
+                large: MediaQuery.of(context).size.height * 0.1,
+                medium: MediaQuery.of(context).size.height * 0.1,
+                small: MediaQuery.of(context).size.height * 0.1,
+              ),
+              color: Palette.secondary,
+              child: FullPostUserDetails(
+                context: context,
+                post: _post,
+              ),
+            ),
+            ImageCarousel(
+              imageUrls: this._post!.images,
+            ),
+            FullPostDuration(
+              context: context,
+              post: _post,
+              duration: duration,
+            ),
+            FullPostBody(
               context: context,
               post: _post,
             ),
-          ),
-          ImageCarousel(
-            imageUrls: this._post!.images,
-          ),
-          FullPostDuration(
-            context: context,
-            post: _post,
-            duration: duration,
-          ),
-          FullPostBody(
-            context: context,
-            post: _post,
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.01,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.03,
-            ),
-            child: TextButton(
-              onPressed: () => setState(() {
-                this._showCommentForm = !this._showCommentForm;
-              }),
-              child: Text(
-                'Add Comment',
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.01,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.03,
+              ),
+              child: TextButton(
+                onPressed: () => setState(() {
+                  this._showCommentForm = !this._showCommentForm;
+                }),
+                child: Text(
+                  'Add Comment',
+                ),
               ),
             ),
-          ),
-          CommentList(
-            comments: this._post!.comments,
-            refreshPost: () {
-              setState(() {});
-            },
-          ),
-        ],
+            CommentList(
+              comments: this._post!.comments,
+              refreshPost: () {
+                setState(() {});
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

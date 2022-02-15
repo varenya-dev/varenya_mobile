@@ -13,6 +13,7 @@ import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/post.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
 
@@ -115,12 +116,17 @@ class _PostUserDetailsState extends State<PostUserDetails> {
         ? Row(
             children: [
               Container(
-                margin: EdgeInsets.all(
-                  MediaQuery.of(context).size.width * 0.02,
+                margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.02,
                 ),
                 child: ProfilePictureWidget(
                   imageUrl: this.widget.serverUser.doctor!.imageUrl,
-                  size: 30,
+                  size: responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.03,
+                    medium: MediaQuery.of(context).size.width * 0.03,
+                    small: MediaQuery.of(context).size.width * 0.05,
+                  ),
                 ),
               ),
               Text(
@@ -132,12 +138,17 @@ class _PostUserDetailsState extends State<PostUserDetails> {
         : Row(
             children: [
               Container(
-                margin: EdgeInsets.all(
-                  MediaQuery.of(context).size.width * 0.02,
+                margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.02,
                 ),
                 child: ProfilePictureWidget(
                   imageUrl: '',
-                  size: 30,
+                  size: responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.03,
+                    medium: MediaQuery.of(context).size.width * 0.03,
+                    small: MediaQuery.of(context).size.width * 0.05,
+                  ),
                 ),
               ),
               Text(
