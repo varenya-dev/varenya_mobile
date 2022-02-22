@@ -228,7 +228,7 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                 ),
                 CustomFieldWidget(
                   textFieldController: this._fullNameController,
-                  label: "First Name",
+                  label: "Name",
                   validators: [
                     RequiredValidator(errorText: "Full name is required"),
                   ],
