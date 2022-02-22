@@ -228,7 +228,7 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                 ),
                 CustomFieldWidget(
                   textFieldController: this._fullNameController,
-                  label: "First Name",
+                  label: "Name",
                   validators: [
                     RequiredValidator(errorText: "Full name is required"),
                   ],
@@ -244,14 +244,14 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                       connected: true,
                       loading: loading,
                       onFormSubmit: this._onFormSubmit,
-                      text: 'Update Email Address',
+                      text: 'Update Profile',
                       loadingText: 'Updating',
                     )
                         : LoadingIconButton(
                       connected: false,
                       loading: loading,
                       onFormSubmit: this._onFormSubmit,
-                      text: 'Update Email Address',
+                      text: 'Update Profile',
                       loadingText: 'Updating',
                     );;
                   },

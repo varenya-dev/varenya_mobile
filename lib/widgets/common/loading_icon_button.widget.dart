@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
 class LoadingIconButton extends StatelessWidget {
   final bool connected;
@@ -26,10 +27,10 @@ class LoadingIconButton extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
           this.loading
-              ? Colors.grey[900]!
+              ? Palette.secondary
               : connected
-                  ? Colors.yellow
-                  : Colors.grey[900],
+                  ? Palette.primary
+                  : Palette.secondary,
         ),
       ),
       onPressed: connected

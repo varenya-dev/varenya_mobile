@@ -126,6 +126,12 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
           key: this._formKey,
           child: Column(
             children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: Image.asset(
+                  'assets/logo/app_logo.png',
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: RichText(
@@ -175,14 +181,20 @@ class _UserDeleteTabState extends State<UserDeleteTab> {
                           loading: loading,
                           onFormSubmit: this._onFormSubmit,
                           text: 'Delete Account',
-                          loadingText: 'Updating',
+                          loadingText: 'Deleting',
+                          icon: Icon(
+                            Icons.delete_outline,
+                          ),
                         )
                       : LoadingIconButton(
                           connected: false,
                           loading: loading,
                           onFormSubmit: this._onFormSubmit,
                           text: 'Delete Account',
-                          loadingText: 'Updating',
+                          loadingText: 'Deleting',
+                          icon: Icon(
+                            Icons.delete_outline,
+                          ),
                         );
                   ;
                 },
