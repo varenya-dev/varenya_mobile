@@ -244,14 +244,14 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                       connected: true,
                       loading: loading,
                       onFormSubmit: this._onFormSubmit,
-                      text: 'Update Email Address',
+                      text: 'Update Profile',
                       loadingText: 'Updating',
                     )
                         : LoadingIconButton(
                       connected: false,
                       loading: loading,
                       onFormSubmit: this._onFormSubmit,
-                      text: 'Update Email Address',
+                      text: 'Update Profile',
                       loadingText: 'Updating',
                     );;
                   },
