@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
-import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
+import 'package:varenya_mobile/widgets/doctor/display_specializations.widget.dart';
+import 'package:varenya_mobile/widgets/doctor/doctor_card_name_specialization.widget.dart';
 
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;
@@ -26,66 +28,42 @@ class DoctorCard extends StatelessWidget {
           );
         },
         child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              15.0,
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
-                  vertical: MediaQuery.of(context).size.height * 0.03,
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height * 0.01,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ProfilePictureWidget(
-                      imageUrl: doctor.imageUrl,
-                      size: MediaQuery.of(context).size.height * 0.13,
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        imageUrl: this.doctor.imageUrl,
+                      ),
                     ),
-                    Text(doctor.fullName),
+                    DoctorCardNameSpecialization(
+                      doctor: doctor,
+                    ),
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
-                  vertical: MediaQuery.of(context).size.height * 0.03,
-                ),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Position:',
-                      ),
-                      TextSpan(
-                        text: this.doctor.jobTitle,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  children: this
-                      .doctor
-                      .specializations
-                      .map(
-                        (specialization) => Container(
-                          margin: EdgeInsets.all(
-                            MediaQuery.of(context).size.height * 0.005,
-                          ),
-                          child: Chip(
-                            label: Text(
-                              specialization.specialization,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
+              Divider(),
+              DisplaySpecializations(
+                doctor: doctor,
               )
             ],
           ),
