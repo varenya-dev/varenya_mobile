@@ -12,7 +12,6 @@ import 'package:varenya_mobile/pages/daily_questionnaire/past_progress.page.dart
 import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/single_progress.page.dart';
-import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/home_page.dart';
 import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
@@ -77,7 +76,6 @@ class App extends StatelessWidget {
         Threads.routeName: (context) => Threads(),
         Chat.routeName: (context) => Chat(),
         DoctorList.routeName: (context) => DoctorList(),
-        DoctorDetails.routeName: (context) => DoctorDetails(),
         AppointmentList.routeName: (context) => AppointmentList(),
         AppointmentSlots.routeName: (context) => AppointmentSlots(),
         CategorizedPosts.routeName: (context) => CategorizedPosts(),
