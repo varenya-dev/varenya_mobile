@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
-import 'package:varenya_mobile/pages/doctor/doctor_details.page.dart';
 import 'package:varenya_mobile/widgets/doctor/display_specializations.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card_name_specialization.widget.dart';
 
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;
+  final VoidCallback onPressDoctor;
 
   const DoctorCard({
     Key? key,
     required this.doctor,
+    required this.onPressDoctor,
   }) : super(key: key);
 
   @override
@@ -21,12 +22,7 @@ class DoctorCard extends StatelessWidget {
         vertical: MediaQuery.of(context).size.height * 0.02,
       ),
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            DoctorDetails.routeName,
-            arguments: this.doctor,
-          );
-        },
+        onTap: this.onPressDoctor,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
