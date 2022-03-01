@@ -1,84 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appointment.dto.dart';
-import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
-import 'package:varenya_mobile/services/appointment.service.dart';
-import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/utils/snackbar.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
-class TimingSlot extends StatefulWidget {
+class TimingSlot extends StatelessWidget {
   // Slot Timing.
   final DateTime slotTiming;
 
   // Doctor details.
   final Doctor doctor;
+  final VoidCallback bookAppointment;
+  final bool selected;
 
   const TimingSlot({
     Key? key,
     required this.slotTiming,
     required this.doctor,
+    required this.bookAppointment,
+    required this.selected,
   }) : super(key: key);
-
-  @override
-  State<TimingSlot> createState() => _TimingSlotState();
-}
-
-class _TimingSlotState extends State<TimingSlot> {
-  // Appointment Service.
-  late final AppointmentService _appointmentService;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Injecting appointment service from global state.
-    this._appointmentService =
-        Provider.of<AppointmentService>(context, listen: false);
-  }
-
-  /*
-   * Method to book an appointment for a time slot.
-   */
-  Future<void> _bookAppointment() async {
-    try {
-      // Send request to server to book appointment.
-      await this._appointmentService.bookAppointment(
-            CreateAppointmentDto(
-                doctorId: this.widget.doctor.id,
-                timing: this.widget.slotTiming),
-          );
-
-      // Confirm appointment booking.
-      displaySnackbar(
-        "Appointment has been booked!",
-        context,
-      );
-
-      // Go back to previous page.
-      Navigator.of(context).pop();
-    }
-    // Handle errors gracefully.
-    on ServerException catch (error) {
-      displaySnackbar(error.message, context);
-    } catch (error, stackTrace) {
-      log.e("TimingSlot:_bookAppointment", error, stackTrace);
-      displaySnackbar(
-        "Something went wrong, please try again later.",
-        context,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
+      margin: EdgeInsets.all(
+        MediaQuery.of(context).size.width * 0.01,
+      ),
       child: ElevatedButton(
-        onPressed: this._bookAppointment,
+        style: ButtonStyle(
+          backgroundColor: selected
+              ? MaterialStateProperty.all(
+                  Palette.primary,
+                )
+              : MaterialStateProperty.all(
+                  Palette.secondary,
+                ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              // Change your radius here
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+        ),
+        onPressed: this.bookAppointment,
         child: Text(
-          '${DateFormat.jm().format(widget.slotTiming).toString()} - ${DateFormat.jm().format(widget.slotTiming.add(new Duration(hours: 1))).toString()}',
+          '${DateFormat.jm().format(this.slotTiming).toString()} - ${DateFormat.jm().format(this.slotTiming.add(new Duration(hours: 1))).toString()}',
+          style: TextStyle(
+            color: selected ? Colors.black : Colors.white,
+          ),
         ),
       ),
     );

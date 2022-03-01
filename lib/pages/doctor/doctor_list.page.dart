@@ -6,11 +6,10 @@ import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
-import 'package:varenya_mobile/utils/modal_bottom_sheet.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
+import 'package:varenya_mobile/widgets/doctor/display_doctor.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card.widget.dart';
-import 'package:varenya_mobile/widgets/doctor/job_filter.widget.dart';
-import 'package:varenya_mobile/widgets/doctor/main_filter.widget.dart';
-import 'package:varenya_mobile/widgets/doctor/specialization_filter.widget.dart';
+import 'package:varenya_mobile/widgets/doctor/doctor_filter.widget.dart';
 
 class DoctorList extends StatefulWidget {
   const DoctorList({Key? key}) : super(key: key);
@@ -25,7 +24,20 @@ class _DoctorListState extends State<DoctorList> {
   late final DoctorService _doctorService;
 
   String _jobFilter = 'EMPTY';
-  List<String> _specializationsFilter = ['', ''];
+  List<Specialization> _specializationsFilter = [
+    new Specialization(
+      id: '',
+      specialization: '',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    new Specialization(
+      id: '',
+      specialization: '',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  ];
   List<Doctor>? _doctors;
 
   @override
@@ -35,76 +47,92 @@ class _DoctorListState extends State<DoctorList> {
     this._doctorService = Provider.of<DoctorService>(context, listen: false);
   }
 
-  void _openSpecializationFilters(BuildContext context) {
-    displayBottomSheet(
-      context,
-      SpecializationFilter(
-        specializationsFilter: this._specializationsFilter,
-        addOrRemoveSpecializationFilter: this._addOrRemoveSpecializationFilter,
-        resetSpecializationFilter: this._resetSpecializationFilter,
-      ),
-    );
-  }
-
-  void _addOrRemoveSpecializationFilter(bool? value, Specialization s) {
-    if (value == true) {
+  void _addOrRemoveSpecializationFilter(Specialization specialization) {
+    if (this
+        ._specializationsFilter
+        .where((element) => element.id == specialization.id)
+        .isEmpty) {
       setState(() {
-        this._specializationsFilter.add(s.specialization);
+        this._specializationsFilter.add(specialization);
       });
     } else {
       setState(() {
-        this._specializationsFilter.remove(s.specialization);
+        this
+            ._specializationsFilter
+            .removeWhere((element) => element.id == specialization.id);
       });
     }
   }
 
-  void _resetSpecializationFilter() {
-    setState(() {
-      this._specializationsFilter.clear();
-      this._specializationsFilter.add('');
-      this._specializationsFilter.add('');
-    });
+  void _addOrRemoveJob(String jobValue) {
+    if (this._jobFilter == jobValue)
+      setState(() {
+        this._jobFilter = 'EMPTY';
+      });
+    else
+      setState(() {
+        this._jobFilter = jobValue;
+      });
   }
 
-  void _openJobFilters(BuildContext context) {
-    displayBottomSheet(
-      context,
-      StatefulBuilder(
-        builder: (BuildContext context, setStateInner) => JobFilter(
-          resetJobFilter: () {
-            this._resetJobFilter();
+  void _openDoctorFilters() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      context: context,
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (context, setStateInner) => DoctorFilter(
+          selectedSpecializations: this._specializationsFilter,
+          selectedJob: this._jobFilter,
+          addOrRemoveSpecialization: (Specialization specialization) {
+            _addOrRemoveSpecializationFilter(specialization);
+
             setStateInner(() {});
           },
-          setJobFilter: (String? jobValue) {
-            if (jobValue != null) {
-              this._setJobFilter(jobValue);
-            }
+          addOrRemoveJob: (String job) {
+            _addOrRemoveJob(job);
+
             setStateInner(() {});
           },
-          jobFilter: this._jobFilter,
         ),
       ),
     );
   }
 
-  void _resetJobFilter() {
-    setState(() {
-      this._jobFilter = 'EMPTY';
-    });
-  }
-
-  void _setJobFilter(String jobValue) {
-    setState(() {
-      this._jobFilter = jobValue;
-    });
+  void _displayDoctor(Doctor doctor) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      context: context,
+      builder: (BuildContext context) => DisplayDoctor(
+        doctor: doctor,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doctors'),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {});
@@ -113,12 +141,49 @@ class _DoctorListState extends State<DoctorList> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              _buildFilterMain(),
+              Container(
+                height: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.height * 0.35,
+                  medium: MediaQuery.of(context).size.height * 0.35,
+                  small: MediaQuery.of(context).size.height * 0.16,
+                ),
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black54,
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                  vertical: MediaQuery.of(context).size.height * 0.05,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Doctors',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.06,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      iconSize: MediaQuery.of(context).size.height * 0.055,
+                      onPressed: this._openDoctorFilters,
+                      icon: Icon(
+                        Icons.filter_list_outlined,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               FutureBuilder(
                 future: this._doctorService.fetchDoctorsWithFiltering(
                       new DoctorFilterDto(
                         jobTitle: this._jobFilter,
-                        specializations: this._specializationsFilter,
+                        specializations: this
+                            ._specializationsFilter
+                            .map((specialization) =>
+                                specialization.specialization)
+                            .toList(),
                       ),
                     ),
                 builder: (
@@ -168,8 +233,8 @@ class _DoctorListState extends State<DoctorList> {
     );
   }
 
-  ListView _buildDoctorsList() {
-    return ListView.builder(
+  Widget _buildDoctorsList() {
+    return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: this._doctors!.length,
@@ -178,33 +243,15 @@ class _DoctorListState extends State<DoctorList> {
 
         return DoctorCard(
           doctor: doctor,
+          onPressDoctor: () {
+            this._displayDoctor(doctor);
+          },
         );
       },
-    );
-  }
-
-  Widget _buildFilterMain() {
-    return MainFilter(
-      buildJobFilter: this._buildJobFilter,
-      buildSpecializationFilter: this._buildSpecializationFilter,
-    );
-  }
-
-  Widget _buildSpecializationFilter() {
-    return ListTile(
-      title: Text('Select Specialization Filter'),
-      onTap: () {
-        this._openSpecializationFilters(context);
-      },
-    );
-  }
-
-  Widget _buildJobFilter() {
-    return ListTile(
-      title: Text('Select Job Filter'),
-      onTap: () {
-        this._openJobFilters(context);
-      },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 12 / 16,
+      ),
     );
   }
 }
