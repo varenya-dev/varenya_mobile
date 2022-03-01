@@ -4,6 +4,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 
 class AppointmentList extends StatefulWidget {
@@ -42,16 +43,38 @@ class _AppointmentListState extends State<AppointmentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Scheduled Appointments'),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {});
         },
-        child: FutureBuilder(
-          future: this._appointmentService.fetchScheduledAppointments(),
-          builder: _handleAppointmentsFuture,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Palette.black,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.14,
+                  padding: EdgeInsets.all(
+                    MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Schedule',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.07,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                FutureBuilder(
+                  future: this._appointmentService.fetchScheduledAppointments(),
+                  builder: _handleAppointmentsFuture,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -108,20 +131,18 @@ class _AppointmentListState extends State<AppointmentList> {
    * Method to build page based on appointments data.
    */
   Widget _buildAppointmentsBody() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        itemCount: this._appointments!.length,
-        shrinkWrap: true,
-        itemBuilder: (BuildContext context, int index) {
-          Appointment appointmentResponse = this._appointments![index];
+    return ListView.builder(
+      itemCount: this._appointments!.length,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        Appointment appointmentResponse = this._appointments![index];
 
-          return AppointmentCard(
-            appointment: appointmentResponse,
-            refreshAppointments: this._refreshAppointmentLists,
-          );
-        },
-      ),
+        return AppointmentCard(
+          appointment: appointmentResponse,
+          refreshAppointments: this._refreshAppointmentLists,
+        );
+      },
     );
   }
 }
