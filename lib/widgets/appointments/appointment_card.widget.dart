@@ -40,36 +40,112 @@ class _AppointmentCardState extends State<AppointmentCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          15.0,
+        ),
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * 0.05,
+        vertical: MediaQuery.of(context).size.height * 0.015,
+      ),
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.017,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dr ${widget.appointment.doctorUser.fullName}',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.03,
+                    ),
+                  ),
+                  Text(
+                    this.widget.appointment.doctorUser.jobTitle,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
+                    Icon(
+                      Icons.calendar_today,
+                    ),
                     Text(
-                      'Dr ${widget.appointment.doctorUser.fullName}',
+                      DateFormat.yMd().format(
+                        this.widget.appointment.scheduledFor,
+                      ),
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.023,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
-                PopupMenuButton(
-                  elevation: 40,
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text("Cancel Appointment"),
-                      value: 1,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.1,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                    ),
+                    Text(
+                      DateFormat.jm().format(
+                        this.widget.appointment.scheduledFor,
+                      ),
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.023,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
-                  onSelected: _onDeleteAppointment,
-                ),
+                )
               ],
             ),
-            Text(
-                'Booked for: ${DateFormat.yMd().add_jm().format(this.widget.appointment.scheduledFor).toString()}')
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.015,
+                ),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey[900],
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  onPressed: this._onDeleteAppointment,
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -79,7 +155,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
   /*
    * Method to delete/cancel an appointment.
    */
-  void _onDeleteAppointment(_) async {
+  void _onDeleteAppointment() async {
     try {
       // Sending request to the server to delete appointment.
       await this._appointmentService.deleteAppointment(widget.appointment);
