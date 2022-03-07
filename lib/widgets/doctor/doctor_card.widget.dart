@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/doctor/display_specializations.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_card_name_specialization.widget.dart';
 
@@ -18,8 +19,18 @@ class DoctorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.05,
-        vertical: MediaQuery.of(context).size.height * 0.02,
+        horizontal: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.width * 0.01,
+          medium: MediaQuery.of(context).size.width * 0.01,
+          small: MediaQuery.of(context).size.width * 0.05,
+        ),
+        vertical: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.height * 0.01,
+          medium: MediaQuery.of(context).size.height * 0.01,
+          small: MediaQuery.of(context).size.height * 0.02,
+        ),
       ),
       child: GestureDetector(
         onTap: this.onPressDoctor,

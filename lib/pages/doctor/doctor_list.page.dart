@@ -272,7 +272,7 @@ class _DoctorListState extends State<DoctorList> {
         ).toInt(),
         childAspectRatio: responsiveConfig(
           context: context,
-          large: 10 / 11,
+          large: 8 / 8,
           medium: 10 / 5,
           small: kIsWeb ? 10 / 11 : 10 / 8,
         ),
