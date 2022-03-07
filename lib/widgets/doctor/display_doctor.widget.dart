@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/doctor/display_popup_specialization.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_popup_button.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/doctor_popup_name_specialization.widget.dart';
@@ -21,7 +22,21 @@ class _DisplayDoctorState extends State<DisplayDoctor> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      height: responsiveConfig(
+        context: context,
+        large: MediaQuery.of(context).size.height * 0.8,
+        medium: MediaQuery.of(context).size.height * 0.8,
+        small: MediaQuery.of(context).size.height * 0.7,
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.width * 0.25,
+          medium: MediaQuery.of(context).size.width * 0.2,
+          small: 0,
+        ),
+      ),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
@@ -34,7 +49,12 @@ class _DisplayDoctorState extends State<DisplayDoctor> {
               ),
               child: CachedNetworkImage(
                 fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.height * 0.4,
+                  medium: MediaQuery.of(context).size.height * 0.4,
+                  small: MediaQuery.of(context).size.height * 0.3,
+                ),
                 width: MediaQuery.of(context).size.width,
                 imageUrl: this.widget.doctor.imageUrl,
               ),

@@ -19,6 +19,7 @@ import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart';
 import 'package:varenya_mobile/pages/post/update_post.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
+import 'package:varenya_mobile/utils/custom_scroll_behaviour.util.dart';
 import 'package:varenya_mobile/utils/generate_swatch.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 
@@ -31,6 +32,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: CustomScrollBehaviour(),
       navigatorKey: this.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Varenya',

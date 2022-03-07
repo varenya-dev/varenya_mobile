@@ -21,7 +21,7 @@ class DoctorCardNameSpecialization extends StatelessWidget {
           child: Text(
             'Dr. ${this.doctor.fullName}',
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.023,
+              fontSize: MediaQuery.of(context).size.height * 0.03,
             ),
           ),
         ),
@@ -32,7 +32,7 @@ class DoctorCardNameSpecialization extends StatelessWidget {
           child: Text(
             this.doctor.jobTitle,
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.017,
+              fontSize: MediaQuery.of(context).size.height * 0.023,
               color: Colors.grey,
             ),
           ),
