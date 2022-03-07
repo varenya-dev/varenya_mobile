@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
@@ -88,7 +89,9 @@ class _DoctorListState extends State<DoctorList> {
           ),
         ),
       ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: kIsWeb
+          ? Colors.transparent
+          : Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (BuildContext context) => StatefulBuilder(
         builder: (context, setStateInner) => DoctorFilter(
@@ -122,7 +125,9 @@ class _DoctorListState extends State<DoctorList> {
           ),
         ),
       ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: kIsWeb
+          ? Colors.transparent
+          : Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (BuildContext context) => DisplayDoctor(
         doctor: doctor,
@@ -137,96 +142,106 @@ class _DoctorListState extends State<DoctorList> {
         onRefresh: () async {
           setState(() {});
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                height: responsiveConfig(
-                  context: context,
-                  large: MediaQuery.of(context).size.height * 0.35,
-                  medium: MediaQuery.of(context).size.height * 0.35,
-                  small: MediaQuery.of(context).size.height * 0.16,
-                ),
-                width: MediaQuery.of(context).size.width,
-                color: Colors.black54,
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
-                  vertical: MediaQuery.of(context).size.height * 0.05,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Doctors',
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height * 0.06,
-                        fontWeight: FontWeight.bold,
+        child: Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: responsiveConfig(
+              context: context,
+              large: MediaQuery.of(context).size.width * 0.25,
+              medium: MediaQuery.of(context).size.width * 0.25,
+              small: 0,
+            ),
+          ),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  height: responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.height * 0.2,
+                    medium: MediaQuery.of(context).size.height * 0.2,
+                    small: MediaQuery.of(context).size.height * 0.16,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black54,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                    vertical: MediaQuery.of(context).size.height * 0.05,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Doctors',
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.06,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      iconSize: MediaQuery.of(context).size.height * 0.055,
-                      onPressed: this._openDoctorFilters,
-                      icon: Icon(
-                        Icons.filter_list_outlined,
+                      IconButton(
+                        iconSize: MediaQuery.of(context).size.height * 0.055,
+                        onPressed: this._openDoctorFilters,
+                        icon: Icon(
+                          Icons.filter_list_outlined,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              FutureBuilder(
-                future: this._doctorService.fetchDoctorsWithFiltering(
-                      new DoctorFilterDto(
-                        jobTitle: this._jobFilter,
-                        specializations: this
-                            ._specializationsFilter
-                            .map((specialization) =>
-                                specialization.specialization)
-                            .toList(),
+                FutureBuilder(
+                  future: this._doctorService.fetchDoctorsWithFiltering(
+                        new DoctorFilterDto(
+                          jobTitle: this._jobFilter,
+                          specializations: this
+                              ._specializationsFilter
+                              .map((specialization) =>
+                                  specialization.specialization)
+                              .toList(),
+                        ),
                       ),
-                    ),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<List<Doctor>> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    switch (snapshot.error.runtimeType) {
-                      case ServerException:
-                        {
-                          ServerException exception =
-                              snapshot.error as ServerException;
-                          return Text(exception.message);
-                        }
-                      default:
-                        {
-                          log.e(
-                            "DoctorList Error",
-                            snapshot.error,
-                            snapshot.stackTrace,
-                          );
-                          return Text(
-                              "Something went wrong, please try again later");
-                        }
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<List<Doctor>> snapshot,
+                  ) {
+                    if (snapshot.hasError) {
+                      switch (snapshot.error.runtimeType) {
+                        case ServerException:
+                          {
+                            ServerException exception =
+                                snapshot.error as ServerException;
+                            return Text(exception.message);
+                          }
+                        default:
+                          {
+                            log.e(
+                              "DoctorList Error",
+                              snapshot.error,
+                              snapshot.stackTrace,
+                            );
+                            return Text(
+                                "Something went wrong, please try again later");
+                          }
+                      }
                     }
-                  }
 
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    this._doctors = snapshot.data!;
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      this._doctors = snapshot.data!;
 
-                    return _buildDoctorsList();
-                  }
+                      return _buildDoctorsList();
+                    }
 
-                  return this._doctors == null
-                      ? Column(
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        )
-                      : this._buildDoctorsList();
-                },
-              ),
-            ],
+                    return this._doctors == null
+                        ? Column(
+                            children: [
+                              CircularProgressIndicator(),
+                            ],
+                          )
+                        : this._buildDoctorsList();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -248,9 +263,19 @@ class _DoctorListState extends State<DoctorList> {
           },
         );
       },
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 12 / 16,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: responsiveConfig(
+          context: context,
+          large: 2,
+          medium: 2,
+          small: 2,
+        ).toInt(),
+        childAspectRatio: responsiveConfig(
+          context: context,
+          large: 9 / 8,
+          medium: 9 / 8,
+          small: 12 / 16,
+        ),
       ),
     );
   }
