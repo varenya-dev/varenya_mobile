@@ -5,6 +5,7 @@ import 'package:varenya_mobile/models/appointments/appointment/appointment.model
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 
 class AppointmentList extends StatefulWidget {
@@ -48,31 +49,53 @@ class _AppointmentListState extends State<AppointmentList> {
           setState(() {});
         },
         child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  color: Palette.black,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.14,
-                  padding: EdgeInsets.all(
-                    MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'Schedule',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.07,
-                      fontWeight: FontWeight.bold,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: responsiveConfig(
+                context: context,
+                large: MediaQuery.of(context).size.width * 0.25,
+                medium: MediaQuery.of(context).size.width * 0.25,
+                small: 0,
+              ),
+            ),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: Palette.black,
+                    width: MediaQuery.of(context).size.width,
+                    height: responsiveConfig(
+                      context: context,
+                      large: MediaQuery.of(context).size.height * 0.2,
+                      medium: MediaQuery.of(context).size.height * 0.2,
+                      small: MediaQuery.of(context).size.height * 0.14,
+                    ),
+                    padding: EdgeInsets.all(
+                      responsiveConfig(
+                        context: context,
+                        large: MediaQuery.of(context).size.width * 0.03,
+                        medium: MediaQuery.of(context).size.width * 0.03,
+                        small: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                    ),
+                    child: Text(
+                      'Schedule',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.07,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                FutureBuilder(
-                  future: this._appointmentService.fetchScheduledAppointments(),
-                  builder: _handleAppointmentsFuture,
-                ),
-              ],
+                  FutureBuilder(
+                    future:
+                        this._appointmentService.fetchScheduledAppointments(),
+                    builder: _handleAppointmentsFuture,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
