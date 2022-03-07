@@ -5,6 +5,7 @@ double responsiveConfig({
   required double large,
   required double medium,
   required double small,
+  double extraSmall = 0,
 }) {
   if (MediaQuery.of(context).size.width > 1200) {
     return large;

@@ -147,7 +147,7 @@ class _DoctorListState extends State<DoctorList> {
             horizontal: responsiveConfig(
               context: context,
               large: MediaQuery.of(context).size.width * 0.25,
-              medium: MediaQuery.of(context).size.width * 0.25,
+              medium: MediaQuery.of(context).size.width * 0.2,
               small: 0,
             ),
           ),
@@ -160,7 +160,7 @@ class _DoctorListState extends State<DoctorList> {
                     context: context,
                     large: MediaQuery.of(context).size.height * 0.2,
                     medium: MediaQuery.of(context).size.height * 0.2,
-                    small: MediaQuery.of(context).size.height * 0.16,
+                    small: MediaQuery.of(context).size.height * 0.2,
                   ),
                   width: MediaQuery.of(context).size.width,
                   color: Colors.black54,
@@ -267,14 +267,14 @@ class _DoctorListState extends State<DoctorList> {
         crossAxisCount: responsiveConfig(
           context: context,
           large: 2,
-          medium: 2,
-          small: 2,
+          medium: 1,
+          small: 1,
         ).toInt(),
         childAspectRatio: responsiveConfig(
           context: context,
-          large: 9 / 8,
-          medium: 9 / 8,
-          small: 12 / 16,
+          large: 10 / 11,
+          medium: 10 / 5,
+          small: kIsWeb ? 10 / 11 : 10 / 8,
         ),
       ),
     );

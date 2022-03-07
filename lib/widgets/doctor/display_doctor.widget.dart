@@ -33,7 +33,7 @@ class _DisplayDoctorState extends State<DisplayDoctor> {
         horizontal: responsiveConfig(
           context: context,
           large: MediaQuery.of(context).size.width * 0.25,
-          medium: MediaQuery.of(context).size.width * 0.25,
+          medium: MediaQuery.of(context).size.width * 0.2,
           small: 0,
         ),
       ),

@@ -31,7 +31,7 @@ class DoctorFilter extends StatelessWidget {
         horizontal: responsiveConfig(
           context: context,
           large: MediaQuery.of(context).size.width * 0.25,
-          medium: MediaQuery.of(context).size.width * 0.25,
+          medium: MediaQuery.of(context).size.width * 0.2,
           small: MediaQuery.of(context).size.width * 0.03,
         ),
       ),

@@ -18,7 +18,7 @@ class DoctorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.02,
+        horizontal: MediaQuery.of(context).size.width * 0.05,
         vertical: MediaQuery.of(context).size.height * 0.02,
       ),
       child: GestureDetector(
@@ -45,9 +45,9 @@ class DoctorCard extends StatelessWidget {
                         topRight: Radius.circular(15),
                       ),
                       child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        width: MediaQuery.of(context).size.width * 0.6,
+                        fit: BoxFit.fitWidth,
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: MediaQuery.of(context).size.width,
                         imageUrl: this.doctor.imageUrl,
                       ),
                     ),
