@@ -5,6 +5,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 
 class AppointmentCard extends StatefulWidget {
@@ -50,7 +51,14 @@ class _AppointmentCardState extends State<AppointmentCard> {
         vertical: MediaQuery.of(context).size.height * 0.015,
       ),
       child: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+        padding: EdgeInsets.all(
+          responsiveConfig(
+            context: context,
+            large: MediaQuery.of(context).size.width * 0.025,
+            medium: MediaQuery.of(context).size.width * 0.025,
+            small: MediaQuery.of(context).size.width * 0.05,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
