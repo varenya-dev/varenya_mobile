@@ -22,9 +22,29 @@ class DoctorFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
-      margin: EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.03,
         left: MediaQuery.of(context).size.width * 0.03,
+        right: MediaQuery.of(context).size.width * 0.03,
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: responsiveConfig(
+          context: context,
+          large: MediaQuery.of(context).size.width * 0.25,
+          medium: MediaQuery.of(context).size.width * 0.25,
+          small: MediaQuery.of(context).size.width * 0.03,
+        ),
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
       ),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
