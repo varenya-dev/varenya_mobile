@@ -57,6 +57,36 @@ class DailyQuestionnaireService {
     await this._createOrUpdateMoodData();
   }
 
+  Future<bool> checkIfDoctorHasAccess(String doctorId) async {
+    DailyMoodData dailyMoodData = await this._fetchMoods();
+
+    return dailyMoodData.access.contains(doctorId);
+  }
+
+  Future<bool> _checkForExistingMoodData() async {
+    DocumentSnapshot<Map<String, dynamic>> moodData = await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .get();
+
+    return moodData.exists;
+  }
+
+  Future<DailyMoodData> _fetchMoods() async {
+    if (!(await this._checkForExistingMoodData())) {
+      await this._createOrUpdateMoodData();
+    }
+
+    DocumentSnapshot<Map<String, dynamic>> moodData = await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .get();
+
+    return DailyMoodData.fromJson(moodData.data()!);
+  }
+
   Future<void> _createOrUpdateMoodData() async {
     List<DailyProgressData> dailyProgressData = this.fetchDailyProgressData();
 
