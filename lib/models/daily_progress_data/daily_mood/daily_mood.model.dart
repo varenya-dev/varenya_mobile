@@ -5,6 +5,9 @@ part 'daily_mood.model.g.dart';
 
 @JsonSerializable()
 class DailyMood {
+  @JsonKey(defaultValue: [])
+  final List<String> access;
+
   @JsonKey(fromJson: timestampFromJson, toJson: timestampToJson)
   final DateTime date;
 
@@ -12,11 +15,13 @@ class DailyMood {
   final int mood;
 
   DailyMood({
+    required this.access,
     required this.date,
     required this.mood,
   });
 
-  factory DailyMood.fromJson(Map<String, dynamic> json) => _$DailyMoodFromJson(json);
+  factory DailyMood.fromJson(Map<String, dynamic> json) =>
+      _$DailyMoodFromJson(json);
 
   Map<String, dynamic> toJson() => _$DailyMoodToJson(this);
 
