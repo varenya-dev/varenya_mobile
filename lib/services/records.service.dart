@@ -14,7 +14,7 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 class RecordsService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  final Box<List<dynamic>> _recordsBox = Hive.box(VARENYA_DOCTOR_RECORD_LIST);
+  final Box<List<dynamic>> _recordsBox = Hive.box(VARENYA_DOCTOR_RECORD_BOX);
 
   /*
    * Method to fetch doctor records from the server.

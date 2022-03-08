@@ -94,7 +94,7 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  await this._dailyQuestionnaireService.shareMoodData(
+                  await this._dailyQuestionnaireService.toggleShareMood(
                         this.widget.doctor.user!.firebaseId,
                       );
 

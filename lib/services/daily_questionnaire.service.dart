@@ -63,9 +63,13 @@ class DailyQuestionnaireService {
     return dailyMoodData.access.contains(doctorId);
   }
 
-  Future<void> shareMoodData(String doctorId) async {
+  Future<void> toggleShareMood(String doctorId) async {
     DailyMoodData dailyMoodData = await this._fetchMoods();
-    dailyMoodData.access.add(doctorId);
+
+    if (dailyMoodData.access.contains(doctorId))
+      dailyMoodData.access.remove(doctorId);
+    else
+      dailyMoodData.access.add(doctorId);
 
     Map<String, dynamic> data = dailyMoodData.toJson();
     data['moods'] = data['moods'].map((mood) => mood.toJson()).toList();
