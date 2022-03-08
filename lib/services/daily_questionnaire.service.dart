@@ -63,6 +63,20 @@ class DailyQuestionnaireService {
     return dailyMoodData.access.contains(doctorId);
   }
 
+  Future<void> shareMoodData(String doctorId) async {
+    DailyMoodData dailyMoodData = await this._fetchMoods();
+    dailyMoodData.access.add(doctorId);
+
+    Map<String, dynamic> data = dailyMoodData.toJson();
+    data['moods'] = data['moods'].map((mood) => mood.toJson()).toList();
+
+    await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .set(data);
+  }
+
   Future<bool> _checkForExistingMoodData() async {
     DocumentSnapshot<Map<String, dynamic>> moodData = await this
         ._firestore
