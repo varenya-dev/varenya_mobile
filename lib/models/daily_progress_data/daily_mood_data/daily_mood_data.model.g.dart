@@ -8,11 +8,14 @@ part of 'daily_mood_data.model.dart';
 
 DailyMoodData _$DailyMoodDataFromJson(Map<String, dynamic> json) =>
     DailyMoodData(
-      access:
-          (json['access'] as List<dynamic>).map((e) => e as String).toList(),
-      moods: (json['moods'] as List<dynamic>)
-          .map((e) => DailyMood.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      access: (json['access'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      moods: (json['moods'] as List<dynamic>?)
+              ?.map((e) => DailyMood.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$DailyMoodDataToJson(DailyMoodData instance) =>
