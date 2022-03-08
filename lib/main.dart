@@ -32,6 +32,7 @@ import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/post.service.dart';
+import 'package:varenya_mobile/services/records.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:hive/hive.dart';
@@ -72,6 +73,7 @@ Future<void> openHiveBoxes() async {
   await Hive.openBox<List<dynamic>>(VARENYA_ACTIVITY_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_PROGRESS_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_QUESTION_BOX);
+  await Hive.openBox<List<dynamic>>(VARENYA_DOCTOR_RECORD_BOX);
 
   log.i("Opened Hive Boxes");
 }
@@ -243,6 +245,9 @@ class Root extends StatelessWidget {
         ),
         Provider<DailyQuestionnaireService>(
           create: (context) => DailyQuestionnaireService(),
+        ),
+        Provider<RecordsService>(
+          create: (context) => RecordsService(),
         ),
       ],
       child: App(),
