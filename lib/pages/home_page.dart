@@ -13,6 +13,7 @@ import 'package:varenya_mobile/pages/daily_questionnaire/question.page.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/questionnaire.page.dart';
 import 'package:varenya_mobile/pages/doctor/doctor_list.page.dart';
 import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
+import 'package:varenya_mobile/pages/records/records.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
@@ -172,6 +173,12 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pushNamed(PastProgress.routeName);
                   },
                   child: Text('Past Progress Page'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(Records.routeName);
+                  },
+                  child: Text('Records Page'),
                 ),
                 ElevatedButton(
                   onPressed: () async {

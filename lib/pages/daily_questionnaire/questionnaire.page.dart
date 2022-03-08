@@ -57,7 +57,7 @@ class _QuestionnaireState extends State<Questionnaire> {
   /*
    * Method to handle saving responses from the questionnaire.
    */
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
 
     // Checking for form validation.
     if (!this._questionnaireKey.currentState!.validate()) {
@@ -94,7 +94,7 @@ class _QuestionnaireState extends State<Questionnaire> {
     );
 
     // Save Daily Progress Data to device storage.
-    this._dailyQuestionnaireService.saveProgressData(dailyProgressData);
+    await this._dailyQuestionnaireService.saveProgressData(dailyProgressData);
 
     // Display confirmation for progress save.
     displaySnackbar(

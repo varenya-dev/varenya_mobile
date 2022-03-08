@@ -18,6 +18,7 @@ import 'package:varenya_mobile/pages/post/categorized_posts.page.dart';
 import 'package:varenya_mobile/pages/post/new_post.page.dart';
 import 'package:varenya_mobile/pages/post/post.page.dart';
 import 'package:varenya_mobile/pages/post/update_post.page.dart';
+import 'package:varenya_mobile/pages/records/records.page.dart';
 import 'package:varenya_mobile/pages/user/user_update_page.dart';
 import 'package:varenya_mobile/utils/custom_scroll_behaviour.util.dart';
 import 'package:varenya_mobile/utils/generate_swatch.util.dart';
@@ -89,6 +90,7 @@ class App extends StatelessWidget {
         Questionnaire.routeName: (context) => Questionnaire(),
         PastProgress.routeName: (context) => PastProgress(),
         SingleProgress.routeName: (context) => SingleProgress(),
+        Records.routeName: (context) => Records(),
       },
       home: SplashPage(),
     );

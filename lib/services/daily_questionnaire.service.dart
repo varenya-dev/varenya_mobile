@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
+import 'package:varenya_mobile/models/daily_progress_data/daily_mood/daily_mood.model.dart';
+import 'package:varenya_mobile/models/daily_progress_data/daily_mood_data/daily_mood_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 
@@ -7,6 +11,9 @@ import 'package:varenya_mobile/models/daily_progress_data/question_answer/questi
  * Service Implementation for Daily Questionnaire Module.
  */
 class DailyQuestionnaireService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final Box<List<dynamic>> _progressBox = Hive.box(VARENYA_PROGRESS_BOX);
   final Box<List<dynamic>> _questionBox = Hive.box(VARENYA_QUESTION_BOX);
 
@@ -33,7 +40,7 @@ class DailyQuestionnaireService {
   /*
    * Method to save daily progress data on device.
    */
-  void saveProgressData(DailyProgressData dailyProgressData) {
+  Future<void> saveProgressData(DailyProgressData dailyProgressData) async {
     // Fetch existing data from device
     List<DailyProgressData> existingData = this.fetchDailyProgressData();
 
@@ -46,5 +53,82 @@ class DailyQuestionnaireService {
 
     // Save the sorted list on device storage.
     this._progressBox.put(VARENYA_PROGRESS_LIST, existingData);
+
+    await this._createOrUpdateMoodData();
+  }
+
+  Future<bool> checkIfDoctorHasAccess(String doctorId) async {
+    DailyMoodData dailyMoodData = await this._fetchMoods();
+
+    return dailyMoodData.access.contains(doctorId);
+  }
+
+  Future<void> toggleShareMood(String doctorId) async {
+    DailyMoodData dailyMoodData = await this._fetchMoods();
+
+    if (dailyMoodData.access.contains(doctorId))
+      dailyMoodData.access.remove(doctorId);
+    else
+      dailyMoodData.access.add(doctorId);
+
+    Map<String, dynamic> data = dailyMoodData.toJson();
+    data['moods'] = data['moods'].map((mood) => mood.toJson()).toList();
+
+    await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .set(data);
+  }
+
+  Future<bool> _checkForExistingMoodData() async {
+    DocumentSnapshot<Map<String, dynamic>> moodData = await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .get();
+
+    return moodData.exists;
+  }
+
+  Future<DailyMoodData> _fetchMoods() async {
+    if (!(await this._checkForExistingMoodData())) {
+      await this._createOrUpdateMoodData();
+    }
+
+    DocumentSnapshot<Map<String, dynamic>> moodData = await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .get();
+
+    return DailyMoodData.fromJson(moodData.data()!);
+  }
+
+  Future<void> _createOrUpdateMoodData() async {
+    List<DailyProgressData> dailyProgressData = this.fetchDailyProgressData();
+
+    List<DailyMood> dailyMood = dailyProgressData
+        .map(
+          (progress) => new DailyMood(
+            date: progress.createdAt,
+            mood: progress.moodRating,
+          ),
+        )
+        .toList();
+
+    DailyMoodData dailyMoodData = new DailyMoodData(
+      access: [],
+      moods: dailyMood,
+    );
+
+    Map<String, dynamic> data = dailyMoodData.toJson();
+    data['moods'] = data['moods'].map((mood) => mood.toJson()).toList();
+
+    await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .set(data);
   }
 }
