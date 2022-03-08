@@ -1,11 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
-import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
-import 'package:varenya_mobile/services/appointment.service.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
