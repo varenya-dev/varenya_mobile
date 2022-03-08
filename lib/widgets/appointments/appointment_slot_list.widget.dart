@@ -4,6 +4,7 @@ import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appoin
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
+import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
@@ -29,6 +30,7 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
   DateTime _selectedSlot = DateTime.now();
 
   late final AppointmentService _appointmentService;
+  late final DailyQuestionnaireService _dailyQuestionnaireService;
 
   @override
   void initState() {
@@ -46,6 +48,11 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
     this._selectedDate = nextWeekDateList[0];
 
     this._appointmentService = Provider.of<AppointmentService>(
+      context,
+      listen: false,
+    );
+
+    this._dailyQuestionnaireService = Provider.of<DailyQuestionnaireService>(
       context,
       listen: false,
     );
@@ -72,6 +79,39 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
         "Appointment has been booked!",
         context,
       );
+
+      bool check = await this
+          ._dailyQuestionnaireService
+          .checkIfDoctorHasAccess(this.widget.doctor.user!.firebaseId);
+
+      if (!check) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Confirmation'),
+            content:
+                Text('Do you want to share your mood data with this doctor?'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await this._dailyQuestionnaireService.shareMoodData(
+                        this.widget.doctor.user!.firebaseId,
+                      );
+
+                  Navigator.of(context).pop();
+                },
+                child: Text('Yes'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('No'),
+              ),
+            ],
+          ),
+        );
+      }
 
       setState(() {});
     }
