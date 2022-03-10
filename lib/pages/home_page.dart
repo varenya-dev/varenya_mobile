@@ -152,27 +152,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    this.localNotificationsService.instantNotification();
-                  },
-                  child: Text('Instant Notification'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
                     Navigator.of(context).pushNamed(Question.routeName);
                   },
                   child: Text('Questions Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(Questionnaire.routeName);
-                  },
-                  child: Text('Questionnaire Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(PastProgress.routeName);
-                  },
-                  child: Text('Past Progress Page'),
                 ),
                 ElevatedButton(
                   onPressed: () async {
