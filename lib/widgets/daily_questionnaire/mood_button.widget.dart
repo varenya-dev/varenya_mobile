@@ -27,7 +27,7 @@ class MoodButton extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color:
-              selected ? Palette.primary.withOpacity(0.6) : Colors.transparent,
+              selected ? Palette.primary.withOpacity(0.6) : Palette.secondary,
           border: Border.all(
             color: selected ? Palette.primary : Colors.grey[850]!,
             width: 2,
