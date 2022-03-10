@@ -25,6 +25,7 @@ import 'package:varenya_mobile/utils/check_connectivity.util.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:varenya_mobile/widgets/common/home_bar.widget.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -36,7 +37,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final AuthService _authService;
   late final UserService _userService;
   late final AlertsService _alertsService;
 
@@ -47,7 +47,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    this._authService = Provider.of<AuthService>(context, listen: false);
     this._userService = Provider.of<UserService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
 
@@ -72,130 +71,32 @@ class _HomePageState extends State<HomePage> {
       });
   }
 
+  final List<Widget> screens = [
+    CategorizedPosts(),
+    DoctorList(),
+    Threads(),
+    SizedBox(),
+    Question(),
+    AppointmentList(),
+  ];
+
+  int screen = 0;
+
+  void emitScreen(int screenNumber) {
+    setState(() {
+      this.screen = screenNumber;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Varenya'),
+      bottomSheet: HomeBar(
+        screen: screen,
+        emitScreen: this.emitScreen,
       ),
       body: NotificationsHandler(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                Consumer<UserProvider>(
-                  builder: (context, state, child) {
-                    User user = state.user;
-                    return Text(user.email!);
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(UserUpdatePage.routeName);
-                  },
-                  child: Text('User Update'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(Threads.routeName);
-                  },
-                  child: Text('Threads'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await this._authService.logOut();
-                    Navigator.of(context).pushNamed(AuthPage.routeName);
-                  },
-                  child: Text('Logout'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await this._alertsService.sendSOSNotifications();
-                    } on ServerException catch (error) {
-                      displaySnackbar(
-                        error.message,
-                        context,
-                      );
-                    } catch (error) {
-                      displaySnackbar(
-                        "Something went wrong, please try again later.",
-                        context,
-                      );
-                    }
-                  },
-                  child: Text('SOS Notification'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(DoctorList.routeName);
-                  },
-                  child: Text('Doctor List'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(AppointmentList.routeName);
-                  },
-                  child: Text('Appointments List'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(CategorizedPosts.routeName);
-                  },
-                  child: Text('Categorized Posts'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(Activity.routeName);
-                  },
-                  child: Text('Activity'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    this.localNotificationsService.instantNotification();
-                  },
-                  child: Text('Instant Notification'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(Question.routeName);
-                  },
-                  child: Text('Questions Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(Questionnaire.routeName);
-                  },
-                  child: Text('Questionnaire Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(PastProgress.routeName);
-                  },
-                  child: Text('Past Progress Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed(Records.routeName);
-                  },
-                  child: Text('Records Page'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    LocalNotificationsService().scheduledNotification(
-                      DateTime.now().add(
-                        Duration(
-                          seconds: 10,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text('Schedule Daily Notification for 10s from now'),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: screens[screen],
       ),
     );
   }

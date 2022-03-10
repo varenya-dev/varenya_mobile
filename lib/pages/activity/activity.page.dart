@@ -4,6 +4,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart' as AM;
 import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_chart.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
@@ -37,25 +38,51 @@ class _ActivityState extends State<Activity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Activity'),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {});
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Your Mood Cycle'),
-              MoodChart(),
-              FutureBuilder(
-                future: this._activityService.fetchActivity(),
-                builder: _handleActivityFutureBuild,
-              ),
-            ],
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.height * 0.2,
+                    medium: MediaQuery.of(context).size.height * 0.2,
+                    small: MediaQuery.of(context).size.height * 0.17,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black54,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                    vertical: MediaQuery.of(context).size.height * 0.05,
+                  ),
+                  child: Text(
+                    'Activity',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.06,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  'Your Mood Cycle',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.04,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                MoodChart(),
+                FutureBuilder(
+                  future: this._activityService.fetchActivity(),
+                  builder: _handleActivityFutureBuild,
+                ),
+              ],
+            ),
           ),
         ),
       ),

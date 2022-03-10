@@ -5,6 +5,7 @@ import 'package:varenya_mobile/dtos/doctor_filter/doctor_filter.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
+import 'package:varenya_mobile/pages/records/records.page.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
@@ -185,6 +186,25 @@ class _DoctorListState extends State<DoctorList> {
                         icon: Icon(
                           Icons.filter_list_outlined,
                         ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.005,
+                    horizontal: MediaQuery.of(context).size.width * 0.06,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Show Past Contacted Doctors?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Records.routeName);
+                        },
+                        child: Text('Show'),
                       ),
                     ],
                   ),

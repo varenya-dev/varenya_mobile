@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
 import 'package:varenya_mobile/pages/daily_questionnaire/single_progress.page.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
+import 'package:varenya_mobile/widgets/daily_questionnaire/past_progress_item.widget.dart';
 
 class PastProgress extends StatefulWidget {
   const PastProgress({Key? key}) : super(key: key);
@@ -38,29 +41,52 @@ class _PastProgressState extends State<PastProgress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Past Progress Data'),
-      ),
-      body: ListView.builder(
-        itemCount: this._dailyProgressList.length,
-        itemBuilder: (BuildContext context, int index) {
-          DailyProgressData dailyProgressData = this._dailyProgressList[index];
-
-          return ListTile(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                SingleProgress.routeName,
-                arguments: dailyProgressData,
-              );
-            },
-            title: Text(
-              DateFormat.yMMMd().add_jm().format(
-                    dailyProgressData.createdAt,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: Palette.black,
+                width: MediaQuery.of(context).size.width,
+                height: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.height * 0.3,
+                  medium: MediaQuery.of(context).size.height * 0.3,
+                  small: MediaQuery.of(context).size.height * 0.24,
+                ),
+                padding: EdgeInsets.all(
+                  responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.03,
+                    medium: MediaQuery.of(context).size.width * 0.03,
+                    small: MediaQuery.of(context).size.width * 0.05,
                   ),
-            ),
-            subtitle: Text("Mood Score: ${dailyProgressData.moodRating}"),
-          );
-        },
+                ),
+                child: Text(
+                  'Past\nProgress',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.07,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: this._dailyProgressList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  DailyProgressData dailyProgressData =
+                      this._dailyProgressList[index];
+
+                  return PastProgressItem(
+                    dailyProgressData: dailyProgressData,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
