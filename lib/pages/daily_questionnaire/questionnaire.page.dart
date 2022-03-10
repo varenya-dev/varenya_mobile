@@ -4,7 +4,11 @@ import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.mo
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/question_controller/question_controller.model.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/utils/snackbar.dart';
+import 'package:varenya_mobile/widgets/daily_questionnaire/daily_questionnaire_button.widget.dart';
+import 'package:varenya_mobile/widgets/daily_questionnaire/mood_button_list.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_selector.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/questionnaire_field.widget.dart';
 import 'package:uuid/uuid.dart';
@@ -20,7 +24,6 @@ class Questionnaire extends StatefulWidget {
 }
 
 class _QuestionnaireState extends State<Questionnaire> {
-
   // Daily Questionnaire Service
   late final DailyQuestionnaireService _dailyQuestionnaireService;
 
@@ -58,7 +61,6 @@ class _QuestionnaireState extends State<Questionnaire> {
    * Method to handle saving responses from the questionnaire.
    */
   Future<void> _handleSubmit() async {
-
     // Checking for form validation.
     if (!this._questionnaireKey.currentState!.validate()) {
       return;
@@ -117,45 +119,70 @@ class _QuestionnaireState extends State<Questionnaire> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Daily Questionnaire'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              fit: FlexFit.loose,
-              child: Form(
-                key: this._questionnaireKey,
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: this._questionControllers.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    QuestionController questionController =
-                        this._questionControllers[index];
-                    return QuestionnaireField(
-                      questionController: questionController,
-                    );
-                  },
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                color: Palette.black,
+                width: MediaQuery.of(context).size.width,
+                height: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.height * 0.3,
+                  medium: MediaQuery.of(context).size.height * 0.3,
+                  small: MediaQuery.of(context).size.height * 0.24,
+                ),
+                padding: EdgeInsets.all(
+                  responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.03,
+                    medium: MediaQuery.of(context).size.width * 0.03,
+                    small: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                ),
+                child: Text(
+                  'Daily\nQuestions',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.07,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            MoodSelector(
-              emitMood: (int mood) {
-                setState(() {
-                  this.mood = mood;
-                });
-              },
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: _handleSubmit,
-                child: Text('Submit'),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Form(
+                  key: this._questionnaireKey,
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: this._questionControllers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      QuestionController questionController =
+                          this._questionControllers[index];
+                      return QuestionnaireField(
+                        questionController: questionController,
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-          ],
+              MoodButtonList(
+                onPress: (int mood) {
+                  setState(() {
+                    this.mood = mood;
+                  });
+                },
+                moodValue: this.mood,
+              ),
+              Center(
+                child: DailyQuestionnaireButton(
+                  onConfirm: this._handleSubmit,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

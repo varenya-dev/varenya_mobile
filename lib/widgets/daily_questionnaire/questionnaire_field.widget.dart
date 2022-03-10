@@ -20,17 +20,9 @@ class QuestionnaireField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05,
-            ),
-            child: Text(
-              questionController.question.question,
-            ),
-          ),
           CustomFieldWidget(
             textFieldController: questionController.textEditingController,
-            label: 'Answer',
+            label: questionController.question.question,
             validators: [
               MinLengthValidator(
                 5,
