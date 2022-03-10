@@ -15,27 +15,50 @@ class QuestionDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(this.question.question),
-      trailing: Wrap(
-        children: [
-          IconButton(
-            onPressed: () {
-              this.onEditQuestion(question);
-            },
-            icon: Icon(
-              Icons.edit,
-            ),
+    return GestureDetector(
+      onTap: () {
+        this.onEditQuestion(question);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: BorderRadius.circular(
+            15.0,
           ),
-          IconButton(
-            onPressed: () {
-              this.onDeleteQuestion(question);
-            },
-            icon: Icon(
-              Icons.delete,
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.01,
+          horizontal: MediaQuery.of(context).size.width * 0.05,
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.02,
+          horizontal: MediaQuery.of(context).size.width * 0.1,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: Text(
+                this.question.question,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.025,
+                ),
+              ),
             ),
-          )
-        ],
+            IconButton(
+              onPressed: () {
+                this.onDeleteQuestion(question);
+              },
+              icon: Icon(
+                Icons.delete,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

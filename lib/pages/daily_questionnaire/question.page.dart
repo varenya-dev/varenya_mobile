@@ -3,7 +3,10 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
+import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
+import 'package:varenya_mobile/widgets/daily_questionnaire/question_actions.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/question_display.widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -259,25 +262,57 @@ class _QuestionState extends State<Question> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Daily Questions Configuration'),
-      ),
-      body: ListView.builder(
-        itemCount: this._questions.length,
-        itemBuilder: (BuildContext context, int index) {
-          QuestionAnswer question = this._questions[index];
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: Palette.black,
+                width: MediaQuery.of(context).size.width,
+                height: responsiveConfig(
+                  context: context,
+                  large: MediaQuery.of(context).size.height * 0.3,
+                  medium: MediaQuery.of(context).size.height * 0.3,
+                  small: MediaQuery.of(context).size.height * 0.24,
+                ),
+                padding: EdgeInsets.all(
+                  responsiveConfig(
+                    context: context,
+                    large: MediaQuery.of(context).size.width * 0.03,
+                    medium: MediaQuery.of(context).size.width * 0.03,
+                    small: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                ),
+                child: Text(
+                  'Questions\nConfiguration',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.07,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              QuestionActions(
+                addQuestion: _handleCreateNewQuestion,
+              ),
+              Divider(),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: this._questions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  QuestionAnswer question = this._questions[index];
 
-          return QuestionDisplay(
-            question: question,
-            onEditQuestion: this._handleUpdateQuestion,
-            onDeleteQuestion: this._handleDeleteQuestion,
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.yellow,
-        onPressed: _handleCreateNewQuestion,
-        child: Icon(Icons.add),
+                  return QuestionDisplay(
+                    question: question,
+                    onEditQuestion: this._handleUpdateQuestion,
+                    onDeleteQuestion: this._handleDeleteQuestion,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
