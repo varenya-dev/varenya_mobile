@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/emoji_mood.constant.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
 import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 
 class MoodChart extends StatefulWidget {
   const MoodChart({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class MoodChart extends StatefulWidget {
 }
 
 class _MoodChartState extends State<MoodChart> {
-
   // Daily Questionnaire Service.
   late final DailyQuestionnaireService _dailyQuestionnaireService;
 
@@ -56,12 +56,36 @@ class _MoodChartState extends State<MoodChart> {
         LineChartData(
           lineTouchData: LineTouchData(
             enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+              tooltipBgColor: Palette.secondary,
+              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                return touchedBarSpots.map(
+                  (barSpot) {
+                    final flSpot = barSpot;
+
+                    return LineTooltipItem(
+                      EMOJIS[flSpot.y.toInt() - 1],
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text:
+                              '\n${DateFormat.yMMMd().format(this._dailyProgressData[flSpot.x.toInt()].createdAt)}',
+                        ),
+                      ],
+                    );
+                  },
+                ).toList();
+              },
+            ),
           ),
           lineBarsData: [
             LineChartBarData(
               preventCurveOverShooting: true,
               colors: [
-                Colors.yellow,
+                Palette.primary,
               ],
               spots: this
                   ._dailyProgressData
@@ -80,7 +104,7 @@ class _MoodChartState extends State<MoodChart> {
               belowBarData: BarAreaData(
                 show: true,
                 colors: [
-                  Colors.yellow.withOpacity(
+                  Palette.primary.withOpacity(
                     0.1,
                   ),
                 ],
