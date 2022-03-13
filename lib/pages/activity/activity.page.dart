@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart' as AM;
+import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/activity.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_chart.widget.dart';
@@ -46,6 +49,7 @@ class _ActivityState extends State<Activity> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -61,22 +65,100 @@ class _ActivityState extends State<Activity> {
                     horizontal: MediaQuery.of(context).size.width * 0.05,
                     vertical: MediaQuery.of(context).size.height * 0.05,
                   ),
+                  child: Consumer<UserProvider>(
+                    builder:
+                        (BuildContext context, UserProvider userProvider, _) {
+                      User user = userProvider.user;
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
+                            style: TextStyle(
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.06,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            iconSize:
+                                MediaQuery.of(context).size.height * 0.055,
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.account_circle_rounded,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.01,
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                  ),
                   child: Text(
-                    'Activity',
+                    'Your Mood Cycle',
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.06,
+                      fontSize: MediaQuery.of(context).size.height * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Text(
-                  'Your Mood Cycle',
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.04,
-                    fontWeight: FontWeight.bold,
+                MoodChart(),
+                Divider(),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.01,
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Emergency',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                MoodChart(),
+                Center(
+                  child: GestureDetector(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.015,
+                        horizontal: MediaQuery.of(context).size.width * 0.1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Palette.primary,
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Text(
+                        'SOS For Help',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.01,
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Your Activity',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 FutureBuilder(
                   future: this._activityService.fetchActivity(),
                   builder: _handleActivityFutureBuild,
