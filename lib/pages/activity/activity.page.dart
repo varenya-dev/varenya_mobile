@@ -6,6 +6,7 @@ import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart' as AM;
 import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/activity.service.dart';
+import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
@@ -28,6 +29,8 @@ class _ActivityState extends State<Activity> {
   // Activity Service to fetch recent activities from.
   late final ActivityService _activityService;
 
+  late final AlertsService _alertsService;
+
   // Fetched activities.
   List<AM.Activity>? _activities;
 
@@ -38,6 +41,9 @@ class _ActivityState extends State<Activity> {
     // Inject Activity Service from global state.
     this._activityService =
         Provider.of<ActivityService>(context, listen: false);
+
+    this._alertsService =
+        Provider.of<AlertsService>(context, listen: false);
   }
 
   void _openUserOptions() {
@@ -147,6 +153,9 @@ class _ActivityState extends State<Activity> {
                 ),
                 Center(
                   child: GestureDetector(
+                    onTap: () async {
+                      await this._alertsService.sendSOSNotifications();
+                    },
                     child: Container(
                       margin: EdgeInsets.symmetric(
                         vertical: MediaQuery.of(context).size.width * 0.01,
