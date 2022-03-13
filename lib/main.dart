@@ -74,6 +74,7 @@ Future<void> openHiveBoxes() async {
   await Hive.openBox<List<dynamic>>(VARENYA_PROGRESS_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_QUESTION_BOX);
   await Hive.openBox<List<dynamic>>(VARENYA_DOCTOR_RECORD_BOX);
+  await Hive.openBox<dynamic>(VARENYA_TIMING_BOX);
 
   log.i("Opened Hive Boxes");
 }

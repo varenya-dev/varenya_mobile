@@ -16,6 +16,7 @@ import 'package:varenya_mobile/utils/upload_image_generate_url.dart';
 import 'package:varenya_mobile/widgets/common/custom_field_widget.dart';
 import 'package:varenya_mobile/widgets/common/loading_icon_button.widget.dart';
 import 'package:varenya_mobile/widgets/common/profile_picture_widget.dart';
+import 'package:varenya_mobile/widgets/user/questionnaire_timing.widget.dart';
 
 class UserProfileUpdateTab extends StatefulWidget {
   const UserProfileUpdateTab({Key? key}) : super(key: key);
@@ -234,6 +235,7 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                   ],
                   textInputType: TextInputType.text,
                 ),
+                QuestionnaireTiming(),
                 OfflineBuilder(
                   connectivityBuilder:
                       (BuildContext context, ConnectivityResult result, _) {
@@ -253,7 +255,7 @@ class _UserProfileUpdateTabState extends State<UserProfileUpdateTab> {
                       onFormSubmit: this._onFormSubmit,
                       text: 'Update Profile',
                       loadingText: 'Updating',
-                    );;
+                    );
                   },
                   child: SizedBox(),
                 ),

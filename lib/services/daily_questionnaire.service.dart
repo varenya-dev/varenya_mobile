@@ -16,6 +16,7 @@ class DailyQuestionnaireService {
 
   final Box<List<dynamic>> _progressBox = Hive.box(VARENYA_PROGRESS_BOX);
   final Box<List<dynamic>> _questionBox = Hive.box(VARENYA_QUESTION_BOX);
+  final Box<dynamic> _timingBox = Hive.box(VARENYA_TIMING_BOX);
 
   /*
    * Method to fetch daily questionnaire questions from device.
@@ -30,6 +31,15 @@ class DailyQuestionnaireService {
   List<DailyProgressData> fetchDailyProgressData() => this
       ._progressBox
       .get(VARENYA_PROGRESS_LIST, defaultValue: [])!.cast<DailyProgressData>();
+
+  DateTime fetchNotificationDate() {
+    return this
+        ._timingBox
+        .get(VARENYA_TIMING_STRING, defaultValue: DateTime.now());
+  }
+
+  void saveTiming(DateTime timing) =>
+      this._timingBox.put(VARENYA_TIMING_STRING, timing);
 
   /*
    * Method to save daily questionnaire questions on device.
