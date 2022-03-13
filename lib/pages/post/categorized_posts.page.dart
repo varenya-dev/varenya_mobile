@@ -122,6 +122,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                           ),
                         ),
                         IconButton(
+                          iconSize: MediaQuery.of(context).size.height * 0.055,
                           onPressed: this._openPostCategoriesFilters,
                           icon: Icon(
                             Icons.filter_list_outlined,
