@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
@@ -11,6 +12,7 @@ import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_chart.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
+import 'package:varenya_mobile/widgets/user/user_options_modal.widget.dart';
 
 class Activity extends StatefulWidget {
   const Activity({Key? key}) : super(key: key);
@@ -36,6 +38,27 @@ class _ActivityState extends State<Activity> {
     // Inject Activity Service from global state.
     this._activityService =
         Provider.of<ActivityService>(context, listen: false);
+  }
+
+  void _openUserOptions() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
+          ),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+      ),
+      backgroundColor: kIsWeb
+          ? Colors.transparent
+          : Theme.of(context).scaffoldBackgroundColor,
+      context: context,
+      builder: (BuildContext context) => UserOptionsModal(),
+    );
   }
 
   @override
@@ -83,8 +106,8 @@ class _ActivityState extends State<Activity> {
                           ),
                           IconButton(
                             iconSize:
-                                MediaQuery.of(context).size.height * 0.055,
-                            onPressed: () {},
+                                MediaQuery.of(context).size.height * 0.056,
+                            onPressed: this._openUserOptions,
                             icon: Icon(
                               Icons.account_circle_rounded,
                             ),
