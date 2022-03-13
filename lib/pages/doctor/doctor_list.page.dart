@@ -190,25 +190,6 @@ class _DoctorListState extends State<DoctorList> {
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.005,
-                    horizontal: MediaQuery.of(context).size.width * 0.06,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('Show Past Contacted Doctors?'),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(Records.routeName);
-                        },
-                        child: Text('Show'),
-                      ),
-                    ],
-                  ),
-                ),
                 FutureBuilder(
                   future: this._doctorService.fetchDoctorsWithFiltering(
                         new DoctorFilterDto(

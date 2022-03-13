@@ -121,13 +121,13 @@ class ChatService {
     // Add it to the chat list in the thread.
     thread.messages.add(chatMessage);
 
-    await this._sendChatNotification(thread.id, message);
-
     // Convert all to JSON and update the same in firestore.
     Map<String, dynamic> jsonData = thread.toJson();
     jsonData['messages'] =
         jsonData['messages'].map((Chat message) => message.toJson()).toList();
     await this._firestore.collection("threads").doc(thread.id).set(jsonData);
+
+    await this._sendChatNotification(thread.id, message);
   }
 
   /*

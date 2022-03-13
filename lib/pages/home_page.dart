@@ -72,10 +72,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Widget> screens = [
+    Activity(),
     CategorizedPosts(),
     DoctorList(),
     Threads(),
-    SizedBox(),
     Question(),
     AppointmentList(),
   ];

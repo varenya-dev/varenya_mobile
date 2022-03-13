@@ -45,33 +45,33 @@ class HomeBar extends StatelessWidget {
           ),
           HomeBarButton(
             icon: Icon(
-              Icons.person_pin_rounded,
+              Icons.photo,
               color: this.screen == 1 ? Palette.primary : Palette.secondary,
               size: MediaQuery.of(context).size.width * 0.12,
             ),
-            text: 'Doctors',
+            text: 'Posts',
             onTap: () {
               this.emitScreen(1);
             },
           ),
           HomeBarButton(
             icon: Icon(
-              Icons.chat,
+              Icons.person_pin_rounded,
               color: this.screen == 2 ? Palette.primary : Palette.secondary,
               size: MediaQuery.of(context).size.width * 0.12,
             ),
-            text: 'Chat',
+            text: 'Doctors',
             onTap: () {
               this.emitScreen(2);
             },
           ),
           HomeBarButton(
             icon: Icon(
-              Icons.error,
+              Icons.chat,
               color: this.screen == 3 ? Palette.primary : Palette.secondary,
               size: MediaQuery.of(context).size.width * 0.12,
             ),
-            text: 'SOS',
+            text: 'Chat',
             onTap: () {
               this.emitScreen(3);
             },
