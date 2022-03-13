@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
+import 'package:varenya_mobile/pages/records/records.page.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
 import 'package:varenya_mobile/widgets/doctor/display_selected_jobs.widget.dart';
 import 'package:varenya_mobile/widgets/doctor/display_selected_specializations.widget.dart';
@@ -105,6 +106,18 @@ class DoctorFilter extends StatelessWidget {
               selectedJob: selectedJob,
               addOrRemoveJob: addOrRemoveJob,
             ),
+            Divider(),
+            ListTile(
+              title: Text('Show Past Contacted Doctors?'),
+              trailing: TextButton(
+                child: Text('Show'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    Records.routeName,
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
