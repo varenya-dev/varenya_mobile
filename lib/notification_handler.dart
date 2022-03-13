@@ -7,6 +7,7 @@ import 'package:varenya_mobile/arguments/chat.argument.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
 import 'package:varenya_mobile/pages/appointment/appointment_list.page.dart';
 import 'package:varenya_mobile/pages/chat/chat.page.dart';
+import 'package:varenya_mobile/pages/common/loading_page.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/chat.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
@@ -30,6 +31,8 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
   late final AlertsService _alertsService;
   late StreamSubscription _fmSubscription;
 
+  bool loading = false;
+
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
         await this._firebaseMessaging.getInitialMessage();
@@ -45,11 +48,21 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
   }
 
   Future<void> _handleMessage(RemoteMessage message) async {
+    setState(() {
+      loading = true;
+    });
     if (message.data['type'] == 'chat') {
+      String userId = message.data['byUser'];
+      String threadId = message.data['thread'];
+      ServerUser serverUser = await this._userService.findUserById(userId);
+
       Navigator.pushNamed(
         context,
         Chat.routeName,
-        arguments: message.data['thread'],
+        arguments: ChatArgument(
+          serverUser: serverUser,
+          threadId: threadId,
+        ),
       );
     }
     if (message.data['type'] == 'sos') {
@@ -70,6 +83,10 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
     if (message.data['type'] == 'appointment') {
       Navigator.pushNamed(context, AppointmentList.routeName);
     }
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -92,6 +109,6 @@ class _NotificationsHandlerState extends State<NotificationsHandler> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return loading ? LoadingPage() : widget.child;
   }
 }

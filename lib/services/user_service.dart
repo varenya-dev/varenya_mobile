@@ -53,7 +53,7 @@ class UserService {
       throw ServerException(message: body['message']);
     } else if (response.statusCode >= 500) {
       Map<String, dynamic> body = json.decode(response.body);
-      log.e("AppointmentService:fetchAvailableSlots Error", body['message']);
+      log.e("UserService:findUserById Error", body['message']);
       throw ServerException(
           message: 'Something went wrong, please try again later.');
     }

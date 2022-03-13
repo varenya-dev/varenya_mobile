@@ -84,9 +84,9 @@ class _ActivityState extends State<Activity> {
                 Container(
                   height: responsiveConfig(
                     context: context,
-                    large: MediaQuery.of(context).size.height * 0.2,
-                    medium: MediaQuery.of(context).size.height * 0.2,
-                    small: MediaQuery.of(context).size.height * 0.17,
+                    large: MediaQuery.of(context).size.height * 0.3,
+                    medium: MediaQuery.of(context).size.height * 0.3,
+                    small: MediaQuery.of(context).size.height * 0.22,
                   ),
                   width: MediaQuery.of(context).size.width,
                   color: Colors.black54,
@@ -99,23 +99,35 @@ class _ActivityState extends State<Activity> {
                         (BuildContext context, UserProvider userProvider, _) {
                       User user = userProvider.user;
 
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
+                                style: TextStyle(
+                                  fontSize:
+                                  MediaQuery.of(context).size.height * 0.06,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                iconSize:
+                                MediaQuery.of(context).size.height * 0.056,
+                                onPressed: this._openUserOptions,
+                                icon: Icon(
+                                  Icons.account_circle_rounded,
+                                ),
+                              ),
+                            ],
+                          ),
                           Text(
-                            'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
+                            'Here is your activity!',
                             style: TextStyle(
                               fontSize:
-                                  MediaQuery.of(context).size.height * 0.06,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IconButton(
-                            iconSize:
-                                MediaQuery.of(context).size.height * 0.056,
-                            onPressed: this._openUserOptions,
-                            icon: Icon(
-                              Icons.account_circle_rounded,
+                              MediaQuery.of(context).size.height * 0.03,
                             ),
                           ),
                         ],
