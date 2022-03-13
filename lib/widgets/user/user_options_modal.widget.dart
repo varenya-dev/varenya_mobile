@@ -86,6 +86,9 @@ class _UserOptionsModalState extends State<UserOptionsModal> {
               ),
               Divider(),
               ListTile(
+                leading: Icon(
+                  Icons.edit,
+                ),
                 title: Text(
                   'Update Profile',
                   style: TextStyle(
@@ -99,6 +102,9 @@ class _UserOptionsModalState extends State<UserOptionsModal> {
                 },
               ),
               ListTile(
+                leading: Icon(
+                  Icons.logout,
+                ),
                 title: Text(
                   'Logout',
                   style: TextStyle(
