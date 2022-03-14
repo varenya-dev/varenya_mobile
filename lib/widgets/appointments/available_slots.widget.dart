@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_available_slots.dto.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
@@ -58,12 +61,12 @@ class _AvailableSlotsState extends State<AvailableSlots> {
             case ServerException:
               {
                 ServerException exception = snapshot.error as ServerException;
-                return Text(exception.message);
+                return Error(message: exception.message);
               }
             default:
               {
                 log.e("SlotList Error", snapshot.error, snapshot.stackTrace);
-                return Text("Something went wrong, please try again later");
+                return Error(message: "Something went wrong, please try again later");
               }
           }
         }
@@ -80,18 +83,14 @@ class _AvailableSlotsState extends State<AvailableSlots> {
         // If previously fetched time slots,
         // display them or display loading indicator.
         return this._dateTimeList == null
-            ? Column(
-                children: [
-                  CircularProgressIndicator(),
-                ],
-              )
+            ? Loading(message: "Loading available slots")
             : _buildTimeSlots();
       },
     );
   }
 
-  Wrap _buildTimeSlots() {
-    return Wrap(
+  Widget _buildTimeSlots() {
+    return this._dateTimeList!.length != 0 ? Wrap(
       children: this
           ._dateTimeList!
           .map(
@@ -105,6 +104,6 @@ class _AvailableSlotsState extends State<AvailableSlots> {
             ),
           )
           .toList(),
-    );
+    ) : NoData(message: "No free slot found");
   }
 }

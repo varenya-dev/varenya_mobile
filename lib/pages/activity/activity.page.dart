@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/activity/activity.model.dart' as AM;
 import 'package:varenya_mobile/providers/user_provider.dart';
@@ -42,8 +45,7 @@ class _ActivityState extends State<Activity> {
     this._activityService =
         Provider.of<ActivityService>(context, listen: false);
 
-    this._alertsService =
-        Provider.of<AlertsService>(context, listen: false);
+    this._alertsService = Provider.of<AlertsService>(context, listen: false);
   }
 
   void _openUserOptions() {
@@ -109,13 +111,13 @@ class _ActivityState extends State<Activity> {
                                 'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
                                 style: TextStyle(
                                   fontSize:
-                                  MediaQuery.of(context).size.height * 0.06,
+                                      MediaQuery.of(context).size.height * 0.06,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               IconButton(
                                 iconSize:
-                                MediaQuery.of(context).size.height * 0.056,
+                                    MediaQuery.of(context).size.height * 0.056,
                                 onPressed: this._openUserOptions,
                                 icon: Icon(
                                   Icons.account_circle_rounded,
@@ -127,7 +129,7 @@ class _ActivityState extends State<Activity> {
                             'Here is your activity!',
                             style: TextStyle(
                               fontSize:
-                              MediaQuery.of(context).size.height * 0.03,
+                                  MediaQuery.of(context).size.height * 0.03,
                             ),
                           ),
                         ],
@@ -229,7 +231,7 @@ class _ActivityState extends State<Activity> {
         case ServerException:
           {
             ServerException exception = snapshot.error as ServerException;
-            return Text(exception.message);
+            return Error(message: exception.message);
           }
         default:
           {
@@ -238,7 +240,8 @@ class _ActivityState extends State<Activity> {
               snapshot.error,
               snapshot.stackTrace,
             );
-            return Text("Something went wrong, please try again later");
+            return Error(
+                message: "Something went wrong, please try again later");
           }
       }
     }
@@ -255,11 +258,7 @@ class _ActivityState extends State<Activity> {
     // If previously fetched activities exist,
     // display them else display loading indicator.
     return this._activities == null
-        ? Column(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          )
+        ? Loading(message: 'Loading your activities')
         : _buildActivitiesBody();
   }
 
@@ -267,26 +266,28 @@ class _ActivityState extends State<Activity> {
    * Method to build activity page body.
    */
   Widget _buildActivitiesBody() {
-    return Flexible(
-      fit: FlexFit.loose,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: this._activities!.length,
-        itemBuilder: (BuildContext context, int index) {
-          AM.Activity activity = this._activities![index];
+    return this._activities!.length != 0
+        ? Flexible(
+            fit: FlexFit.loose,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: this._activities!.length,
+              itemBuilder: (BuildContext context, int index) {
+                AM.Activity activity = this._activities![index];
 
-          return activity.activityType == "POST"
-              ? PostCard(post: activity.post!)
-              : activity.activityType == "APPOINTMENT"
-                  ? AppointmentCard(
-                      appointment: activity.appointment!,
-                      refreshAppointments: () {
-                        setState(() {});
-                      })
-                  : SizedBox();
-        },
-      ),
-    );
+                return activity.activityType == "POST"
+                    ? PostCard(post: activity.post!)
+                    : activity.activityType == "APPOINTMENT"
+                        ? AppointmentCard(
+                            appointment: activity.appointment!,
+                            refreshAppointments: () {
+                              setState(() {});
+                            })
+                        : SizedBox();
+              },
+            ),
+          )
+        : NoData(message: 'No activity to display');
   }
 }

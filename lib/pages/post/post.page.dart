@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart' as PM;
 import 'package:varenya_mobile/services/post.service.dart';
@@ -67,54 +69,50 @@ class _PostState extends State<Post> {
               ],
             )
           : null,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Posts'),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {});
-        },
-        child: FutureBuilder(
-          future: this._postService.fetchPostsById(this._postId!),
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<PM.Post> snapshot,
-          ) {
-            if (snapshot.hasError) {
-              switch (snapshot.error.runtimeType) {
-                case ServerException:
-                  {
-                    ServerException exception =
-                        snapshot.error as ServerException;
-                    return Text(exception.message);
-                  }
-                default:
-                  {
-                    log.e(
-                      "Post Error",
-                      snapshot.error,
-                      snapshot.stackTrace,
-                    );
-                    return Text("Something went wrong, please try again later");
-                  }
-              }
-            }
-
-            if (snapshot.connectionState == ConnectionState.done) {
-              this._post = snapshot.data!;
-
-              return _buildBody();
-            }
-
-            return this._post == null
-                ? Column(
-                    children: [
-                      CircularProgressIndicator(),
-                    ],
-                  )
-                : _buildBody();
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {});
           },
+          child: FutureBuilder(
+            future: this._postService.fetchPostsById(this._postId!),
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<PM.Post> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                switch (snapshot.error.runtimeType) {
+                  case ServerException:
+                    {
+                      ServerException exception =
+                          snapshot.error as ServerException;
+                      return Error(message: exception.message);
+                    }
+                  default:
+                    {
+                      log.e(
+                        "Post Error",
+                        snapshot.error,
+                        snapshot.stackTrace,
+                      );
+                      return Error(
+                        message: "Something went wrong, please try again later",
+                      );
+                    }
+                }
+              }
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                this._post = snapshot.data!;
+
+                return _buildBody();
+              }
+
+              return this._post == null
+                  ? Loading(message: 'Loading post details')
+                  : _buildBody();
+            },
+          ),
         ),
       ),
     );
@@ -136,18 +134,9 @@ class _PostState extends State<Post> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: responsiveConfig(
-                context: context,
-                large: MediaQuery.of(context).size.height * 0.1,
-                medium: MediaQuery.of(context).size.height * 0.1,
-                small: MediaQuery.of(context).size.height * 0.1,
-              ),
-              color: Palette.secondary,
-              child: FullPostUserDetails(
-                context: context,
-                post: _post,
-              ),
+            FullPostUserDetails(
+              context: context,
+              post: _post!,
             ),
             ImageCarousel(
               imageUrls: this._post!.images,
