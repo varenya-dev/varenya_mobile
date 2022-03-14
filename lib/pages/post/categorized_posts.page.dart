@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/post/post.model.dart';
 import 'package:varenya_mobile/models/post/post_category/post_category.model.dart';
@@ -146,7 +149,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                             {
                               ServerException exception =
                                   snapshot.error as ServerException;
-                              return Text(exception.message);
+                              return Error(message: exception.message);
                             }
                           default:
                             {
@@ -155,8 +158,10 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                                 snapshot.error,
                                 snapshot.stackTrace,
                               );
-                              return Text(
-                                  "Something went wrong, please try again later");
+                              return Error(
+                                message:
+                                    "Something went wrong, please try again later",
+                              );
                             }
                         }
                       }
@@ -168,11 +173,7 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
                       }
 
                       return this._posts == null
-                          ? Column(
-                              children: [
-                                CircularProgressIndicator(),
-                              ],
-                            )
+                          ? Loading(message: "Loading posts")
                           : this._buildPostsList();
                     },
                   ),
@@ -185,18 +186,20 @@ class _CategorizedPostsState extends State<CategorizedPosts> {
     );
   }
 
-  ListView _buildPostsList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: this._posts!.length,
-      itemBuilder: (BuildContext context, int index) {
-        Post post = this._posts![index];
+  Widget _buildPostsList() {
+    return this._posts!.length != 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: this._posts!.length,
+            itemBuilder: (BuildContext context, int index) {
+              Post post = this._posts![index];
 
-        return PostCard(
-          post: post,
-        );
-      },
-    );
+              return PostCard(
+                post: post,
+              );
+            },
+          )
+        : NoData(message: "No post to be displayed");
   }
 }
