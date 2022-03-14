@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
-import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
 import 'package:varenya_mobile/services/records.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
-import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 import 'package:varenya_mobile/widgets/records/doctor_record.widget.dart';
 
 class Records extends StatefulWidget {
@@ -103,7 +104,7 @@ class _RecordsState extends State<Records> {
         case ServerException:
           {
             ServerException exception = snapshot.error as ServerException;
-            return Text(exception.message);
+            return Error(message: exception.message);
           }
         default:
           {
@@ -112,7 +113,7 @@ class _RecordsState extends State<Records> {
               snapshot.error,
               snapshot.stackTrace,
             );
-            return Text("Something went wrong, please try again later");
+            return Error(message: "Something went wrong, please try again later");
           }
       }
     }
@@ -128,16 +129,12 @@ class _RecordsState extends State<Records> {
     // If previously fetched doctors exists,
     // display them or loading indicator.
     return this._doctors == null
-        ? Column(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          )
+        ? Loading(message: 'Loading doctor details for you')
         : this._buildRecordsBody();
   }
 
   Widget _buildRecordsBody() {
-    return ListView.builder(
+    return this._doctors!.length != 0 ? ListView.builder(
       itemCount: this._doctors!.length,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -148,6 +145,6 @@ class _RecordsState extends State<Records> {
           doctor: doctor,
         );
       },
-    );
+    ) : NoData(message: 'No doctor details to display');
   }
 }
