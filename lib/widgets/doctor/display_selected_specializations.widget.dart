@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
@@ -49,7 +52,7 @@ class _DisplaySelectedSpecializationsState
               case ServerException:
                 {
                   ServerException exception = snapshot.error as ServerException;
-                  return Text(exception.message);
+                  return Error(message: exception.message);
                 }
               default:
                 {
@@ -58,7 +61,7 @@ class _DisplaySelectedSpecializationsState
                     snapshot.error,
                     snapshot.stackTrace,
                   );
-                  return Text("Something went wrong, please try again later");
+                  return Error(message: "Something went wrong, please try again later");
                 }
             }
           }
@@ -70,7 +73,7 @@ class _DisplaySelectedSpecializationsState
           }
 
           return this._fetchedSpecializations == null
-              ? CircularProgressIndicator()
+              ? Loading(message: "Loading specialization filters")
               : _buildSpecializationsList();
         },
       ),
@@ -87,7 +90,7 @@ class _DisplaySelectedSpecializationsState
           small: 0,
         ),
       ),
-      child: Wrap(
+      child: this._fetchedSpecializations!.length != 0 ? Wrap(
         alignment: WrapAlignment.center,
         children: this._fetchedSpecializations!.map(
           (specialization) {
@@ -128,7 +131,7 @@ class _DisplaySelectedSpecializationsState
             );
           },
         ).toList(),
-      ),
+      ) : NoData(message: "No specialization filters to display"),
     );
   }
 }

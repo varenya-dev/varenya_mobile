@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
@@ -46,7 +49,7 @@ class _DisplaySelectedJobsState extends State<DisplaySelectedJobs> {
               case ServerException:
                 {
                   ServerException exception = snapshot.error as ServerException;
-                  return Text(exception.message);
+                  return Error(message: exception.message);
                 }
               default:
                 {
@@ -55,7 +58,8 @@ class _DisplaySelectedJobsState extends State<DisplaySelectedJobs> {
                     snapshot.error,
                     snapshot.stackTrace,
                   );
-                  return Text("Something went wrong, please try again later");
+                  return Error(
+                      message: "Something went wrong, please try again later");
                 }
             }
           }
@@ -67,7 +71,7 @@ class _DisplaySelectedJobsState extends State<DisplaySelectedJobs> {
           }
 
           return this.fetchedJobs == null
-              ? CircularProgressIndicator()
+              ? Loading(message: "Loading job filters")
               : _buildSpecializationsList();
         },
       ),
@@ -84,44 +88,46 @@ class _DisplaySelectedJobsState extends State<DisplaySelectedJobs> {
           small: 0,
         ),
       ),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        children: this.fetchedJobs!.map(
-          (job) {
-            bool checkSelected = this.widget.selectedJob == job;
+      child: this.fetchedJobs!.length != 0
+          ? Wrap(
+              alignment: WrapAlignment.center,
+              children: this.fetchedJobs!.map(
+                (job) {
+                  bool checkSelected = this.widget.selectedJob == job;
 
-            return GestureDetector(
-              onTap: () {
-                this.widget.addOrRemoveJob(job);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: !checkSelected
-                      ? Palette.secondary
-                      : Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(
-                    15.0,
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.02,
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
-                ),
-                margin: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.01,
-                  horizontal: MediaQuery.of(context).size.width * 0.015,
-                ),
-                child: Text(
-                  job,
-                  style: TextStyle(
-                    color: checkSelected ? Colors.black : Colors.white,
-                  ),
-                ),
-              ),
-            );
-          },
-        ).toList(),
-      ),
+                  return GestureDetector(
+                    onTap: () {
+                      this.widget.addOrRemoveJob(job);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: !checkSelected
+                            ? Palette.secondary
+                            : Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.02,
+                        horizontal: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      margin: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.01,
+                        horizontal: MediaQuery.of(context).size.width * 0.015,
+                      ),
+                      child: Text(
+                        job,
+                        style: TextStyle(
+                          color: checkSelected ? Colors.black : Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            )
+          : NoData(message: "No job filters to display"),
     );
   }
 }
