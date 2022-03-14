@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:varenya_mobile/animations/error.animation.dart';
+import 'package:varenya_mobile/animations/loading.animation.dart';
+import 'package:varenya_mobile/animations/no_data.animation.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/appointments/appointment/appointment.model.dart';
 import 'package:varenya_mobile/services/appointment.service.dart';
@@ -117,7 +120,7 @@ class _AppointmentListState extends State<AppointmentList> {
         case ServerException:
           {
             ServerException exception = snapshot.error as ServerException;
-            return Text(exception.message);
+            return Error(message: exception.message);
           }
         default:
           {
@@ -126,7 +129,8 @@ class _AppointmentListState extends State<AppointmentList> {
               snapshot.error,
               snapshot.stackTrace,
             );
-            return Text("Something went wrong, please try again later");
+            return Error(
+                message: "Something went wrong, please try again later");
           }
       }
     }
@@ -142,11 +146,7 @@ class _AppointmentListState extends State<AppointmentList> {
     // If previously fetched appointments exists,
     // display them or loading indicator.
     return this._appointments == null
-        ? Column(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          )
+        ? Loading(message: "Loading your appointments")
         : this._buildAppointmentsBody();
   }
 
@@ -154,18 +154,20 @@ class _AppointmentListState extends State<AppointmentList> {
    * Method to build page based on appointments data.
    */
   Widget _buildAppointmentsBody() {
-    return ListView.builder(
-      itemCount: this._appointments!.length,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        Appointment appointmentResponse = this._appointments![index];
+    return this._appointments!.length != 0
+        ? ListView.builder(
+            itemCount: this._appointments!.length,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              Appointment appointmentResponse = this._appointments![index];
 
-        return AppointmentCard(
-          appointment: appointmentResponse,
-          refreshAppointments: this._refreshAppointmentLists,
-        );
-      },
-    );
+              return AppointmentCard(
+                appointment: appointmentResponse,
+                refreshAppointments: this._refreshAppointmentLists,
+              );
+            },
+          )
+        : NoData(message: "No appointments booked yet");
   }
 }
