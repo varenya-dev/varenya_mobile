@@ -118,6 +118,8 @@ class DailyQuestionnaireService {
   Future<void> _createOrUpdateMoodData() async {
     List<DailyProgressData> dailyProgressData = this.fetchDailyProgressData();
 
+    DailyMoodData existingData = await this._fetchMoods();
+
     List<DailyMood> dailyMood = dailyProgressData
         .map(
           (progress) => new DailyMood(
@@ -128,7 +130,7 @@ class DailyQuestionnaireService {
         .toList();
 
     DailyMoodData dailyMoodData = new DailyMoodData(
-      access: [],
+      access: existingData.access,
       moods: dailyMood,
     );
 
