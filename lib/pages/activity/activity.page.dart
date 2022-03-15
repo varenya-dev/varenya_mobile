@@ -13,6 +13,7 @@ import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:varenya_mobile/utils/palette.util.dart';
 import 'package:varenya_mobile/utils/responsive_config.util.dart';
+import 'package:varenya_mobile/utils/snackbar.dart';
 import 'package:varenya_mobile/widgets/appointments/appointment_card.widget.dart';
 import 'package:varenya_mobile/widgets/daily_questionnaire/mood_chart.widget.dart';
 import 'package:varenya_mobile/widgets/posts/post_card.widget.dart';
@@ -169,6 +170,8 @@ class _ActivityState extends State<Activity> {
                   child: GestureDetector(
                     onTap: () async {
                       await this._alertsService.sendSOSNotifications();
+
+                      displaySnackbar("SOS Notification sent", context);
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(
