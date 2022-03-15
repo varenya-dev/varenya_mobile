@@ -35,6 +35,8 @@ class _QuestionnaireState extends State<Questionnaire> {
 
   final Uuid uuid = new Uuid();
 
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +63,9 @@ class _QuestionnaireState extends State<Questionnaire> {
    * Method to handle saving responses from the questionnaire.
    */
   Future<void> _handleSubmit() async {
+    setState(() {
+      this._loading = true;
+    });
     // Checking for form validation.
     if (!this._questionnaireKey.currentState!.validate()) {
       return;
@@ -105,6 +110,10 @@ class _QuestionnaireState extends State<Questionnaire> {
     );
 
     Navigator.of(context).pop();
+
+    setState(() {
+      this._loading = false;
+    });
   }
 
   @override
@@ -179,6 +188,7 @@ class _QuestionnaireState extends State<Questionnaire> {
               Center(
                 child: DailyQuestionnaireButton(
                   onConfirm: this._handleSubmit,
+                  loading: this._loading,
                 ),
               ),
             ],

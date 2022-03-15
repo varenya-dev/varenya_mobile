@@ -32,6 +32,8 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
   late final AppointmentService _appointmentService;
   late final DailyQuestionnaireService _dailyQuestionnaireService;
 
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +67,9 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
   }
 
   Future<void> _onConfirm() async {
+    setState(() {
+      this._loading = true;
+    });
     try {
       // Send request to server to book appointment.
       await this._appointmentService.bookAppointment(
@@ -125,6 +130,10 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
         context,
       );
     }
+
+    setState(() {
+      this._loading = false;
+    });
   }
 
   @override
@@ -166,6 +175,7 @@ class _AppointmentSlotListState extends State<AppointmentSlotList> {
         ),
         AppointmentButton(
           onConfirm: this._onConfirm,
+          loading: this._loading,
         )
       ],
     );

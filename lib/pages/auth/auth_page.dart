@@ -77,7 +77,7 @@ class _AuthPageState extends State<AuthPage> {
 
       // If available, route the user to registration page.
       if (isAvailable) {
-        Navigator.of(context).pushReplacementNamed(
+        Navigator.of(context).pushNamed(
           RegisterPage.routeName,
           arguments: emailAddress,
         );
@@ -91,7 +91,7 @@ class _AuthPageState extends State<AuthPage> {
 
     // Route to login page.
     else {
-      Navigator.of(context).pushReplacementNamed(
+      Navigator.of(context).pushNamed(
         LoginPage.routeName,
         arguments: emailAddress,
       );
@@ -147,7 +147,7 @@ class _AuthPageState extends State<AuthPage> {
                   ),
                 ),
                 Text(
-                  'Dicta dolores sequi reprehenderit corporis. Ipsam adipisci iure culpa.',
+                  'A Mental Health Support Application.',
                   textAlign: TextAlign.center,
                 ),
                 AuthButtonBarWidget(
