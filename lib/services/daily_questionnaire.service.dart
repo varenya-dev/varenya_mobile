@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
@@ -6,6 +8,7 @@ import 'package:varenya_mobile/models/daily_progress_data/daily_mood/daily_mood.
 import 'package:varenya_mobile/models/daily_progress_data/daily_mood_data/daily_mood_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
+import 'package:varenya_mobile/utils/logger.util.dart';
 
 /*
  * Service Implementation for Daily Questionnaire Module.
@@ -103,7 +106,7 @@ class DailyQuestionnaireService {
 
   Future<DailyMoodData> _fetchMoods() async {
     if (!(await this._checkForExistingMoodData())) {
-      await this._createOrUpdateMoodData();
+      await this._createMoodData();
     }
 
     DocumentSnapshot<Map<String, dynamic>> moodData = await this
@@ -142,5 +145,36 @@ class DailyQuestionnaireService {
         .collection('moods')
         .doc(this._auth.currentUser!.uid)
         .set(data);
+
+    log.i("Moods Doc Created");
+  }
+
+  Future<void> _createMoodData() async {
+    List<DailyProgressData> dailyProgressData = this.fetchDailyProgressData();
+
+    List<DailyMood> dailyMood = dailyProgressData
+        .map(
+          (progress) => new DailyMood(
+            date: progress.createdAt,
+            mood: progress.moodRating,
+          ),
+        )
+        .toList();
+
+    DailyMoodData dailyMoodData = new DailyMoodData(
+      access: [],
+      moods: dailyMood,
+    );
+
+    Map<String, dynamic> data = dailyMoodData.toJson();
+    data['moods'] = data['moods'].map((mood) => mood.toJson()).toList();
+
+    await this
+        ._firestore
+        .collection('moods')
+        .doc(this._auth.currentUser!.uid)
+        .set(data);
+
+    log.i("Moods Doc Created");
   }
 }
