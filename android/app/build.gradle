@@ -50,6 +50,20 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            applicationId "com.varenya.varenya_mobile"
+        }
+
+        prod {
+            dimension "app"
+            applicationId "com.varenya.varenya_mobile_prod"
+        }
+    }
 }
 
 flutter {
