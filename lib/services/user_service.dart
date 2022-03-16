@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/dtos/user/update_email_dto/update_email_dto.dart';
 import 'package:varenya_mobile/dtos/user/update_password_dto/update_password_dto.dart';
 import 'package:varenya_mobile/exceptions/auth/user_already_exists_exception.dart';
@@ -22,6 +21,14 @@ class UserService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  final String apiUrl;
+  final String rawApiUrl;
+
+  UserService({
+    required this.apiUrl,
+    required this.rawApiUrl,
+  });
+
   Future<ServerUser> findUserById(String userId) async {
     // Fetch the ID token for the user.
     String firebaseAuthToken =
@@ -29,7 +36,7 @@ class UserService {
 
     // Prepare URI for the request.
     Uri uri = Uri.http(
-      RAW_ENDPOINT,
+      rawApiUrl,
       "/v1/api/user",
       {
         "id": userId,
@@ -279,7 +286,7 @@ class UserService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/user");
+    Uri uri = Uri.parse("$apiUrl/user");
 
     // Prepare authorization headers.
     Map<String, String> headers = {

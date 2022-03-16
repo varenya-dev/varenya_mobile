@@ -46,3 +46,7 @@ app.*.map.json
 /android/app/release
 android/app/google-services.json
 web/firebaseConfig.js
+firebase/dev/google-services.json
+firebase/prod/google-services.json
+android/app/src/dev/google-services.json
+android/app/src/prod/google-services.json

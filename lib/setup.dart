@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:varenya_mobile/app.dart';
-import 'package:provider/provider.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/constants/notification_actions.constant.dart';
 import 'package:varenya_mobile/enum/post_type.enum.dart';
@@ -20,20 +17,7 @@ import 'package:varenya_mobile/models/post/post_image/post_image.model.dart';
 import 'package:varenya_mobile/models/specialization/specialization.model.dart';
 import 'package:varenya_mobile/models/user/random_name/random_name.model.dart';
 import 'package:varenya_mobile/models/user/server_user.model.dart';
-import 'package:varenya_mobile/providers/notification_action.provider.dart';
-import 'package:varenya_mobile/providers/user_provider.dart';
-import 'package:varenya_mobile/services/activity.service.dart';
-import 'package:varenya_mobile/services/alerts_service.dart';
-import 'package:varenya_mobile/services/appointment.service.dart';
-import 'package:varenya_mobile/services/auth_service.dart';
-import 'package:varenya_mobile/services/chat.service.dart';
-import 'package:varenya_mobile/services/comments.service.dart';
-import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
-import 'package:varenya_mobile/services/doctor.service.dart';
 import 'package:varenya_mobile/services/local_notifications.service.dart';
-import 'package:varenya_mobile/services/post.service.dart';
-import 'package:varenya_mobile/services/records.service.dart';
-import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
 import 'package:hive/hive.dart';
 
@@ -43,7 +27,7 @@ import 'package:hive/hive.dart';
 Future<void> setupFCM() async {
   // Initializing Firebase Notification settings.
   NotificationSettings settings =
-      await FirebaseMessaging.instance.requestPermission(
+  await FirebaseMessaging.instance.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -112,7 +96,7 @@ Future<LocalNotificationsService> setupLocalNotifications() async {
 
   // Creating a local notification service singleton.
   LocalNotificationsService localNotificationsService =
-      LocalNotificationsService();
+  LocalNotificationsService();
 
   // Initializing local notifications.
   await localNotificationsService.initializeLocalNotifications();
@@ -129,14 +113,14 @@ Future<LocalNotificationsService> setupLocalNotifications() async {
  * @param action Default action to perform.
  */
 Future<String> checkNotificationLaunchedApp(
-  LocalNotificationsService localNotificationsService,
-  String action,
-) async {
+    LocalNotificationsService localNotificationsService,
+    String action,
+    ) async {
   log.i("Checking Notification Triggered App Launch");
 
   // Getting app launch details.
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-      await localNotificationsService.notificationAppLaunchDetails;
+  await localNotificationsService.notificationAppLaunchDetails;
 
   // Check if notification launched the app.
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
@@ -152,12 +136,7 @@ Future<String> checkNotificationLaunchedApp(
   return action;
 }
 
-/*
- * Main Method to launch the app.
- */
-void main() async {
-  // STEP 1: Ensure Widget Binding.
-  WidgetsFlutterBinding.ensureInitialized();
+Future<String> fullSetup () async {
 
   log.i("Firebase and Hive Initializing");
 
@@ -178,7 +157,7 @@ void main() async {
 
   // STEP 6: Initialize local notification service.
   LocalNotificationsService localNotificationsService =
-      await setupLocalNotifications();
+  await setupLocalNotifications();
 
   String action = DO_NOTHING;
 
@@ -188,70 +167,5 @@ void main() async {
     action,
   );
 
-  // STEP 8: Run the app.
-  runApp(
-    Root(
-      action: action,
-    ),
-  );
-}
-
-class Root extends StatelessWidget {
-  final String action;
-
-  Root({
-    required this.action,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    log.i("Action Status: $action");
-
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UserProvider>(
-          create: (context) => UserProvider(),
-        ),
-        ChangeNotifierProvider<NotificationActionProvider>(
-          create: (context) => NotificationActionProvider(
-            action: action,
-          ),
-        ),
-        Provider<AuthService>(
-          create: (context) => AuthService(),
-        ),
-        Provider<UserService>(
-          create: (context) => UserService(),
-        ),
-        Provider<ChatService>(
-          create: (context) => ChatService(),
-        ),
-        Provider<AlertsService>(
-          create: (context) => AlertsService(),
-        ),
-        Provider<DoctorService>(
-          create: (context) => DoctorService(),
-        ),
-        Provider<AppointmentService>(
-          create: (context) => AppointmentService(),
-        ),
-        Provider<PostService>(
-          create: (context) => PostService(),
-        ),
-        Provider<CommentsService>(
-          create: (context) => CommentsService(),
-        ),
-        Provider<ActivityService>(
-          create: (context) => ActivityService(),
-        ),
-        Provider<DailyQuestionnaireService>(
-          create: (context) => DailyQuestionnaireService(),
-        ),
-        Provider<RecordsService>(
-          create: (context) => RecordsService(),
-        ),
-      ],
-      child: App(),
-    );
-  }
+  return action;
 }

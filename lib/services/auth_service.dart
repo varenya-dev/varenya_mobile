@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
-import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/dtos/auth/login_account_dto/login_account_dto.dart';
 import 'package:varenya_mobile/dtos/auth/register_account_dto/register_account_dto.dart';
@@ -34,6 +33,14 @@ class AuthService {
   final Box<List<dynamic>> _questionBox = Hive.box(VARENYA_QUESTION_BOX);
   final Box<dynamic> _timingBox = Hive.box(VARENYA_TIMING_BOX);
   final Box<List<dynamic>> _recordsBox = Hive.box(VARENYA_DOCTOR_RECORD_BOX);
+
+  final String apiUrl;
+  final String rawApiUrl;
+
+  AuthService({
+    required this.apiUrl,
+    required this.rawApiUrl,
+  });
 
   /*
    * Method to check account availability.
@@ -184,7 +191,7 @@ class AuthService {
         await this.firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/auth/register");
+    Uri uri = Uri.parse("$apiUrl/auth/register");
 
     // Prepare authorization headers.
     Map<String, String> headers = {

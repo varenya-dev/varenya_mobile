@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/exceptions/server.exception.dart';
 import 'package:varenya_mobile/models/doctor/doctor.model.dart';
@@ -15,6 +14,14 @@ class RecordsService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   final Box<List<dynamic>> _recordsBox = Hive.box(VARENYA_DOCTOR_RECORD_BOX);
+
+  final String apiUrl;
+  final String rawApiUrl;
+
+  RecordsService({
+    required this.apiUrl,
+    required this.rawApiUrl,
+  });
 
   /*
    * Method to fetch doctor records from the server.
@@ -26,7 +33,7 @@ class RecordsService {
           await this._firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$ENDPOINT/records");
+      Uri uri = Uri.parse("$apiUrl/records");
 
       // Prepare authorization headers.
       Map<String, String> headers = {
