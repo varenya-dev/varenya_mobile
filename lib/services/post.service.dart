@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/dtos/post/create_post/create_post.dto.dart';
 import 'package:varenya_mobile/dtos/post/delete_post/delete_post.dto.dart';
@@ -24,6 +23,14 @@ class PostService {
   final Box<List<dynamic>> _postsBox = Hive.box(VARENYA_POSTS_BOX);
   final Box<List<dynamic>> _categoriesBox = Hive.box(VARENYA_POST_CATEGORY_BOX);
 
+  final String apiUrl;
+  final String rawApiUrl;
+
+  PostService({
+    required this.apiUrl,
+    required this.rawApiUrl,
+  });
+
   /*
    * Method to fetch a single post details from server.
    * @param postId UUID of the post.
@@ -35,7 +42,7 @@ class PostService {
 
     // Prepare URI for the request.
     Uri uri = Uri.http(
-      RAW_ENDPOINT,
+      rawApiUrl,
       "/v1/api/post",
       {"postId": postId},
     );
@@ -81,7 +88,7 @@ class PostService {
           await this._firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$ENDPOINT/post/new");
+      Uri uri = Uri.parse("$apiUrl/post/new");
 
       // Prepare authorization headers.
       Map<String, String> headers = {
@@ -153,7 +160,7 @@ class PostService {
 
       // Prepare URI for the request.
       Uri uri = Uri.http(
-        RAW_ENDPOINT,
+        apiUrl,
         "/v1/api/post/category",
         {"category": category},
       );
@@ -220,7 +227,7 @@ class PostService {
           await this._firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$ENDPOINT/post/categories");
+      Uri uri = Uri.parse("$apiUrl/post/categories");
 
       // Prepare authorization headers.
       Map<String, String> headers = {
@@ -285,7 +292,7 @@ class PostService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/post");
+    Uri uri = Uri.parse("$apiUrl/post");
 
     // Prepare authorization headers.
     Map<String, String> headers = {
@@ -323,7 +330,7 @@ class PostService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/post");
+    Uri uri = Uri.parse("$apiUrl/post");
 
     // Prepare authorization headers.
     Map<String, String> headers = {
@@ -360,7 +367,7 @@ class PostService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/post");
+    Uri uri = Uri.parse("$apiUrl/post");
 
     // Prepare authorization headers.
     Map<String, String> headers = {

@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:varenya_mobile/constants/endpoint_constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/dtos/appointment/create_appointment/create_appointment.dto.dart';
 import 'package:varenya_mobile/dtos/appointment/fetch_available_slots/fetch_available_slots.dto.dart';
@@ -19,6 +18,14 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 class AppointmentService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Box<List<dynamic>> _appointmentsBox = Hive.box(VARENYA_APPOINTMENT_BOX);
+
+  final String apiUrl;
+  final String rawApiUrl;
+
+  AppointmentService({
+    required this.apiUrl,
+    required this.rawApiUrl,
+  });
 
   /*
    * Method to fetch available time slots for
@@ -34,7 +41,7 @@ class AppointmentService {
 
     // Prepare URI for the request.
     Uri uri = Uri.http(
-      RAW_ENDPOINT,
+      rawApiUrl,
       "/v1/api/appointment/available",
       fetchAvailableSlotsDto.toJson(),
     );
@@ -83,7 +90,7 @@ class AppointmentService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/appointment");
+    Uri uri = Uri.parse("$apiUrl/appointment");
 
     // Prepare authorization headers.
     Map<String, String> headers = {
@@ -119,7 +126,7 @@ class AppointmentService {
           await this._firebaseAuth.currentUser!.getIdToken();
 
       // Prepare URI for the request.
-      Uri uri = Uri.parse("$ENDPOINT/appointment/patient");
+      Uri uri = Uri.parse("$apiUrl/appointment/patient");
 
       // Prepare authorization headers.
       Map<String, String> headers = {
@@ -186,7 +193,7 @@ class AppointmentService {
         await this._firebaseAuth.currentUser!.getIdToken();
 
     // Prepare URI for the request.
-    Uri uri = Uri.parse("$ENDPOINT/appointment");
+    Uri uri = Uri.parse("$apiUrl/appointment");
 
     // Prepare authorization headers.
     Map<String, String> headers = {
