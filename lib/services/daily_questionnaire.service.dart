@@ -1,14 +1,14 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
+import 'package:varenya_mobile/constants/default_questions.constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_mood/daily_mood.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_mood_data/daily_mood_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_progress_data.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/question_answer/question_answer.model.dart';
 import 'package:varenya_mobile/utils/logger.util.dart';
+import 'package:uuid/uuid.dart';
 
 /*
  * Service Implementation for Daily Questionnaire Module.
@@ -16,6 +16,7 @@ import 'package:varenya_mobile/utils/logger.util.dart';
 class DailyQuestionnaireService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Uuid uuid = new Uuid();
 
   final Box<List<dynamic>> _progressBox = Hive.box(VARENYA_PROGRESS_BOX);
   final Box<List<dynamic>> _questionBox = Hive.box(VARENYA_QUESTION_BOX);
@@ -49,6 +50,26 @@ class DailyQuestionnaireService {
    */
   void saveQuestions(List<QuestionAnswer> questions) =>
       this._questionBox.put(VARENYA_QUESTION_LIST, questions);
+
+  void checkAndAddDefaultQuestions() {
+    List<QuestionAnswer> checkQuestions = this.fetchDailyQuestions();
+
+    if (checkQuestions.isNotEmpty) {
+      return;
+    }
+
+    List<QuestionAnswer> defaultQuestions = DEFAULT_QUESTIONS
+        .map(
+          (question) => QuestionAnswer(
+            id: this.uuid.v4(),
+            question: question,
+            answer: '',
+          ),
+        )
+        .toList();
+
+    this.saveQuestions(defaultQuestions);
+  }
 
   /*
    * Method to save daily progress data on device.
