@@ -68,85 +68,86 @@ class _ThreadsState extends State<Threads> {
             small: 0,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: responsiveConfig(
-                context: context,
-                large: MediaQuery.of(context).size.height * 0.35,
-                medium: MediaQuery.of(context).size.height * 0.35,
-                small: MediaQuery.of(context).size.height * 0.3,
-              ),
-              width: MediaQuery.of(context).size.width,
-              color: Colors.black54,
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.05,
-                vertical: MediaQuery.of(context).size.height * 0.05,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    DateTime.now().hour < 12
-                        ? 'Good Morning,'
-                        : DateTime.now().hour >= 12 && DateTime.now().hour < 16
-                            ? 'Good Afternoon,'
-                            : 'Good Evening,',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.025,
-                      color: Theme.of(context).textTheme.subtitle1!.color,
-                    ),
-                  ),
-                  Text(
-                    this._threads.isEmpty
-                        ? 'You have no messages yet'
-                        : 'Your\nmessages',
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.07,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (this._threads.isNotEmpty)
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Container(
-                margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.07,
-                    top: MediaQuery.of(context).size.height * 0.04),
-                child: Text(
-                  'Recent:',
-                  style: Theme.of(context).textTheme.subtitle1,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black54,
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                  vertical: MediaQuery.of(context).size.height * 0.05,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateTime.now().hour < 12
+                          ? 'Good Morning,'
+                          : DateTime.now().hour >= 12 && DateTime.now().hour < 16
+                              ? 'Good Afternoon,'
+                              : 'Good Evening,',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.025,
+                        color: Theme.of(context).textTheme.subtitle1!.color,
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                        this._threads.isEmpty
+                            ? 'You have no messages yet'
+                            : 'Your\nmessages',
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.05,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        overflow: TextOverflow.visible,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            this._threads.isNotEmpty
-                ? ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: this._threads.length,
-                    itemBuilder: (context, index) {
-                      Thread thread = this._threads[index];
-                      return SingleThread(
-                        chatThread: thread,
-                      );
-                    },
-                  )
-                : Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            'No messages here',
-                            style: Theme.of(context).textTheme.subtitle1,
+              if (this._threads.isNotEmpty)
+                Container(
+                  margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.07,
+                      top: MediaQuery.of(context).size.height * 0.04),
+                  child: Text(
+                    'Recent:',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ),
+              this._threads.isNotEmpty
+                  ? ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: this._threads.length,
+                      itemBuilder: (context, index) {
+                        Thread thread = this._threads[index];
+                        return SingleThread(
+                          chatThread: thread,
+                        );
+                      },
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              'No messages here',
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-          ],
+                        ],
+                      ),
+                    )
+            ],
+          ),
         ),
       ),
     );

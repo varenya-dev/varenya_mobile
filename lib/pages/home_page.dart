@@ -19,6 +19,7 @@ import 'package:varenya_mobile/providers/user_provider.dart';
 import 'package:varenya_mobile/services/alerts_service.dart';
 import 'package:varenya_mobile/services/auth_service.dart';
 import 'package:varenya_mobile/services/chat.service.dart';
+import 'package:varenya_mobile/services/daily_questionnaire.service.dart';
 import 'package:varenya_mobile/services/local_notifications.service.dart';
 import 'package:varenya_mobile/services/user_service.dart';
 import 'package:varenya_mobile/utils/check_connectivity.util.dart';
@@ -39,9 +40,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final UserService _userService;
   late final AlertsService _alertsService;
-
-  final LocalNotificationsService localNotificationsService =
-      LocalNotificationsService();
+  late final DailyQuestionnaireService _dailyQuestionnaireService;
 
   @override
   void initState() {
@@ -49,6 +48,8 @@ class _HomePageState extends State<HomePage> {
 
     this._userService = Provider.of<UserService>(context, listen: false);
     this._alertsService = Provider.of<AlertsService>(context, listen: false);
+    this._dailyQuestionnaireService =
+        Provider.of<DailyQuestionnaireService>(context, listen: false);
 
     if (!kIsWeb)
       checkConnectivity().then((value) {
@@ -69,6 +70,8 @@ class _HomePageState extends State<HomePage> {
       }).catchError((error, stackTrace) {
         log.e("HomePage Error", error, stackTrace);
       });
+
+    this._dailyQuestionnaireService.checkAndAddDefaultQuestions();
   }
 
   final List<Widget> screens = [
@@ -95,8 +98,13 @@ class _HomePageState extends State<HomePage> {
         screen: screen,
         emitScreen: this.emitScreen,
       ),
-      body: NotificationsHandler(
-        child: screens[screen],
+      body: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height * 0.12,
+        ),
+        child: NotificationsHandler(
+          child: screens[screen],
+        ),
       ),
     );
   }
