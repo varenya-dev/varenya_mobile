@@ -69,12 +69,6 @@ class _AppointmentListState extends State<AppointmentList> {
                   Container(
                     color: Palette.black,
                     width: MediaQuery.of(context).size.width,
-                    height: responsiveConfig(
-                      context: context,
-                      large: MediaQuery.of(context).size.height * 0.2,
-                      medium: MediaQuery.of(context).size.height * 0.2,
-                      small: MediaQuery.of(context).size.height * 0.14,
-                    ),
                     padding: EdgeInsets.all(
                       responsiveConfig(
                         context: context,
@@ -86,7 +80,7 @@ class _AppointmentListState extends State<AppointmentList> {
                     child: Text(
                       'Schedule',
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height * 0.07,
+                        fontSize: MediaQuery.of(context).size.height * 0.05,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),

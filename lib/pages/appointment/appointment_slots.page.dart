@@ -48,7 +48,7 @@ class _AppointmentSlotsState extends State<AppointmentSlots> {
                     context: context,
                     large: MediaQuery.of(context).size.height * 0.4,
                     medium: MediaQuery.of(context).size.height * 0.4,
-                    small: MediaQuery.of(context).size.height * 0.3,
+                    small: MediaQuery.of(context).size.height * 0.4,
                   ),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.fitWidth,

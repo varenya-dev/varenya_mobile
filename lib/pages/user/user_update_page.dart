@@ -21,10 +21,10 @@ class UserUpdatePage extends StatelessWidget {
           title: Text(
             'Update\nProfile',
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.07,
+              fontSize: MediaQuery.of(context).size.height * 0.05,
             ),
           ),
-          toolbarHeight: MediaQuery.of(context).size.height * 0.16,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.2,
           automaticallyImplyLeading: false,
           bottom: TabBar(
             indicatorColor: Palette.primary,
@@ -68,22 +68,24 @@ class UserUpdatePage extends StatelessWidget {
             ],
           ),
         ),
-        body: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: responsiveConfig(
-              context: context,
-              large: MediaQuery.of(context).size.width * 0.25,
-              medium: MediaQuery.of(context).size.width * 0.25,
-              small: 0,
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: responsiveConfig(
+                context: context,
+                large: MediaQuery.of(context).size.width * 0.25,
+                medium: MediaQuery.of(context).size.width * 0.25,
+                small: 0,
+              ),
             ),
-          ),
-          child: TabBarView(
-            children: [
-              UserProfileUpdateTab(),
-              UserEmailUpdateTab(),
-              UserPasswordUpdateTab(),
-              UserDeleteTab(),
-            ],
+            child: TabBarView(
+              children: [
+                UserProfileUpdateTab(),
+                UserEmailUpdateTab(),
+                UserPasswordUpdateTab(),
+                UserDeleteTab(),
+              ],
+            ),
           ),
         ),
       ),

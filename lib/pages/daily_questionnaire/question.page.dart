@@ -267,14 +267,8 @@ class _QuestionState extends State<Question> {
           child: Column(
             children: [
               Container(
-                color: Palette.black,
                 width: MediaQuery.of(context).size.width,
-                height: responsiveConfig(
-                  context: context,
-                  large: MediaQuery.of(context).size.height * 0.3,
-                  medium: MediaQuery.of(context).size.height * 0.3,
-                  small: MediaQuery.of(context).size.height * 0.24,
-                ),
+                color: Palette.black,
                 padding: EdgeInsets.all(
                   responsiveConfig(
                     context: context,
@@ -283,12 +277,17 @@ class _QuestionState extends State<Question> {
                     small: MediaQuery.of(context).size.width * 0.05,
                   ),
                 ),
-                child: Text(
-                  'Questions\nConfiguration',
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.07,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Text(
+                    'Questions\nConfiguration',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.05,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.visible,
+                    maxLines: 5,
                   ),
                 ),
               ),

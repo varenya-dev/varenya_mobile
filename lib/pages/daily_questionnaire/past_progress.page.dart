@@ -48,12 +48,6 @@ class _PastProgressState extends State<PastProgress> {
               Container(
                 color: Palette.black,
                 width: MediaQuery.of(context).size.width,
-                height: responsiveConfig(
-                  context: context,
-                  large: MediaQuery.of(context).size.height * 0.3,
-                  medium: MediaQuery.of(context).size.height * 0.3,
-                  small: MediaQuery.of(context).size.height * 0.24,
-                ),
                 padding: EdgeInsets.all(
                   responsiveConfig(
                     context: context,
@@ -65,7 +59,7 @@ class _PastProgressState extends State<PastProgress> {
                 child: Text(
                   'Past\nProgress',
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.07,
+                    fontSize: MediaQuery.of(context).size.height * 0.05,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

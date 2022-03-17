@@ -85,12 +85,6 @@ class _ActivityState extends State<Activity> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  height: responsiveConfig(
-                    context: context,
-                    large: MediaQuery.of(context).size.height * 0.3,
-                    medium: MediaQuery.of(context).size.height * 0.3,
-                    small: MediaQuery.of(context).size.height * 0.22,
-                  ),
                   width: MediaQuery.of(context).size.width,
                   color: Colors.black54,
                   padding: EdgeInsets.symmetric(
@@ -108,12 +102,17 @@ class _ActivityState extends State<Activity> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
-                                style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height * 0.06,
-                                  fontWeight: FontWeight.bold,
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Text(
+                                  'Hello, ${user.displayName != null ? user.displayName!.split(' ')[0] : 'user'}',
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height * 0.05,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 5,
                                 ),
                               ),
                               IconButton(

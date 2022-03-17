@@ -145,100 +145,96 @@ class _DoctorListState extends State<DoctorList> {
         onRefresh: () async {
           setState(() {});
         },
-        child: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: responsiveConfig(
-              context: context,
-              large: MediaQuery.of(context).size.width * 0.25,
-              medium: MediaQuery.of(context).size.width * 0.2,
-              small: 0,
+        child: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: responsiveConfig(
+                context: context,
+                large: MediaQuery.of(context).size.width * 0.25,
+                medium: MediaQuery.of(context).size.width * 0.2,
+                small: 0,
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                Container(
-                  height: responsiveConfig(
-                    context: context,
-                    large: MediaQuery.of(context).size.height * 0.2,
-                    medium: MediaQuery.of(context).size.height * 0.2,
-                    small: MediaQuery.of(context).size.height * 0.2,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black54,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                    vertical: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Doctors',
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.06,
-                          fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black54,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.05,
+                      vertical: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Doctors',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height * 0.05,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        iconSize: MediaQuery.of(context).size.height * 0.055,
-                        onPressed: this._openDoctorFilters,
-                        icon: Icon(
-                          Icons.filter_list_outlined,
+                        IconButton(
+                          iconSize: MediaQuery.of(context).size.height * 0.055,
+                          onPressed: this._openDoctorFilters,
+                          icon: Icon(
+                            Icons.filter_list_outlined,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                FutureBuilder(
-                  future: this._doctorService.fetchDoctorsWithFiltering(
-                        new DoctorFilterDto(
-                          jobTitle: this._jobFilter,
-                          specializations: this
-                              ._specializationsFilter
-                              .map((specialization) =>
-                                  specialization.specialization)
-                              .toList(),
+                  FutureBuilder(
+                    future: this._doctorService.fetchDoctorsWithFiltering(
+                          new DoctorFilterDto(
+                            jobTitle: this._jobFilter,
+                            specializations: this
+                                ._specializationsFilter
+                                .map((specialization) =>
+                                    specialization.specialization)
+                                .toList(),
+                          ),
                         ),
-                      ),
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot<List<Doctor>> snapshot,
-                  ) {
-                    if (snapshot.hasError) {
-                      switch (snapshot.error.runtimeType) {
-                        case ServerException:
-                          {
-                            ServerException exception =
-                                snapshot.error as ServerException;
-                            return Error(message: exception.message);
-                          }
-                        default:
-                          {
-                            log.e(
-                              "DoctorList Error",
-                              snapshot.error,
-                              snapshot.stackTrace,
-                            );
-                            return Error(message: "Something went wrong, please try again later");
-                          }
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<List<Doctor>> snapshot,
+                    ) {
+                      if (snapshot.hasError) {
+                        switch (snapshot.error.runtimeType) {
+                          case ServerException:
+                            {
+                              ServerException exception =
+                                  snapshot.error as ServerException;
+                              return Error(message: exception.message);
+                            }
+                          default:
+                            {
+                              log.e(
+                                "DoctorList Error",
+                                snapshot.error,
+                                snapshot.stackTrace,
+                              );
+                              return Error(message: "Something went wrong, please try again later");
+                            }
+                        }
                       }
-                    }
 
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      this._doctors = snapshot.data!;
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        this._doctors = snapshot.data!;
 
-                      return _buildDoctorsList();
-                    }
+                        return _buildDoctorsList();
+                      }
 
-                    return this._doctors == null
-                        ? Loading(message: "Loading doctor details")
-                        : this._buildDoctorsList();
-                  },
-                ),
-              ],
+                      return this._doctors == null
+                          ? Loading(message: "Loading doctor details")
+                          : this._buildDoctorsList();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

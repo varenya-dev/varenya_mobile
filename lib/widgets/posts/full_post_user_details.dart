@@ -45,12 +45,6 @@ class FullPostUserDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: responsiveConfig(
-        context: context,
-        large: MediaQuery.of(context).size.height * 0.3,
-        medium: MediaQuery.of(context).size.height * 0.3,
-        small: MediaQuery.of(context).size.height * 0.2,
-      ),
       width: MediaQuery.of(context).size.width,
       color: Colors.black54,
       padding: EdgeInsets.symmetric(
@@ -78,7 +72,7 @@ class FullPostUserDetails extends StatelessWidget {
           );
         },
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.6,
           child: Text(
             this._post.user.role == Roles.MAIN
                 ? '${this._post.user.randomName!.randomName} posted'
@@ -88,7 +82,7 @@ class FullPostUserDetails extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
             overflow: TextOverflow.visible,
-            maxLines: 3,
+            maxLines: 4,
           ),
         ),
       ),
