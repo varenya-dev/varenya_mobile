@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       new TextEditingController();
 
   bool _loading = false;
+  bool _setEmail = false;
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     setState(() {
-      this._loading = true;
+      this._loading = false;
     });
   }
 
@@ -102,9 +103,18 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the email address from the previous screen.
-    this._emailFieldController.text =
-        ModalRoute.of(context)!.settings.arguments as String;
+
+    if (!this._setEmail) {
+      // Get the email address from the previous screen.
+      this._emailFieldController.text =
+      ModalRoute.of(context)!.settings.arguments as String;
+
+      setState(() {
+        this._setEmail = true;
+      });
+
+      log.i('Email Address Set');
+    }
 
     return Scaffold(
       body: Center(
