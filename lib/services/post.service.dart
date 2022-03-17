@@ -160,7 +160,7 @@ class PostService {
 
       // Prepare URI for the request.
       Uri uri = Uri.http(
-        apiUrl,
+        rawApiUrl,
         "/v1/api/post/category",
         {"category": category},
       );
