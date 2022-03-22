@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:varenya_mobile/constants/default_questions.constant.dart';
+import 'package:varenya_mobile/constants/dummy_questionnaire.constant.dart';
 import 'package:varenya_mobile/constants/hive_boxes.constant.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_mood/daily_mood.model.dart';
 import 'package:varenya_mobile/models/daily_progress_data/daily_mood_data/daily_mood_data.model.dart';
@@ -69,6 +70,14 @@ class DailyQuestionnaireService {
         .toList();
 
     this.saveQuestions(defaultQuestions);
+  }
+
+  void checkAndAddDummyData() {
+    if (this.fetchDailyProgressData().isEmpty) {
+      dummyData.forEach((element) {
+        this.saveProgressData(element);
+      });
+    }
   }
 
   /*

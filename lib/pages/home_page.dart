@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
       });
 
     this._dailyQuestionnaireService.checkAndAddDefaultQuestions();
+    this._dailyQuestionnaireService.checkAndAddDummyData();
   }
 
   final List<Widget> screens = [
