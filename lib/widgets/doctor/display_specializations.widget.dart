@@ -13,7 +13,7 @@ class DisplaySpecializations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.06,
+      height: MediaQuery.of(context).size.height * 0.1,
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
@@ -21,19 +21,19 @@ class DisplaySpecializations extends StatelessWidget {
             .doctor
             .specializations
             .map((specialization) => Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-          ),
-          child: Chip(
-            backgroundColor: Palette.primary,
-            label: Text(
-              specialization.specialization,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ))
+                  margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                  ),
+                  child: Chip(
+                    backgroundColor: Palette.primary,
+                    label: Text(
+                      specialization.specialization,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ))
             .toList(),
       ),
     );

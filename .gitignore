@@ -50,3 +50,4 @@ firebase/dev/google-services.json
 firebase/prod/google-services.json
 android/app/src/dev/google-services.json
 android/app/src/prod/google-services.json
+.vscode/launch.json

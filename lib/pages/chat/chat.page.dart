@@ -167,7 +167,7 @@ class _ChatState extends State<Chat> {
           ),
         ),
       ],
-      toolbarHeight: MediaQuery.of(context).size.height * 0.15,
+      toolbarHeight: MediaQuery.of(context).size.height * 0.1,
     );
 
     return Scaffold(
@@ -239,13 +239,15 @@ class _ChatState extends State<Chat> {
                     textFieldController: this._chatController,
                     helperText: "Message...",
                     validators: [
-                      RequiredValidator(errorText: "Please type in your message")
+                      RequiredValidator(
+                          errorText: "Please type in your message")
                     ],
                     textInputType: TextInputType.text,
                     suffixIcon: OfflineBuilder(
                       connectivityBuilder:
                           (BuildContext context, ConnectivityResult result, _) {
-                        final bool connected = result != ConnectivityResult.none;
+                        final bool connected =
+                            result != ConnectivityResult.none;
 
                         return IconButton(
                           icon: Icon(
