@@ -217,7 +217,9 @@ class _DoctorListState extends State<DoctorList> {
                                 snapshot.error,
                                 snapshot.stackTrace,
                               );
-                              return Error(message: "Something went wrong, please try again later");
+                              return Error(
+                                  message:
+                                      "Something went wrong, please try again later");
                             }
                         }
                       }
@@ -243,34 +245,22 @@ class _DoctorListState extends State<DoctorList> {
   }
 
   Widget _buildDoctorsList() {
-    return this._doctors!.length != 0 ? GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: this._doctors!.length,
-      itemBuilder: (BuildContext context, int index) {
-        Doctor doctor = this._doctors![index];
+    return this._doctors!.length != 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: this._doctors!.length,
+            itemBuilder: (BuildContext context, int index) {
+              Doctor doctor = this._doctors![index];
 
-        return DoctorCard(
-          doctor: doctor,
-          onPressDoctor: () {
-            this._displayDoctor(doctor);
-          },
-        );
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: responsiveConfig(
-          context: context,
-          large: 2,
-          medium: 1,
-          small: 1,
-        ).toInt(),
-        childAspectRatio: responsiveConfig(
-          context: context,
-          large: 8 / 8,
-          medium: 10 / 5,
-          small: kIsWeb ? 10 / 11 : 10 / 8,
-        ),
-      ),
-    ) : NoData(message: "No doctor details to display");
+              return DoctorCard(
+                doctor: doctor,
+                onPressDoctor: () {
+                  this._displayDoctor(doctor);
+                },
+              );
+            },
+          )
+        : NoData(message: "No doctor details to display");
   }
 }
