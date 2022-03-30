@@ -5,10 +5,11 @@ When contributing to this repository, please discuss the changes you wish to mak
 Alternatively, you can contribute to resolve any of the [open issues](https://github.com/varenya-dev/varenya_mobile/issues) without the need for prior discussion.
 
 ## Pull Requests
+
 Please follow these exact steps for sending us a pull request:
 
--   Make sure that an issue regarding your proposal is open (by you or someone else).
--   Fork this repository and clone the fork to your local machine.
--   Checkout the `dev` branch for the latest development progress using `git checkout dev`.
--   Send us a pull request from `your-username:dev` to `varenya_mobile:main`.
--   Your PR will be merged if satisfactory.
+- Make sure that an issue regarding your proposal is open (by you or someone else).
+- Fork this repository and clone the fork to your local machine.
+- Checkout the `main` branch for the latest development progress using `git checkout main`.
+- Send us a pull request from `your-username:main` to `varenya_mobile:main`.
+- Your PR will be merged if satisfactory.
