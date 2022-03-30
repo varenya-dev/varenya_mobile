@@ -38,7 +38,7 @@ A mental health support app built using Flutter to help people in need to book a
 
 <p align="center">
   <img src = "https://firebasestorage.googleapis.com/v0/b/varenya-flutter.appspot.com/o/assets%2FScreenshot_20220330-082521.jpg?alt=media&token=42096d36-9f56-4ea4-9756-c2e33e452c9f" width=200>
-  <img src = "https://firebasestorage.googleapis.com/v0/b/varenya-flutter.appspot.com/o/assets%2FScreenshot_20220330-082521.jpg?alt=media&token=42096d36-9f56-4ea4-9756-c2e33e452c9f" width=200>
+  <img src = "https://firebasestorage.googleapis.com/v0/b/varenya-flutter.appspot.com/o/assets%2FScreenshot_20220330-082625.jpg?alt=media&token=dc74dd63-d4a1-4e7e-b808-565ce9062f29" width=200>
 </p>
 
 ## Features
