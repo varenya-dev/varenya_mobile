@@ -66,6 +66,6 @@ Here are the instructions on how to build and run this project on your respectiv
 - Clone the project on your system via GitHub.
 - Clone the [server](https://github.com/varenya-dev/varenya-server) as well on your system since Varenya Mobile works on both NodeJS as well as Firebase.
 - Make sure you have [docker](https://www.docker.com/products/docker-desktop) installed on your system.
-- Create a [firebase project](https://console.firebase.google.com/) and fetch the `google-services.json` and save it in the `android/app/dev` folder.
+- Create a [firebase project](https://console.firebase.google.com/) and fetch the `google-services.json` and save it in the `android/app/src/dev` folder.
 - Run `docker compose -f docker-compose.yml up --build` in the server root folder to build and run a development version of the server.
 - Open up a console and an emulator and run `flutter run --flavor dev -t .\lib\main.dev.dart` to run the development version of the app.
